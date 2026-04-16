@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nova Label Decoder</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <section id="authScreen" class="auth-screen">
+      <div class="auth-card">
+        <p class="eyebrow">WELCOME TO NOVA</p>
+        <h1>Sign in to start scanning smarter.</h1>
+        <p class="auth-subtitle">
+          Decode labels, search brand health, and get clean alternatives in seconds.
+        </p>
+        <div class="auth-mode-switch">
+          <button id="showLoginButton" class="secondary small" type="button">Login</button>
+          <button id="showCreateAccountButton" class="secondary small" type="button">
+            Create Account
+          </button>
+        </div>
+        <label for="loginEmail" class="label">Email</label>
+        <input id="loginEmail" type="email" placeholder="you@example.com" />
+        <label for="loginPassword" class="label">Password</label>
+        <input id="loginPassword" type="password" placeholder="Enter password" />
+        <div id="createAccountFields" class="hidden">
+          <label for="signupConfirmPassword" class="label">Confirm Password</label>
+          <input
+            id="signupConfirmPassword"
+            type="password"
+            placeholder="Re-enter password"
+          />
+        </div>
+        <div class="actions">
+          <button id="loginButton">Login</button>
+          <button id="createAccountButton" class="hidden">Create Account</button>
+          <button id="guestButton" class="secondary">Continue as Guest</button>
+        </div>
+        <p id="authMessage" class="auth-message"></p>
+      </div>
+    </section>
+
+    <div id="appContent" class="hidden">
+      <header class="hero">
+        <div class="hero-top">
+          <p class="eyebrow">NOVA FOOD INTELLIGENCE</p>
+          <button id="logoutButton" class="secondary small">Logout</button>
+        </div>
+        <div class="hero-content">
+          <div>
+            <h1>Decode labels. Expose additives. Shop smarter.</h1>
+            <p>
+              Paste or type a label ingredient list, run a high-speed scan, and get
+              a science-based health score with cleaner alternatives.
+            </p>
+          </div>
+          <img
+            class="hero-image"
+            src="./assets/scan-hero.svg"
+            alt="Illustration of scanning food labels"
+          />
+        </div>
+      </header>
+
+      <main class="app-shell">
+      <section class="panel">
+        <h2>High-Speed Label Scan</h2>
+        <label for="ingredients" class="label"
+          >Ingredients (comma-separated)</label
+        >
+        <div id="scanZone" class="scan-zone">
+          <textarea
+            id="ingredients"
+            placeholder="Example: Carbonated water, high fructose corn syrup, caramel color, phosphoric acid, natural flavors, potassium benzoate, caffeine..."
+            rows="8"
+          ></textarea>
+          <div class="scan-overlay hidden" id="scanOverlay" aria-hidden="true">
+            <div class="scan-line"></div>
+          </div>
+        </div>
+        <div id="scanLoading" class="scan-loading hidden" aria-live="polite">
+          <span class="spinner" aria-hidden="true"></span>
+          <span>Analyzing ingredients...</span>
+        </div>
+
+        <div class="actions">
+          <button id="scanButton">Run Scan</button>
+          <button id="loadDemoButton" class="secondary">Load Demo Label</button>
+        </div>
+
+        <hr class="divider" />
+
+        <h2>Brand Health Lookup</h2>
+        <label for="brandSearch" class="label">Search a food brand</label>
+        <div class="brand-search-wrap">
+          <input
+            id="brandSearch"
+            type="text"
+            placeholder="Example: Kellogg's, Coca-Cola, Chobani..."
+            autocomplete="off"
+            aria-autocomplete="list"
+            aria-controls="brandSuggestions"
+            aria-expanded="false"
+          />
+          <ul id="brandSuggestions" class="suggestions hidden"></ul>
+        </div>
+
+        <div class="actions">
+          <button id="brandSearchButton">Search Brand</button>
+          <button id="loadBrandDemoButton" class="secondary">
+            Load Demo Brand
+          </button>
+        </div>
+      </section>
+
+      <section class="panel results-panel">
+        <h2>Scan Results</h2>
+        <div id="emptyState" class="empty-state">
+          Run a scan to see additive detection, risk analysis, and cleaner swaps.
+        </div>
+
+        <div id="results" class="hidden">
+          <div class="score-row">
+            <div class="score-badge" id="scoreBadge">
+              <span id="scoreValue">--</span>
+              <small>Health Score</small>
+            </div>
+            <div>
+              <p id="verdict" class="verdict"></p>
+              <p id="confidence" class="confidence"></p>
+            </div>
+          </div>
+
+          <figure class="result-visual">
+            <img id="resultImage" src="./assets/default-food.svg" alt="Food profile visual" />
+            <figcaption id="resultImageCaption">Visual profile preview</figcaption>
+          </figure>
+
+          <div class="result-block">
+            <h3>Hidden Additives / Harmful Ingredients</h3>
+            <ul id="flagList"></ul>
+          </div>
+
+          <div class="result-block">
+            <h3>What This Means</h3>
+            <ul id="factList"></ul>
+          </div>
+
+          <div class="result-block">
+            <h3>Cleaner Alternatives</h3>
+            <ul id="alternativeList"></ul>
+          </div>
+        </div>
+      </section>
+      </main>
+
+      <footer>
+        <p>
+          Nova is an educational tool and not a medical diagnosis. Always consult
+          a healthcare professional for personalized advice.
+        </p>
+      </footer>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
