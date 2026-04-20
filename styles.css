@@ -352,6 +352,18 @@ button.small {
   color: var(--muted);
 }
 
+.nutrition-summary {
+  margin: 8px 0 0;
+  color: #d8e6ff;
+  font-size: 0.92rem;
+}
+
+.lookup-note {
+  margin: -2px 0 10px;
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
 .result-block + .result-block {
   margin-top: 14px;
 }

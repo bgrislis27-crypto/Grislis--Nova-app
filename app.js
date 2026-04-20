@@ -165,6 +165,312 @@ const brandHealthDatabase = [
       "Brands with short labels and no artificial additives.",
     ],
   },
+  {
+    name: "Hu Kitchen",
+    aliases: ["hu", "hu chocolate"],
+    score: 76,
+    image: "./assets/brand-snacks.svg",
+    verdict: "Low concern profile",
+    confidence:
+      "Niche chocolate and snacks with simpler ingredient lists than mass-market candy, though still treat-category calories.",
+    concerns: [
+      "Chocolate and snack lines remain energy-dense; easy to overconsume.",
+      "Some items use coconut sugar or similar; still counts as added sugar.",
+    ],
+    alternatives: [
+      "Dark chocolate with very high cacao and minimal ingredients.",
+      "Homemade trail mix with nuts and unsweetened dried fruit.",
+    ],
+  },
+  {
+    name: "Lesser Evil",
+    aliases: ["lesser evil popcorn", "lesserevil"],
+    score: 74,
+    image: "./assets/brand-snacks.svg",
+    verdict: "Low concern profile",
+    confidence:
+      "Better-for-you popcorn and puffs with organic positioning and fewer artificial additives than mainstream chips.",
+    concerns: [
+      "Still packaged snacks; sodium and refined carbs vary by SKU.",
+      "Oil and seasoning blends can add saturated fat depending on flavor.",
+    ],
+    alternatives: [
+      "Air-popped popcorn with your own spices.",
+      "Roasted chickpeas or nuts for crunch.",
+    ],
+  },
+  {
+    name: "Simple Mills",
+    aliases: ["simple mills crackers", "simplemills"],
+    score: 77,
+    image: "./assets/brand-pantry.svg",
+    verdict: "Low concern profile",
+    confidence:
+      "Almond- and seed-forward baking mixes and crackers marketed around whole-food ingredients.",
+    concerns: [
+      "Baked goods are still calorie-dense; nut flours add fat calories quickly.",
+      "Some products use gums or starches for texture.",
+    ],
+    alternatives: [
+      "Homemade crackers from oats, seeds, and minimal oil.",
+      "Whole-grain rice cakes with nut butter.",
+    ],
+  },
+  {
+    name: "Primal Kitchen",
+    aliases: ["primal kitchen mayo", "primal"],
+    score: 75,
+    image: "./assets/brand-pantry.svg",
+    verdict: "Low concern profile",
+    confidence:
+      "Condiments and bars positioned on avocado oil, collagen, and cleaner label claims versus standard sauces.",
+    concerns: [
+      "Keto-forward items can be high in fat and sodium for flavor.",
+      "Sweetened bars and dressings still need label reading.",
+    ],
+    alternatives: [
+      "Olive oil and vinegar for salads.",
+      "Plain Greek yogurt as a dip base.",
+    ],
+  },
+  {
+    name: "Magic Spoon",
+    aliases: ["magic spoon cereal"],
+    score: 68,
+    image: "./assets/brand-cereal.svg",
+    verdict: "Moderate concern profile",
+    confidence:
+      "High-protein cereal alternative with strong macro marketing; formulation is engineered versus traditional grains.",
+    concerns: [
+      "Uses alternative sweeteners and protein isolates common in specialty cereals.",
+      "Price and processing intensity are higher than plain oats.",
+    ],
+    alternatives: [
+      "Plain oats plus protein powder or Greek yogurt on the side.",
+      "Muesli with nuts and seeds for natural protein.",
+    ],
+  },
+  {
+    name: "Olipop",
+    aliases: ["oli pop", "olipop soda"],
+    score: 71,
+    image: "./assets/brand-soda.svg",
+    verdict: "Low concern profile",
+    confidence:
+      "Prebiotic soda category with much lower sugar positioning than classic colas, though still a flavored beverage.",
+    concerns: [
+      "Fiber and botanical blends can affect digestion differently person to person.",
+      "Still a discretionary drink versus water or tea.",
+    ],
+    alternatives: [
+      "Unsweetened sparkling water with citrus.",
+      "Homemade ginger tea with a touch of honey.",
+    ],
+  },
+  {
+    name: "Poppi",
+    aliases: ["poppi soda", "poppi prebiotic"],
+    score: 70,
+    image: "./assets/brand-soda.svg",
+    verdict: "Low concern profile",
+    confidence:
+      "Apple cider vinegar forward sodas with lower sugar than traditional soft drinks; brand sits in functional beverage niche.",
+    concerns: [
+      "Acidity and sweeteners vary by flavor; check each label.",
+      "Marketing can oversell gut benefits versus whole-food fiber.",
+    ],
+    alternatives: [
+      "Diluted ACV in water if you enjoy the profile.",
+      "Kombucha with low sugar if fermented drinks fit your routine.",
+    ],
+  },
+  {
+    name: "Miyoko's Creamery",
+    aliases: ["miyokos", "miyoko butter", "miyoko creamery"],
+    score: 73,
+    image: "./assets/brand-yogurt.svg",
+    verdict: "Low concern profile",
+    confidence:
+      "Plant-based butter and cheese alternatives focused on cultured and nut-forward recipes versus highly hydrogenated spreads.",
+    concerns: [
+      "Plant cheeses remain fat- and sodium-dense like dairy counterparts.",
+      "Allergen labels matter for cashew or coconut bases.",
+    ],
+    alternatives: [
+      "Hummus or mashed avocado on toast.",
+      "Small-batch nut cheeses with short ingredient lists.",
+    ],
+  },
+  {
+    name: "Banza",
+    aliases: ["banza pasta", "banza chickpea"],
+    score: 76,
+    image: "./assets/brand-pantry.svg",
+    verdict: "Low concern profile",
+    confidence:
+      "Chickpea-based pasta that boosts protein and fiber versus refined white pasta for the same meal occasions.",
+    concerns: [
+      "Some shapes include rice or pea blends; read each box.",
+      "Legume pasta can be gassy for sensitive digestive systems.",
+    ],
+    alternatives: [
+      "Lentil or whole-wheat pasta.",
+      "Zucchini noodles mixed half-and-half with regular pasta.",
+    ],
+  },
+  {
+    name: "Partake Foods",
+    aliases: ["partake cookies", "partake"],
+    score: 72,
+    image: "./assets/brand-snacks.svg",
+    verdict: "Low concern profile",
+    confidence:
+      "Allergy-friendly cookies and mixes built for top-9 free positioning; helpful niche for sensitive households.",
+    concerns: [
+      "Cookies remain treats; sugar content varies by product.",
+      "Alternative flours can be refined starches for texture.",
+    ],
+    alternatives: [
+      "Homemade oat-banana cookies with minimal sugar.",
+      "Fresh fruit with nut or seed butter if allergens allow.",
+    ],
+  },
+  {
+    name: "Once Upon a Farm",
+    aliases: ["once upon a farm pouches", "onceuponafarm"],
+    score: 79,
+    image: "./assets/brand-pantry.svg",
+    verdict: "Low concern profile",
+    confidence:
+      "Cold-pressed fruit and veggie pouches with a whole-food story versus typical shelf-stable baby desserts.",
+    concerns: [
+      "Pouches are still blended; less chewing than whole produce for toddlers.",
+      "Organic sugar sources are still sugar in smoothies.",
+    ],
+    alternatives: [
+      "Soft-cooked whole fruits and vegetables at home.",
+      "Plain full-fat yogurt with mashed berries.",
+    ],
+  },
+  {
+    name: "Siggi's",
+    aliases: ["siggis", "siggi yogurt", "siggi's skyr"],
+    score: 80,
+    image: "./assets/brand-yogurt.svg",
+    verdict: "Low concern profile",
+    confidence:
+      "Icelandic-style skyr known for high protein and lower sugar positioning than many sweetened yogurts.",
+    concerns: [
+      "Flavored lines add more sugar than plain skyr.",
+      "Some products use thickeners or fruit prep for texture.",
+    ],
+    alternatives: [
+      "Plain skyr with fresh fruit.",
+      "Unstrained Greek yogurt for similar protein density.",
+    ],
+  },
+  {
+    name: "Athletic Brewing",
+    aliases: ["athletic brewing co", "athletic beer", "athletic na beer"],
+    score: 66,
+    image: "./assets/brand-soda.svg",
+    verdict: "Moderate concern profile",
+    confidence:
+      "Non-alcoholic craft beer niche; removes alcohol calories but keeps malt beverage processing and carbs.",
+    concerns: [
+      "Still a grain-based drink with calories and sometimes residual sugar.",
+      "Not a hydration substitute for water.",
+    ],
+    alternatives: [
+      "Sparkling hop water with zero alcohol and minimal ingredients.",
+      "Kombucha with known low sugar if you want complexity.",
+    ],
+  },
+  {
+    name: "Liquid Death",
+    aliases: ["liquid death water", "liquiddeath"],
+    score: 88,
+    image: "./assets/brand-soda.svg",
+    verdict: "Low concern profile",
+    confidence:
+      "Primarily mountain water in cans with strong branding; minimal formulation concern versus sweetened drinks.",
+    concerns: [
+      "Still packaged water; environmental footprint versus tap filtration.",
+      "Iced tea line introduces sugar and additives—SKU matters.",
+    ],
+    alternatives: [
+      "Filtered tap water in a reusable bottle.",
+      "Unsweetened iced tea you brew at home.",
+    ],
+  },
+  {
+    name: "Thrive Market",
+    aliases: ["thrive market brand", "thrive private label"],
+    score: 73,
+    image: "./assets/brand-pantry.svg",
+    verdict: "Low concern profile",
+    confidence:
+      "Member retailer with many private-label goods aimed at organic and diet-specific niches; quality varies by category.",
+    concerns: [
+      "Private label spans snacks to sweets; not every SKU is equally clean.",
+      "Subscription model can encourage more packaged food purchasing.",
+    ],
+    alternatives: [
+      "Farmer's markets and bulk bins for fewer packaged goods.",
+      "Compare Thrive SKUs to single-brand specialists in each category.",
+    ],
+  },
+  {
+    name: "Three Wishes",
+    aliases: ["three wishes cereal"],
+    score: 74,
+    image: "./assets/brand-cereal.svg",
+    verdict: "Low concern profile",
+    confidence:
+      "Legume- and chickpea-forward cereal with higher protein and fiber story than classic kids cereals.",
+    concerns: [
+      "Still includes sweeteners for palatability in many flavors.",
+      "Pricier than conventional cereal; portion control still matters.",
+    ],
+    alternatives: [
+      "Homemade granola with oats, seeds, and light maple.",
+      "Plain puffed grains plus fruit and milk.",
+    ],
+  },
+  {
+    name: "Perfect Bar",
+    aliases: ["perfect bar refrigerated", "perfect snack bar"],
+    score: 64,
+    image: "./assets/brand-snacks.svg",
+    verdict: "Moderate concern profile",
+    confidence:
+      "Refrigerated whole-food style bars with nut butter and honey; energy-dense and sweet like most bars.",
+    concerns: [
+      "Calories and sugar add up quickly for small portions.",
+      "Needs refrigeration; still ultra-convenient processed format.",
+    ],
+    alternatives: [
+      "Apple slices with almond butter.",
+      "Homemade date-nut balls with controlled sweetness.",
+    ],
+  },
+  {
+    name: "Epic Provisions",
+    aliases: ["epic bar", "epic jerky", "epic provisions meat bar"],
+    score: 62,
+    image: "./assets/brand-snacks.svg",
+    verdict: "Moderate concern profile",
+    confidence:
+      "Meat bars and jerky positioned on animal welfare and simple ingredients; still processed cured meat category.",
+    concerns: [
+      "Processed red meat patterns are debated for long-term health.",
+      "Sodium content can be high for shelf stability.",
+    ],
+    alternatives: [
+      "Leftover roasted chicken or turkey slices.",
+      "Hard-boiled eggs for portable protein.",
+    ],
+  },
 ];
 
 const scoreBadge = document.getElementById("scoreBadge");
@@ -176,8 +482,12 @@ const results = document.getElementById("results");
 const flagList = document.getElementById("flagList");
 const factList = document.getElementById("factList");
 const alternativeList = document.getElementById("alternativeList");
+const flagTitle = document.getElementById("flagTitle");
+const factTitle = document.getElementById("factTitle");
+const alternativeTitle = document.getElementById("alternativeTitle");
 const resultImage = document.getElementById("resultImage");
 const resultImageCaption = document.getElementById("resultImageCaption");
+const nutritionSummary = document.getElementById("nutritionSummary");
 
 const ingredientsInput = document.getElementById("ingredients");
 const scanButton = document.getElementById("scanButton");
@@ -428,6 +738,12 @@ function renderList(target, items, formatter) {
   }
 }
 
+function setResultSectionTitles(flag, fact, alternative) {
+  flagTitle.textContent = flag;
+  factTitle.textContent = fact;
+  alternativeTitle.textContent = alternative;
+}
+
 function runScan() {
   const parsedIngredients = parseIngredients(ingredientsInput.value);
   if (parsedIngredients.length === 0) {
@@ -446,9 +762,15 @@ function runScan() {
   confidence.textContent = verdictData.confidence;
   scoreBadge.style.borderColor = verdictData.color;
   scoreBadge.style.backgroundColor = verdictData.badgeBackground;
+  nutritionSummary.textContent = "";
   resultImage.src = "./assets/default-food.svg";
   resultImage.alt = "Ingredient-based label scan visual";
   resultImageCaption.textContent = "Ingredient scan visualization";
+  setResultSectionTitles(
+    "Hidden Additives / Harmful Ingredients",
+    "What This Means",
+    "Cleaner Alternatives",
+  );
 
   renderList(
     flagList,
@@ -499,6 +821,119 @@ function findBrand(brandNameInput) {
       return names.some((name) => name.includes(query) || query.includes(name));
     }) || null
   );
+}
+
+function getNutriment(product, key) {
+  const nutriments = product.nutriments || {};
+  const value = nutriments[key];
+  return typeof value === "number" ? value : null;
+}
+
+function computeNutritionScore(product) {
+  let score = 70;
+  const calories = getNutriment(product, "energy-kcal_100g");
+  const protein = getNutriment(product, "proteins_100g");
+  const sugar = getNutriment(product, "sugars_100g");
+  const saturatedFat = getNutriment(product, "saturated-fat_100g");
+  const sodium = getNutriment(product, "sodium_100g");
+  const fiber = getNutriment(product, "fiber_100g");
+
+  if (calories !== null) {
+    if (calories > 300) score -= 10;
+    if (calories < 170) score += 5;
+  }
+  if (protein !== null) {
+    if (protein >= 10) score += 10;
+    if (protein < 4) score -= 6;
+  }
+  if (sugar !== null) {
+    if (sugar > 15) score -= 14;
+    else if (sugar > 8) score -= 7;
+    else score += 4;
+  }
+  if (saturatedFat !== null && saturatedFat > 5) score -= 8;
+  if (sodium !== null && sodium > 0.5) score -= 8;
+  if (fiber !== null && fiber >= 3) score += 7;
+
+  return Math.max(1, Math.min(100, Math.round(score)));
+}
+
+function buildPositivesAndNegatives(product) {
+  const positives = [];
+  const negatives = [];
+  const alternatives = [];
+  const calories = getNutriment(product, "energy-kcal_100g");
+  const protein = getNutriment(product, "proteins_100g");
+  const sugar = getNutriment(product, "sugars_100g");
+  const saturatedFat = getNutriment(product, "saturated-fat_100g");
+  const sodium = getNutriment(product, "sodium_100g");
+  const fiber = getNutriment(product, "fiber_100g");
+  const ingredientsText = (product.ingredients_text || "").toLowerCase();
+
+  if (protein !== null && protein >= 10) positives.push(`High protein (${protein}g per 100g).`);
+  if (fiber !== null && fiber >= 3) positives.push(`Contains fiber (${fiber}g per 100g).`);
+  if (sugar !== null && sugar <= 5) positives.push(`Lower sugar profile (${sugar}g per 100g).`);
+  if (calories !== null && calories <= 170)
+    positives.push(`Moderate calorie density (${calories} kcal per 100g).`);
+
+  if (sugar !== null && sugar > 12) negatives.push(`High sugar (${sugar}g per 100g).`);
+  if (saturatedFat !== null && saturatedFat > 5)
+    negatives.push(`Higher saturated fat (${saturatedFat}g per 100g).`);
+  if (sodium !== null && sodium > 0.5) negatives.push(`Higher sodium (${sodium}g per 100g).`);
+  if (ingredientsText.includes("flavor") || ingredientsText.includes("flavour")) {
+    negatives.push("Uses broad flavor wording that can reduce ingredient transparency.");
+  }
+  if (ingredientsText.includes("syrup")) {
+    negatives.push("Contains syrup-based sweeteners, often linked with higher added sugars.");
+  }
+
+  alternatives.push("Compare with options that have less sugar and fewer total ingredients.");
+  alternatives.push("Prioritize products with higher protein/fiber and lower sodium.");
+
+  return { positives, negatives, alternatives };
+}
+
+async function fetchOpenFoodFactsProduct(query) {
+  const url = `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(query)}&search_simple=1&action=process&json=1&page_size=10`;
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error("Could not reach OpenFoodFacts.");
+  }
+
+  const payload = await response.json();
+  const products = Array.isArray(payload.products) ? payload.products : [];
+  const withNutrition = products.filter(
+    (product) => product.image_url && product.nutriments && product.product_name,
+  );
+  return withNutrition[0] || null;
+}
+
+function renderOpenFoodFactsProduct(product) {
+  const score = computeNutritionScore(product);
+  const verdictData = getVerdictText(score);
+  const calories = getNutriment(product, "energy-kcal_100g");
+  const protein = getNutriment(product, "proteins_100g");
+  const { positives, negatives, alternatives } = buildPositivesAndNegatives(product);
+  const productName = product.product_name || "Unknown product";
+  const brandName = product.brands || "Unknown brand";
+
+  emptyState.classList.add("hidden");
+  results.classList.remove("hidden");
+
+  scoreValue.textContent = String(score);
+  verdict.textContent = `${brandName}: ${productName}`;
+  confidence.textContent = "Live nutrition data pulled from OpenFoodFacts product records.";
+  nutritionSummary.textContent = `Calories: ${calories ?? "N/A"} kcal/100g | Protein: ${protein ?? "N/A"}g/100g`;
+  scoreBadge.style.borderColor = verdictData.color;
+  scoreBadge.style.backgroundColor = verdictData.badgeBackground;
+  resultImage.src = product.image_url || "./assets/default-food.svg";
+  resultImage.alt = `${productName} food package image`;
+  resultImageCaption.textContent = `${productName} (${brandName})`;
+
+  setResultSectionTitles("Main Negatives", "Main Positives", "Cleaner Alternatives");
+  renderList(flagList, negatives, (item) => item);
+  renderList(factList, positives, (item) => item);
+  renderList(alternativeList, alternatives, (item) => item);
 }
 
 function getBrandSuggestions(query) {
@@ -568,53 +1003,80 @@ function updateActiveSuggestion(nextIndex) {
   });
 }
 
-function runBrandSearch() {
-  const match = findBrand(brandSearch.value);
-  hideBrandSuggestions();
-
-  if (!match) {
-    emptyState.classList.add("hidden");
-    results.classList.remove("hidden");
-
-    scoreValue.textContent = "--";
-    verdict.textContent = "Brand not found";
-    confidence.textContent =
-      "No profile is available yet. Try Coca-Cola, Kellogg's, Nestle, Chobani, or Annie's.";
-    scoreBadge.style.borderColor = "#2a3657";
-    scoreBadge.style.backgroundColor = "#12253d";
-    resultImage.src = "./assets/default-food.svg";
-    resultImage.alt = "No brand image available";
-    resultImageCaption.textContent = "No brand visual available yet";
-
-    renderList(flagList, [], () => "");
-    renderList(factList, [], () => "");
-    renderList(alternativeList, [], () => "");
+async function runBrandSearch() {
+  const query = brandSearch.value.trim();
+  if (!query) {
     return;
   }
 
-  const verdictData = getVerdictText(match.score);
-  emptyState.classList.add("hidden");
-  results.classList.remove("hidden");
+  hideBrandSuggestions();
+  brandSearchButton.disabled = true;
+  brandSearchButton.textContent = "Searching...";
 
-  scoreValue.textContent = String(match.score);
-  verdict.textContent = `${match.name}: ${match.verdict}`;
-  confidence.textContent = match.confidence;
-  scoreBadge.style.borderColor = verdictData.color;
-  scoreBadge.style.backgroundColor = verdictData.badgeBackground;
-  resultImage.src = match.image;
-  resultImage.alt = `${match.name} visual profile`;
-  resultImageCaption.textContent = `${match.name} portfolio-style visual`;
+  try {
+    try {
+      const liveProduct = await fetchOpenFoodFactsProduct(query);
+      if (liveProduct) {
+        renderOpenFoodFactsProduct(liveProduct);
+        return;
+      }
+    } catch {
+      // Fall back to local profiles if live API lookup fails.
+    }
 
-  renderList(flagList, match.concerns, (item) => item);
-  renderList(
-    factList,
-    [
-      `Brand-level score reflects portfolio trends, not every individual SKU.`,
-      `Current assessment model uses known ingredient-pattern risk weighting.`,
-    ],
-    (item) => item,
-  );
-  renderList(alternativeList, match.alternatives, (item) => item);
+    const match = findBrand(query);
+
+    if (!match) {
+      emptyState.classList.add("hidden");
+      results.classList.remove("hidden");
+
+      scoreValue.textContent = "--";
+      verdict.textContent = "Brand not found";
+      confidence.textContent =
+        "No profile was found in live lookup or local database. Try Coca-Cola, Kellogg's, Nestle, Chobani, or Annie's.";
+      nutritionSummary.textContent = "";
+      scoreBadge.style.borderColor = "#2a3657";
+      scoreBadge.style.backgroundColor = "#12253d";
+      resultImage.src = "./assets/default-food.svg";
+      resultImage.alt = "No brand image available";
+      resultImageCaption.textContent = "No brand visual available yet";
+
+      setResultSectionTitles("Main Negatives", "Main Positives", "Cleaner Alternatives");
+      renderList(flagList, [], () => "");
+      renderList(factList, [], () => "");
+      renderList(alternativeList, [], () => "");
+      return;
+    }
+
+    const verdictData = getVerdictText(match.score);
+    emptyState.classList.add("hidden");
+    results.classList.remove("hidden");
+
+    scoreValue.textContent = String(match.score);
+    verdict.textContent = `${match.name}: ${match.verdict}`;
+    confidence.textContent = match.confidence;
+    nutritionSummary.textContent = "Calories and protein are unavailable for static profile entries.";
+    scoreBadge.style.borderColor = verdictData.color;
+    scoreBadge.style.backgroundColor = verdictData.badgeBackground;
+    resultImage.src = match.image;
+    resultImage.alt = `${match.name} visual profile`;
+    resultImageCaption.textContent = `${match.name} portfolio-style visual`;
+
+    setResultSectionTitles("Main Negatives", "Main Positives", "Cleaner Alternatives");
+    renderList(flagList, match.concerns, (item) => item);
+    renderList(
+      factList,
+      [
+        `Brand-level score reflects portfolio trends, not every individual SKU.`,
+        `Current assessment model uses known ingredient-pattern risk weighting.`,
+      ],
+      (item) => item,
+    );
+    renderList(alternativeList, match.alternatives, (item) => item);
+  } finally {
+    brandSearchButton.disabled = false;
+    brandSearchButton.textContent = "Search Brand";
+  }
 }
 
 scanButton.addEventListener("click", triggerHighSpeedScan);

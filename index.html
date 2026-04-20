@@ -93,6 +93,7 @@
 
         <h2>Brand Health Lookup</h2>
         <label for="brandSearch" class="label">Search a food brand</label>
+        <p class="lookup-note">Live product nutrition and food images powered by OpenFoodFacts.</p>
         <div class="brand-search-wrap">
           <input
             id="brandSearch"
@@ -129,6 +130,7 @@
             <div>
               <p id="verdict" class="verdict"></p>
               <p id="confidence" class="confidence"></p>
+              <p id="nutritionSummary" class="nutrition-summary"></p>
             </div>
           </div>
 
@@ -138,17 +140,17 @@
           </figure>
 
           <div class="result-block">
-            <h3>Hidden Additives / Harmful Ingredients</h3>
+            <h3 id="flagTitle">Hidden Additives / Harmful Ingredients</h3>
             <ul id="flagList"></ul>
           </div>
 
           <div class="result-block">
-            <h3>What This Means</h3>
+            <h3 id="factTitle">What This Means</h3>
             <ul id="factList"></ul>
           </div>
 
           <div class="result-block">
-            <h3>Cleaner Alternatives</h3>
+            <h3 id="alternativeTitle">Cleaner Alternatives</h3>
             <ul id="alternativeList"></ul>
           </div>
         </div>
