@@ -475,6 +475,38 @@
         font-weight: 600;
       }
 
+      .app-shot-gallery {
+        display: flex;
+        flex-direction: column;
+        gap: 1.75rem;
+        margin-top: 1.25rem;
+      }
+
+      .app-shot {
+        margin: 0;
+        border-radius: 14px;
+        border: 1px solid var(--stroke);
+        overflow: hidden;
+        background: var(--card);
+        box-shadow: var(--shadow);
+      }
+
+      .app-shot img {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+
+      .app-shot figcaption {
+        margin: 0;
+        padding: 0.65rem 1rem;
+        font-size: var(--step--1);
+        font-weight: 600;
+        color: var(--muted);
+        border-top: 1px solid var(--stroke);
+        background: var(--page-alt);
+      }
+
       .fine-print {
         margin-top: 1.25rem;
         font-size: 0.78rem;
@@ -505,6 +537,7 @@
         <a href="#main">Top</a>
         <a href="#story">Context</a>
         <a href="#features">Behavior</a>
+        <a href="#shots">Screenshots</a>
         <a href="#tech">Build</a>
         <a href="#screens">Wire-ish mocks</a>
         <a href="#demo">Try it</a>
@@ -524,7 +557,7 @@
               decoding="async"
             />
           </div>
-          <p class="tagline">Grislis — course project write-up</p>
+          <p class="tagline">A new way to look at food</p>
           <h1>Paste a label. Get a rough score and a list of flagged additives.</h1>
           <p class="lead">
             It’s one static site: HTML, CSS, and plain JS. I wanted something I could run from GitHub Pages
@@ -591,6 +624,49 @@
             from OFF when it can.
           </li>
         </ol>
+      </section>
+
+      <section id="shots" aria-labelledby="shots-h">
+        <h2 id="shots-h">App screenshots</h2>
+        <p class="section-lead">
+          Captures from the live app on GitHub Pages (Safari) — welcome flow, main scan view, and brand lookup
+          with score band.
+        </p>
+        <div class="app-shot-gallery">
+          <figure class="app-shot">
+            <img
+              src="./assets/showcase-auth.png"
+              width="1024"
+              height="662"
+              loading="lazy"
+              decoding="async"
+              alt="Nova welcome card: sign in, create account, and continue as guest on a white background with green accents."
+            />
+            <figcaption>Welcome / sign-in — guest path for quick demos</figcaption>
+          </figure>
+          <figure class="app-shot">
+            <img
+              src="./assets/showcase-main.png"
+              width="1024"
+              height="662"
+              loading="lazy"
+              decoding="async"
+              alt="Nova main screen with hero, ingredient scan textarea, and scan label with camera controls."
+            />
+            <figcaption>Main app — ingredient scan and camera entry</figcaption>
+          </figure>
+          <figure class="app-shot">
+            <img
+              src="./assets/showcase-brand-results.png"
+              width="1024"
+              height="662"
+              loading="lazy"
+              decoding="async"
+              alt="Nova brand lookup and scan results showing a numeric health score in the red band for a cola brand."
+            />
+            <figcaption>Brand lookup + results — live-style score and copy</figcaption>
+          </figure>
+        </div>
       </section>
 
       <section id="tech" aria-labelledby="tech-h">

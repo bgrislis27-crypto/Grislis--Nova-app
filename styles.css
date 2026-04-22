@@ -1,9 +1,9 @@
 /* Yuka-inspired palette (aligned with showcase.html tokens). */
 :root {
   color-scheme: light;
-  --page: #ebebf0;
-  --page-alt: #f5f5f7;
-  --page-elevated: #f5f5f7;
+  --page: #ffffff;
+  --page-alt: #ffffff;
+  --page-elevated: #ffffff;
   --card: #ffffff;
   --text: #1c1c1e;
   --muted: #636366;
@@ -22,9 +22,9 @@
   --secondary-fill: #e5e5ea;
   --secondary-text: #3a3a3c;
   --secondary-hover: #d8d8dc;
-  --shadow: 0 2px 14px rgba(0, 0, 0, 0.06);
+  --shadow: 0 1px 8px rgba(0, 0, 0, 0.04);
   --shadow-card: var(--shadow);
-  --shadow-float: 0 8px 28px rgba(0, 0, 0, 0.08);
+  --shadow-float: 0 4px 20px rgba(0, 0, 0, 0.06);
   --shadow-lg: var(--shadow-float);
   --radius: 18px;
   --radius-lg: 18px;
@@ -87,18 +87,13 @@ body {
   display: grid;
   place-items: center;
   padding: 24px;
-  background: linear-gradient(
-    165deg,
-    #f8fff5 0%,
-    var(--page-elevated) 38%,
-    var(--page) 100%
-  );
+  background: var(--page);
 }
 
 .auth-card {
   width: 100%;
   max-width: 420px;
-  background: linear-gradient(180deg, #f9fff6 0%, #ffffff 42%);
+  background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: 28px 24px;
@@ -157,8 +152,7 @@ body {
   top: 0;
   z-index: 50;
   width: 100%;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(10px);
+  background: #ffffff;
   border-bottom: 1px solid var(--stroke);
 }
 
@@ -286,7 +280,7 @@ body {
   padding: clamp(1.25rem, 3vw, 1.75rem);
   border-radius: var(--radius);
   border: 1px solid var(--stroke);
-  background: linear-gradient(180deg, #f9fff6 0%, #ffffff 42%);
+  background: #ffffff;
   box-shadow: var(--shadow-lg);
 }
 
@@ -351,7 +345,7 @@ h1 {
   max-width: 260px;
   border-radius: var(--radius-md);
   border: 1px solid var(--border);
-  background: var(--page-elevated);
+  background: #ffffff;
   box-shadow: var(--shadow-card);
 }
 
@@ -370,11 +364,11 @@ h1 {
   margin: 0;
   padding: clamp(1.75rem, 4vw, 2.75rem) var(--space);
   border-top: 1px solid var(--stroke);
-  background: var(--page-alt);
+  background: #ffffff;
 }
 
 .app-shell > .panel.panel--results {
-  background: var(--page);
+  background: #ffffff;
 }
 
 h2 {
@@ -427,8 +421,8 @@ textarea:focus-visible {
   overflow: hidden;
   background: linear-gradient(
     to bottom,
-    rgba(0, 177, 74, 0.06),
-    rgba(0, 177, 74, 0.02)
+    rgba(255, 255, 255, 0.35),
+    rgba(255, 255, 255, 0.1)
   );
 }
 
@@ -496,7 +490,7 @@ input[type="password"] {
   width: 100%;
   border-radius: var(--radius-sm);
   border: 1px solid var(--border-strong);
-  background: var(--page-elevated);
+  background: #ffffff;
   color: var(--text);
   padding: 12px 14px;
   line-height: 1.4;
@@ -742,7 +736,7 @@ button:focus-visible {
 
 .score-badge.tier-neutral {
   border-color: var(--border-strong);
-  background: var(--page-elevated);
+  background: #ffffff;
 }
 
 .score-badge.tier-neutral span {
@@ -809,7 +803,7 @@ button:focus-visible {
   max-width: 360px;
   border-radius: var(--radius-md);
   border: 1px solid var(--border);
-  background: var(--page-elevated);
+  background: #ffffff;
 }
 
 .result-visual figcaption {

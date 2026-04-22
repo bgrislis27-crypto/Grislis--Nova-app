@@ -1271,6 +1271,7 @@ function runScan() {
   confidence.textContent = verdictData.confidence;
   applyScoreBadgeTier(verdictData.tier);
   nutritionSummary.textContent = "";
+  resultImage.onerror = null;
   resultImage.src = "./assets/default-food.svg";
   resultImage.alt = "Ingredient-based label scan visual";
   resultImageCaption.textContent = "Ingredient scan visualization";
@@ -1337,6 +1338,128 @@ function getNutriment(product, key) {
   return typeof value === "number" ? value : null;
 }
 
+function getProductDisplayName(product) {
+  if (!product || typeof product !== "object") {
+    return "";
+  }
+  const keys = [
+    "product_name",
+    "product_name_en",
+    "generic_name",
+    "generic_name_en",
+    "abbreviated_product_name",
+    "product_name_fr",
+  ];
+  for (const k of keys) {
+    const v = product[k];
+    if (typeof v === "string" && v.trim()) {
+      return v.trim();
+    }
+  }
+  return "";
+}
+
+function nutrimentsHasNumericValues(n) {
+  if (!n || typeof n !== "object") {
+    return false;
+  }
+  return Object.keys(n).some((key) => {
+    const val = n[key];
+    return typeof val === "number" && !Number.isNaN(val);
+  });
+}
+
+function normalizeOpenFoodFactsImageUrl(raw) {
+  if (typeof raw !== "string" || !raw.trim()) {
+    return null;
+  }
+  const u = raw.trim();
+  if (u.startsWith("https://") || u.startsWith("http://")) {
+    return u;
+  }
+  if (u.startsWith("//")) {
+    return `https:${u}`;
+  }
+  return null;
+}
+
+/** Newer OFF records nest chosen pack shots under `selected_images`. */
+function imageUrlFromSelectedImages(product) {
+  const sel = product?.selected_images;
+  if (!sel || typeof sel !== "object") {
+    return null;
+  }
+  const blocks = [sel.front, sel.packaging, sel.other];
+  for (const block of blocks) {
+    if (!block || typeof block !== "object") {
+      continue;
+    }
+    const layer = block.display || block.small || block.thumb;
+    if (!layer || typeof layer !== "object") {
+      continue;
+    }
+    for (const loc of Object.values(layer)) {
+      if (loc && typeof loc === "object") {
+        const hit = normalizeOpenFoodFactsImageUrl(loc.url);
+        if (hit) {
+          return hit;
+        }
+      }
+    }
+  }
+  return null;
+}
+
+/** Sets pack photo or placeholder; remote URLs get a one-shot onerror fallback. */
+function applyPackImageToResult(url, displayNameForAlt) {
+  const fallback = "./assets/default-food.svg";
+  resultImage.onerror = null;
+  const remote =
+    typeof url === "string" && (url.startsWith("https://") || url.startsWith("http://"));
+  if (remote) {
+    resultImage.onerror = () => {
+      resultImage.onerror = null;
+      resultImage.src = fallback;
+      resultImage.alt = `${displayNameForAlt} — placeholder`;
+      if (resultImageCaption) {
+        resultImageCaption.textContent = `${displayNameForAlt} · Pack photo failed to load; placeholder`;
+      }
+    };
+    resultImage.src = url;
+    resultImage.alt = `${displayNameForAlt} — pack photo from OpenFoodFacts`;
+    return;
+  }
+  resultImage.src = typeof url === "string" && url ? url : fallback;
+  resultImage.alt = displayNameForAlt ? `${displayNameForAlt} placeholder visual` : "Placeholder visual";
+}
+
+/** Prefer front-of-pack photo from OpenFoodFacts JSON when available. */
+function getProductImageUrl(product) {
+  if (!product || typeof product !== "object") {
+    return null;
+  }
+  const flat = [
+    product.image_front_url,
+    product.image_url,
+    product.image_small_url,
+    product.image_front_small_url,
+    product.image_front_thumb_url,
+    product.image_packaging_url,
+    product.image_packaging_small_url,
+  ];
+  for (const raw of flat) {
+    const hit = normalizeOpenFoodFactsImageUrl(raw);
+    if (hit) {
+      return hit;
+    }
+  }
+  return imageUrlFromSelectedImages(product);
+}
+
+function productHasPhoto(product) {
+  return Boolean(getProductImageUrl(product));
+}
+
 function computeNutritionScore(product) {
   let score = 70;
   const calories = getNutriment(product, "energy-kcal_100g");
@@ -1401,19 +1524,99 @@ function buildPositivesAndNegatives(product) {
   return { positives, negatives, alternatives };
 }
 
-async function fetchOpenFoodFactsProduct(query) {
-  const url = `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(query)}&search_simple=1&action=process&json=1&page_size=10`;
+function mergeOpenFoodFactsProducts(searchHit, detailed) {
+  if (!detailed || typeof detailed !== "object") {
+    return searchHit;
+  }
+  return { ...searchHit, ...detailed };
+}
+
+async function fetchOpenFoodFactsProductDetails(code) {
+  const clean = String(code ?? "").trim();
+  if (!clean) {
+    return null;
+  }
+  const url = `https://world.openfoodfacts.org/api/v0/product/${encodeURIComponent(clean)}.json`;
   const response = await fetch(url);
+  if (!response.ok) {
+    return null;
+  }
+  const payload = await response.json();
+  if (payload.status !== 1 || !payload.product || typeof payload.product !== "object") {
+    return null;
+  }
+  return payload.product;
+}
+
+/**
+ * Search hits are often missing image URLs; merge each candidate with
+ * GET /api/v0/product/{code}.json for full front-of-pack links.
+ */
+async function fetchOpenFoodFactsProduct(query) {
+  const searchUrl = `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(query)}&search_simple=1&action=process&json=1&page_size=24`;
+  const response = await fetch(searchUrl);
   if (!response.ok) {
     throw new Error("Could not reach OpenFoodFacts.");
   }
 
   const payload = await response.json();
-  const products = Array.isArray(payload.products) ? payload.products : [];
-  const withNutrition = products.filter(
-    (product) => product.image_url && product.nutriments && product.product_name,
-  );
-  return withNutrition[0] || null;
+  if (!payload || typeof payload !== "object" || !Array.isArray(payload.products)) {
+    return null;
+  }
+
+  const products = payload.products.filter((p) => p && p.code);
+  if (products.length === 0) {
+    return null;
+  }
+
+  const labeled = products.filter((p) => getProductDisplayName(p));
+  const pool = labeled.length > 0 ? labeled : products;
+
+  const rank = (p) => {
+    let score = 0;
+    if (productHasPhoto(p)) {
+      score += 4;
+    }
+    if (nutrimentsHasNumericValues(p.nutriments)) {
+      score += 2;
+    }
+    if (getProductDisplayName(p)) {
+      score += 1;
+    }
+    return score;
+  };
+
+  const ordered = [...pool].sort((a, b) => rank(b) - rank(a));
+  const seen = new Set();
+  const candidates = [];
+  for (const p of ordered) {
+    const c = String(p.code).trim();
+    if (!c || seen.has(c)) {
+      continue;
+    }
+    seen.add(c);
+    candidates.push(p);
+    if (candidates.length >= 12) {
+      break;
+    }
+  }
+
+  let bestWithoutPhoto = null;
+  const maxAttempts = Math.min(6, candidates.length);
+
+  for (let i = 0; i < maxAttempts; i++) {
+    const hit = candidates[i];
+    const details = await fetchOpenFoodFactsProductDetails(hit.code);
+    const merged = mergeOpenFoodFactsProducts(hit, details);
+    if (productHasPhoto(merged)) {
+      return merged;
+    }
+    if (details && (!bestWithoutPhoto || nutrimentsHasNumericValues(merged.nutriments))) {
+      bestWithoutPhoto = merged;
+    }
+  }
+
+  return bestWithoutPhoto;
 }
 
 function renderOpenFoodFactsProduct(product) {
@@ -1422,7 +1625,7 @@ function renderOpenFoodFactsProduct(product) {
   const calories = getNutriment(product, "energy-kcal_100g");
   const protein = getNutriment(product, "proteins_100g");
   const { positives, negatives, alternatives } = buildPositivesAndNegatives(product);
-  const productName = product.product_name || "Unknown product";
+  const productName = getProductDisplayName(product) || "Unknown product";
   const brandName = product.brands || "Unknown brand";
 
   emptyState.classList.add("hidden");
@@ -1433,9 +1636,11 @@ function renderOpenFoodFactsProduct(product) {
   confidence.textContent = "Live nutrition data pulled from OpenFoodFacts product records.";
   nutritionSummary.textContent = `Calories: ${calories ?? "N/A"} kcal/100g | Protein: ${protein ?? "N/A"}g/100g`;
   applyScoreBadgeTier(verdictData.tier);
-  resultImage.src = product.image_url || "./assets/default-food.svg";
-  resultImage.alt = `${productName} food package image`;
-  resultImageCaption.textContent = `${productName} (${brandName})`;
+  const packPhoto = getProductImageUrl(product);
+  applyPackImageToResult(packPhoto || "./assets/default-food.svg", productName);
+  resultImageCaption.textContent = packPhoto
+    ? `${productName} (${brandName}) · Product photo: OpenFoodFacts community database`
+    : `${productName} (${brandName})`;
 
   setResultSectionTitles("Main Negatives", "Main Positives", "Cleaner Alternatives");
   renderList(flagList, negatives, (item) => item);
@@ -1543,6 +1748,7 @@ async function runBrandSearch() {
         "No profile was found in live lookup or local database. Try Coca-Cola, Kellogg's, Nestle, Chobani, or Annie's.";
       nutritionSummary.textContent = "";
       applyScoreBadgeTier("neutral");
+      resultImage.onerror = null;
       resultImage.src = "./assets/default-food.svg";
       resultImage.alt = "No brand image available";
       resultImageCaption.textContent = "No brand visual available yet";
@@ -1561,11 +1767,13 @@ async function runBrandSearch() {
     scoreValue.textContent = String(match.score);
     verdict.textContent = `${match.name}: ${match.verdict}`;
     confidence.textContent = match.confidence;
-    nutritionSummary.textContent = "Calories and protein are unavailable for static profile entries.";
+    nutritionSummary.textContent =
+      "Score from Nova’s local brand profile. Fetching a real pack photo from OpenFoodFacts when possible…";
     applyScoreBadgeTier(verdictData.tier);
+    resultImage.onerror = null;
     resultImage.src = match.image;
-    resultImage.alt = `${match.name} visual profile`;
-    resultImageCaption.textContent = `${match.name} portfolio-style visual`;
+    resultImage.alt = `${match.name} illustrated profile`;
+    resultImageCaption.textContent = `${match.name} — looking up a product photo…`;
 
     setResultSectionTitles("Main Negatives", "Main Positives", "Cleaner Alternatives");
     renderList(flagList, match.concerns, (item) => item);
@@ -1578,6 +1786,36 @@ async function runBrandSearch() {
       (item) => item,
     );
     renderList(alternativeList, match.alternatives, (item) => item);
+
+    try {
+      const photoProduct = await fetchOpenFoodFactsProduct(match.name);
+      const packUrl = photoProduct ? getProductImageUrl(photoProduct) : null;
+      if (packUrl) {
+        const pname = getProductDisplayName(photoProduct) || match.name;
+        const bname =
+          String(photoProduct.brands || "")
+            .split(",")[0]
+            .trim() || match.name;
+        applyPackImageToResult(packUrl, pname);
+        resultImageCaption.textContent = `${pname} (${bname}) · Product photo: OpenFoodFacts`;
+        const cal = getNutriment(photoProduct, "energy-kcal_100g");
+        const prot = getNutriment(photoProduct, "proteins_100g");
+        if (cal !== null || prot !== null) {
+          nutritionSummary.textContent = `Local brand score above; pack photo from OpenFoodFacts. Calories: ${cal ?? "N/A"} kcal/100g | Protein: ${prot ?? "N/A"}g/100g for this product.`;
+        } else {
+          nutritionSummary.textContent =
+            "Local brand score above; product photo from OpenFoodFacts (nutrition fields not listed for this hit).";
+        }
+      } else {
+        nutritionSummary.textContent =
+          "Calories and protein are unavailable for the static profile, and no product photo was found on OpenFoodFacts for this search.";
+        resultImageCaption.textContent = `${match.name} — illustrated placeholder (no OFF photo found)`;
+      }
+    } catch {
+      nutritionSummary.textContent =
+        "Calories and protein are unavailable for static profile entries. Could not load OpenFoodFacts for a pack photo.";
+      resultImageCaption.textContent = `${match.name} portfolio-style visual`;
+    }
   } finally {
     brandSearchButton.disabled = false;
     brandSearchButton.textContent = "Search Brand";

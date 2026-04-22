@@ -7,7 +7,7 @@ Nova is a lightweight food-label decoder web app that helps you cut through mark
 - **Scan label with camera** — take a photo or use the webcam; text is recognized in the browser (Tesseract.js loaded from a CDN on first use). Works best over **HTTPS** or `localhost` with camera permission.
 - High-speed ingredient scan from pasted label text (commas, semicolons, or line breaks)
 - Brand health lookup for quick portfolio-level scoring
-- Live product lookup with food images, calories, and protein values
+- Live product lookup with **real pack photos** (OpenFoodFacts), calories, and protein when the API returns a match; local brand profiles also try to pull a product photo from OFF after the lookup
 - Detection of hidden additives and common ultra-processed markers
 - Science-style health score (0-100) based on ingredient severity model
 - Clear explanations of detected risks
