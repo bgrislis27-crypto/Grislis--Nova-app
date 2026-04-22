@@ -471,6 +471,346 @@ const brandHealthDatabase = [
       "Hard-boiled eggs for portable protein.",
     ],
   },
+  {
+    name: "Pepsi",
+    aliases: ["pepsico", "pepsi cola", "mountain dew", "mtn dew", "gatorade"],
+    score: 43,
+    image: "./assets/brand-soda.svg",
+    verdict: "High concern profile",
+    confidence:
+      "Broad beverage portfolio dominated by sweetened sodas, sports drinks, and energy-style products.",
+    concerns: [
+      "Flagship colas and many sports drinks rely on added sugars or intense sweeteners.",
+      "Acid levels and flavor systems typical of ultra-processed drinks.",
+    ],
+    alternatives: [
+      "Water or seltzer with fruit slices.",
+      "Lower-sugar functional drinks with short labels you verify per SKU.",
+    ],
+  },
+  {
+    name: "General Mills",
+    aliases: ["general mills", "cheerios", "lucky charms", "cinnamon toast crunch", "betty crocker"],
+    score: 50,
+    image: "./assets/brand-cereal.svg",
+    verdict: "Moderate concern profile",
+    confidence:
+      "Mass-market cereals and baking mixes span fortified whole-grain options to sugar-forward kids lines.",
+    concerns: [
+      "Many hero SKUs are still high in added sugar or refined flour.",
+      "Marketing on 'whole grain' can outpace actual sugar load on the label.",
+    ],
+    alternatives: [
+      "Plain Cheerios-style oats with fruit instead of presweetened loops.",
+      "Homemade muffins with whole wheat and minimal sweetener.",
+    ],
+  },
+  {
+    name: "Kraft Heinz",
+    aliases: ["kraft", "heinz", "kraft mac and cheese", "oscar mayer", "lunchables"],
+    score: 46,
+    image: "./assets/brand-pantry.svg",
+    verdict: "Moderate concern profile",
+    confidence:
+      "Iconic condiments, cheese products, and kids lunch kits skew toward sodium, saturated fat, and long ingredient lists.",
+    concerns: [
+      "Mac-and-cheese and lunch kits often combine refined carbs with processed cheese.",
+      "Deli meats and shelf-stable sauces can stack sodium quickly.",
+    ],
+    alternatives: [
+      "Whole-wheat pasta with a simple cheese sauce from real cheese.",
+      "Leftovers in a thermos instead of shelf-stable kits.",
+    ],
+  },
+  {
+    name: "Mondelez",
+    aliases: ["mondelez", "oreo", "ritz", "triscuit", "belvita", "cadbury"],
+    score: 44,
+    image: "./assets/brand-snacks.svg",
+    verdict: "High concern profile",
+    confidence:
+      "Global snack portfolio heavy on cookies, crackers, and confectionery with typical ultra-processed patterns.",
+    concerns: [
+      "Many top sellers pair refined flour with palm oil and added sugars.",
+      "Portion creep is easy with bite-sized formats.",
+    ],
+    alternatives: [
+      "Whole-grain crackers with hummus or cheese you slice yourself.",
+      "Dark chocolate squares with fruit instead of filled cookies.",
+    ],
+  },
+  {
+    name: "Danone",
+    aliases: ["dannon", "activia", "oikos", "danone yogurt"],
+    score: 69,
+    image: "./assets/brand-yogurt.svg",
+    verdict: "Moderate concern profile",
+    confidence:
+      "Large dairy and plant portfolio; plain yogurts score well but flavored lines vary widely in added sugar.",
+    concerns: [
+      "Fruit-on-the-bottom and dessert yogurts can rival soda in sugar per cup.",
+      "Plant alternatives range from simple to highly engineered.",
+    ],
+    alternatives: [
+      "Plain yogurt plus fresh fruit.",
+      "Unsweetened soy or pea yogurt with seeds for texture.",
+    ],
+  },
+  {
+    name: "Fage",
+    aliases: ["fage yogurt", "fage total", "φαγε"],
+    score: 82,
+    image: "./assets/brand-yogurt.svg",
+    verdict: "Low concern profile",
+    confidence:
+      "Greek yogurt line known for thick texture and plain options that keep ingredients minimal versus dessert cups.",
+    concerns: [
+      "Flavored split cups still add sugars and fruit prep.",
+      "Full-fat tubs are calorie-dense if portions grow large.",
+    ],
+    alternatives: [
+      "Plain Fage with honey or berries you control.",
+      "Skyr if you want even higher protein per spoonful.",
+    ],
+  },
+  {
+    name: "RXBAR",
+    aliases: ["rx bar", "rxbar protein"],
+    score: 67,
+    image: "./assets/brand-snacks.svg",
+    verdict: "Moderate concern profile",
+    confidence:
+      "Whole-food style bars with dates and nuts on the front label; still compact calories and natural sugars.",
+    concerns: [
+      "Dates concentrate sugar even without cane syrup.",
+      "Protein density can be lower than powder bars for the same calories.",
+    ],
+    alternatives: [
+      "Handful of nuts plus a piece of fruit.",
+      "Homemade date-nut bars where you halve the sweetener.",
+    ],
+  },
+  {
+    name: "KIND",
+    aliases: ["kind bar", "kind snacks", "kind healthy grains"],
+    score: 65,
+    image: "./assets/brand-snacks.svg",
+    verdict: "Moderate concern profile",
+    confidence:
+      "Nut-forward bars and clusters marketed as wholesome; many SKUs still carry syrups, chocolate coatings, or binders.",
+    concerns: [
+      "Calorie and sugar totals can surprise on 'healthy' looking packages.",
+      "Grain clusters may use multiple sweeteners for crunch.",
+    ],
+    alternatives: [
+      "Trail mix you assemble with unsweetened nuts and a few dark chocolate chips.",
+      "Rice cakes with nut butter for crunch without a candy-style coating.",
+    ],
+  },
+  {
+    name: "Amy's Kitchen",
+    aliases: ["amys kitchen", "amy's kitchen", "amys frozen"],
+    score: 74,
+    image: "./assets/brand-pantry.svg",
+    verdict: "Low concern profile",
+    confidence:
+      "Organic frozen meals and soups often beat conventional TV dinners on ingredient transparency, though sodium varies.",
+    concerns: [
+      "Frozen bowls can still be high in sodium for flavor and preservation.",
+      "Mac and cheese lines are comfort food, not everyday staples.",
+    ],
+    alternatives: [
+      "Batch-cook grains and beans on Sunday for quick bowls.",
+      "Low-sodium canned beans plus frozen vegetables.",
+    ],
+  },
+  {
+    name: "365 by Whole Foods",
+    aliases: ["365 whole foods", "whole foods 365", "365 brand"],
+    score: 71,
+    image: "./assets/brand-pantry.svg",
+    verdict: "Low concern profile",
+    confidence:
+      "Private label spanning staples to snacks; many items follow store ingredient standards but quality is category-dependent.",
+    concerns: [
+      "Not every 365 SKU is minimal; desserts and chips still exist.",
+      "Organic sugar is still sugar in cookies.",
+    ],
+    alternatives: [
+      "Read each 365 label like any other brand.",
+      "Bulk beans, grains, and spices for the cleanest cart.",
+    ],
+  },
+  {
+    name: "Campbell's",
+    aliases: ["campbells", "campbell soup", "chunky soup", "goldfish crackers", "pepperidge farm"],
+    score: 49,
+    image: "./assets/brand-pantry.svg",
+    verdict: "Moderate concern profile",
+    confidence:
+      "Canned soups and classic snack brands lean on sodium, refined flour, and shelf-stable formulations across big sellers.",
+    concerns: [
+      "Condensed soups can pack a day's sodium in one can.",
+      "Cracker lines overlap with mainstream cookie and snack categories.",
+    ],
+    alternatives: [
+      "Homemade broth-based soups with frozen vegetables.",
+      "Whole-grain crackers with simple cheese slices.",
+    ],
+  },
+  {
+    name: "Sabra",
+    aliases: ["sabra hummus", "sabra guacamole"],
+    score: 72,
+    image: "./assets/brand-snacks.svg",
+    verdict: "Low concern profile",
+    confidence:
+      "Chickpea dips with mainstream distribution; classic hummus is relatively simple though preservatives appear in larger tubs.",
+    concerns: [
+      "Some flavors add sugar, citric acid, or oil blends for shelf life.",
+      "Portion with fried pita chips can undo the legume benefit.",
+    ],
+    alternatives: [
+      "Homemade hummus in a food processor with tahini and lemon.",
+      "Carrot and cucumber sticks instead of fried chips.",
+    ],
+  },
+  {
+    name: "Dave's Killer Bread",
+    aliases: ["daves killer bread", "dave's bread", "dkb"],
+    score: 77,
+    image: "./assets/brand-pantry.svg",
+    verdict: "Low concern profile",
+    confidence:
+      "Whole-grain seeded breads with organic story and higher fiber than white sandwich loaves.",
+    concerns: [
+      "Still calorie-dense; easy to overstack spreads.",
+      "Some sweet breads and bagels add sugars like any bakery line.",
+    ],
+    alternatives: [
+      "Sprouted-grain breads from other bakeries with short labels.",
+      "Open-faced sandwiches to cut total bread grams.",
+    ],
+  },
+  {
+    name: "Stonyfield Organic",
+    aliases: ["stonyfield", "stony field yogurt"],
+    score: 75,
+    image: "./assets/brand-yogurt.svg",
+    verdict: "Low concern profile",
+    confidence:
+      "Organic dairy yogurt portfolio with kids pouches and plain tubs; generally cleaner than conventional dessert yogurts.",
+    concerns: [
+      "Kids squeeze products can still carry added sugars.",
+      "Whole-milk lines add saturated fat calories.",
+    ],
+    alternatives: [
+      "Plain whole-milk yogurt with mashed fruit for kids.",
+      "Lower-fat organic if your goals prioritize saturated fat.",
+    ],
+  },
+  {
+    name: "Larabar",
+    aliases: ["lara bar", "larabar minis"],
+    score: 73,
+    image: "./assets/brand-snacks.svg",
+    verdict: "Low concern profile",
+    confidence:
+      "Short-ingredient date-and-nut bars; simplicity is a strength though sugar comes mostly from fruit paste.",
+    concerns: [
+      "Small bar, high sugar density from dates.",
+      "Chocolate chip flavors add refined sugar beyond fruit.",
+    ],
+    alternatives: [
+      "Whole dates stuffed with almonds.",
+      "Apple with peanut butter for similar macros.",
+    ],
+  },
+  {
+    name: "Bob's Red Mill",
+    aliases: ["bobs red mill", "bob's red mill", "bobs oats"],
+    score: 84,
+    image: "./assets/brand-pantry.svg",
+    verdict: "Low concern profile",
+    confidence:
+      "Pantry staples like oats, flours, and legumes with minimal processing story versus ready-to-eat meals.",
+    concerns: [
+      "Baking mixes still include added sugar and leaveners—read each bag.",
+      "Muesli and granola SKUs vary in sweeteners and oils.",
+    ],
+    alternatives: [
+      "Steel-cut oats bought in bulk.",
+      "Single-ingredient flours for home baking.",
+    ],
+  },
+  {
+    name: "Impossible Foods",
+    aliases: ["impossible burger", "impossible meat", "impossible foods"],
+    score: 58,
+    image: "./assets/brand-pantry.svg",
+    verdict: "Moderate concern profile",
+    confidence:
+      "Plant-based meat analogs engineered for taste and texture; sodium and ingredient lists are longer than whole beans.",
+    concerns: [
+      "Heme and flavor systems are novel to many shoppers.",
+      "Sodium often runs higher than lean ground beef for palatability.",
+    ],
+    alternatives: [
+      "Mushroom-lentil burgers made at home.",
+      "Crumbled tempeh with spices.",
+    ],
+  },
+  {
+    name: "Beyond Meat",
+    aliases: ["beyond burger", "beyond meat", "beyond sausage"],
+    score: 57,
+    image: "./assets/brand-pantry.svg",
+    verdict: "Moderate concern profile",
+    confidence:
+      "Pea-protein meat substitutes positioned as climate-friendly; still ultra-processed compared to whole legumes.",
+    concerns: [
+      "Coconut and canola oil blends add saturated fat in some SKUs.",
+      "Long ingredient decks versus a can of beans.",
+    ],
+    alternatives: [
+      "Black bean patties with cumin and oats.",
+      "Marinated tofu steaks.",
+    ],
+  },
+  {
+    name: "Halo Top",
+    aliases: ["halo top ice cream", "halotop"],
+    score: 63,
+    image: "./assets/brand-yogurt.svg",
+    verdict: "Moderate concern profile",
+    confidence:
+      "Lower-calorie ice cream niche using alternative sweeteners and air; better on sugar than premium tubs but still dessert.",
+    concerns: [
+      "Sugar alcohols or fibers can upset digestion for some people.",
+      "Easy to eat the whole pint because of marketing.",
+    ],
+    alternatives: [
+      "Blended frozen banana 'nice cream' with cocoa.",
+      "Small portion of full-fat ice cream mindfully.",
+    ],
+  },
+  {
+    name: "Yasso",
+    aliases: ["yasso frozen greek yogurt", "yasso bars"],
+    score: 68,
+    image: "./assets/brand-yogurt.svg",
+    verdict: "Moderate concern profile",
+    confidence:
+      "Frozen Greek yogurt bars—protein-forward versus ice cream but still a coated novelty treat.",
+    concerns: [
+      "Chocolate coatings add sugar and saturated fat.",
+      "Stabilizers and gums show up in stick formats.",
+    ],
+    alternatives: [
+      "Frozen yogurt bark with fruit on a sheet pan.",
+      "Plain yogurt parfait frozen in popsicle molds.",
+    ],
+  },
 ];
 
 const scoreBadge = document.getElementById("scoreBadge");

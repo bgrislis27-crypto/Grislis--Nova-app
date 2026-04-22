@@ -27,5 +27,5 @@ This version is dependency-free and runs directly in the browser.
 - The scoring model is educational and heuristic, not a medical diagnosis.
 - Live nutrition and product images are pulled from OpenFoodFacts (no API key required).
 - You can expand `ingredientKnowledgeBase` in `app.js` to improve ingredient coverage.
-- You can expand `brandHealthDatabase` in `app.js` to add more brand profiles.
+- `brandHealthDatabase` in `app.js` includes many mainstream and better-for-you brands; add entries with `name`, `aliases`, `score`, `image`, `verdict`, `confidence`, `concerns`, and `alternatives`.
 - If you want a paid key-based API, Spoonacular is a common next step: [https://spoonacular.com/food-api](https://spoonacular.com/food-api).
