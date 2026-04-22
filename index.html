@@ -3,16 +3,35 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Nova Label Decoder</title>
+    <title>Nova — label decoder</title>
+    <meta
+      name="description"
+      content="Nova: paste ingredients or scan a label, get a rough health score and additive flags. Vanilla JS, OpenFoodFacts, GitHub Pages."
+    />
+    <link rel="icon" href="./assets/nova-fruit-logo.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
+    <a class="skip" href="#app-main">Skip to main content</a>
+
     <section id="authScreen" class="auth-screen">
       <div class="auth-card">
-        <p class="eyebrow">WELCOME TO NOVA</p>
-        <h1>Sign in to start scanning smarter.</h1>
+        <div class="auth-logo-wrap">
+          <img
+            class="app-logo app-logo--lg"
+            src="./assets/nova-fruit-logo.svg"
+            width="76"
+            height="76"
+            alt=""
+            decoding="async"
+          />
+        </div>
+        <p class="tagline">Grislis — course project</p>
+        <p class="eyebrow">Welcome to Nova</p>
+        <h1>Sign in to decode labels</h1>
         <p class="auth-subtitle">
-          Decode labels, search brand health, and get clean alternatives in seconds.
+          Paste ingredients, scan a label with your camera, see a quick score, and look up brands with nutrition
+          from OpenFoodFacts.
         </p>
         <div class="auth-mode-switch">
           <button id="showLoginButton" class="secondary small" type="button">Login</button>
@@ -42,125 +61,202 @@
     </section>
 
     <div id="appContent" class="hidden">
-      <header class="hero">
-        <div class="hero-top">
-          <p class="eyebrow">NOVA FOOD INTELLIGENCE</p>
-          <button id="logoutButton" class="secondary small">Logout</button>
+      <div class="app-top-nav-wrap">
+        <div class="app-top-nav">
+          <a class="brand-lockup" href="#app-main" aria-label="Nova — main content">
+            <img
+              class="app-logo app-logo--nav"
+              src="./assets/nova-fruit-logo.svg"
+              width="36"
+              height="36"
+              alt=""
+              decoding="async"
+            />
+            <span class="brand-mark">Nova</span>
+          </a>
+          <nav class="app-top-links" aria-label="Related pages">
+            <a href="./showcase.html">Project write-up</a>
+          </nav>
+          <button id="logoutButton" class="secondary small" type="button">Logout</button>
         </div>
-        <div class="hero-content">
-          <div>
-            <h1>Decode labels. Expose additives. Shop smarter.</h1>
-            <p>
-              Paste or type a label ingredient list, run a high-speed scan, and get
-              a science-based health score with cleaner alternatives.
+      </div>
+
+      <header class="app-header">
+        <div class="hero">
+          <div class="hero-inner">
+            <div class="hero-mark" aria-hidden="true">
+              <img
+                class="app-logo app-logo--hero"
+                src="./assets/nova-fruit-logo.svg"
+                width="70"
+                height="70"
+                alt=""
+                decoding="async"
+              />
+            </div>
+            <p class="tagline">Grislis — course project</p>
+            <h1>Paste a label. Get a rough score and a list of flagged additives.</h1>
+            <p class="lead">
+              One static site on GitHub Pages — HTML, CSS, and plain JS. OpenFoodFacts fills in pack photos and
+              nutrition when a lookup hits.
             </p>
+            <div class="hero-content hero-content--with-art">
+              <img
+                class="hero-image"
+                src="./assets/scan-hero.svg"
+                alt="Illustration of scanning food labels"
+              />
+            </div>
           </div>
-          <img
-            class="hero-image"
-            src="./assets/scan-hero.svg"
-            alt="Illustration of scanning food labels"
-          />
         </div>
       </header>
 
-      <main class="app-shell">
-      <section class="panel">
-        <h2>High-Speed Label Scan</h2>
-        <label for="ingredients" class="label"
-          >Ingredients (comma-separated)</label
-        >
-        <div id="scanZone" class="scan-zone">
-          <textarea
-            id="ingredients"
-            placeholder="Example: Carbonated water, high fructose corn syrup, caramel color, phosphoric acid, natural flavors, potassium benzoate, caffeine..."
-            rows="8"
-          ></textarea>
-          <div class="scan-overlay hidden" id="scanOverlay" aria-hidden="true">
-            <div class="scan-line"></div>
-          </div>
-        </div>
-        <div id="scanLoading" class="scan-loading hidden" aria-live="polite">
-          <span class="spinner" aria-hidden="true"></span>
-          <span>Analyzing ingredients...</span>
-        </div>
-
-        <div class="actions">
-          <button id="scanButton">Run Scan</button>
-          <button id="loadDemoButton" class="secondary">Load Demo Label</button>
-        </div>
-
-        <hr class="divider" />
-
-        <h2>Brand Health Lookup</h2>
-        <label for="brandSearch" class="label">Search a food brand</label>
-        <p class="lookup-note">Live product nutrition and food images powered by OpenFoodFacts.</p>
-        <div class="brand-search-wrap">
-          <input
-            id="brandSearch"
-            type="text"
-            placeholder="Example: Kellogg's, Coca-Cola, Chobani..."
-            autocomplete="off"
-            aria-autocomplete="list"
-            aria-controls="brandSuggestions"
-            aria-expanded="false"
-          />
-          <ul id="brandSuggestions" class="suggestions hidden"></ul>
-        </div>
-
-        <div class="actions">
-          <button id="brandSearchButton">Search Brand</button>
-          <button id="loadBrandDemoButton" class="secondary">
-            Load Demo Brand
-          </button>
-        </div>
-      </section>
-
-      <section class="panel results-panel">
-        <h2>Scan Results</h2>
-        <div id="emptyState" class="empty-state">
-          Run a scan to see additive detection, risk analysis, and cleaner swaps.
-        </div>
-
-        <div id="results" class="hidden">
-          <div class="score-row">
-            <div class="score-badge" id="scoreBadge">
-              <span id="scoreValue">--</span>
-              <small>Health Score</small>
+      <main id="app-main" class="app-shell">
+        <section class="panel">
+          <h2>Ingredient scan</h2>
+          <label for="ingredients" class="label">Ingredients</label>
+          <p class="lookup-note">
+            Paste text, or use <strong>Scan label with camera</strong> — ingredients are read on your device (OCR).
+            Commas, semicolons, or line breaks all work.
+          </p>
+          <div id="scanZone" class="scan-zone">
+            <textarea
+              id="ingredients"
+              placeholder="Example: Carbonated water, high fructose corn syrup, caramel color, phosphoric acid, natural flavors, potassium benzoate, caffeine..."
+              rows="8"
+            ></textarea>
+            <div class="scan-overlay hidden" id="scanOverlay" aria-hidden="true">
+              <div class="scan-line"></div>
             </div>
-            <div>
-              <p id="verdict" class="verdict"></p>
-              <p id="confidence" class="confidence"></p>
-              <p id="nutritionSummary" class="nutrition-summary"></p>
+          </div>
+          <div id="scanLoading" class="scan-loading hidden" aria-live="polite">
+            <span class="spinner" aria-hidden="true"></span>
+            <span>Analyzing ingredients...</span>
+          </div>
+
+          <div class="actions">
+            <button id="scanButton">Run Scan</button>
+            <button id="openCameraModalButton" type="button" class="secondary">Scan label with camera</button>
+            <button id="loadDemoButton" class="secondary">Load Demo Label</button>
+          </div>
+
+          <div
+            id="cameraModal"
+            class="modal hidden"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="cameraModalTitle"
+          >
+            <div class="modal-backdrop" id="cameraModalBackdrop" tabindex="-1"></div>
+            <div class="modal-card">
+              <h3 id="cameraModalTitle">Scan ingredient label</h3>
+              <p class="modal-lead">
+                Photograph the ingredient list in good light. Recognition runs in your browser; nothing is uploaded
+                to Nova’s servers.
+              </p>
+              <video id="cameraPreview" class="camera-preview hidden" playsinline muted></video>
+              <canvas id="cameraCanvas" class="hidden"></canvas>
+              <p id="cameraOcrStatus" class="camera-status empty-state" aria-live="polite"></p>
+              <div class="modal-actions">
+                <button type="button" id="cameraWebcamStart" class="secondary">Use webcam</button>
+                <button type="button" id="cameraWebcamCapture" class="secondary hidden">Capture photo</button>
+                <input
+                  id="cameraFileInput"
+                  type="file"
+                  class="hidden"
+                  accept="image/*"
+                  capture="environment"
+                />
+                <button type="button" id="cameraFileTrigger" class="secondary">Take / choose photo</button>
+                <button type="button" id="cameraModalClose" class="secondary">Close</button>
+              </div>
             </div>
           </div>
 
-          <figure class="result-visual">
-            <img id="resultImage" src="./assets/default-food.svg" alt="Food profile visual" />
-            <figcaption id="resultImageCaption">Visual profile preview</figcaption>
-          </figure>
+          <hr class="divider" />
 
-          <div class="result-block">
-            <h3 id="flagTitle">Hidden Additives / Harmful Ingredients</h3>
-            <ul id="flagList"></ul>
+          <h2>Brand lookup</h2>
+          <label for="brandSearch" class="label">Search a food brand</label>
+          <p class="lookup-note">Live product nutrition and food images powered by OpenFoodFacts.</p>
+          <div class="brand-search-wrap">
+            <input
+              id="brandSearch"
+              type="text"
+              placeholder="Example: Kellogg's, Coca-Cola, Chobani..."
+              autocomplete="off"
+              aria-autocomplete="list"
+              aria-controls="brandSuggestions"
+              aria-expanded="false"
+            />
+            <ul id="brandSuggestions" class="suggestions hidden"></ul>
           </div>
 
-          <div class="result-block">
-            <h3 id="factTitle">What This Means</h3>
-            <ul id="factList"></ul>
+          <div class="actions">
+            <button id="brandSearchButton">Search Brand</button>
+            <button id="loadBrandDemoButton" class="secondary">
+              Load Demo Brand
+            </button>
+          </div>
+        </section>
+
+        <section class="panel panel--results">
+          <h2>Scan results</h2>
+          <p class="lookup-note score-legend" aria-label="Score color bands">
+            <span><strong>80–100</strong> good</span> ·
+            <span><strong>50–79</strong> so-so</span> ·
+            <span><strong>0–49</strong> poor</span>
+          </p>
+          <div id="emptyState" class="empty-state">
+            Run a scan to see additive detection, risk analysis, and cleaner swaps.
           </div>
 
-          <div class="result-block">
-            <h3 id="alternativeTitle">Cleaner Alternatives</h3>
-            <ul id="alternativeList"></ul>
+          <div id="results" class="hidden">
+            <div class="score-row">
+              <div class="score-badge tier-neutral" id="scoreBadge">
+                <span id="scoreValue">--</span>
+                <small>Health Score</small>
+              </div>
+              <div>
+                <p id="verdict" class="verdict"></p>
+                <p id="confidence" class="confidence"></p>
+                <p id="nutritionSummary" class="nutrition-summary"></p>
+              </div>
+            </div>
+
+            <figure class="result-visual">
+              <img id="resultImage" src="./assets/default-food.svg" alt="Food profile visual" />
+              <figcaption id="resultImageCaption">Visual profile preview</figcaption>
+            </figure>
+
+            <div class="result-block">
+              <h3 id="flagTitle">Hidden Additives / Harmful Ingredients</h3>
+              <ul id="flagList"></ul>
+            </div>
+
+            <div class="result-block">
+              <h3 id="factTitle">What This Means</h3>
+              <ul id="factList"></ul>
+            </div>
+
+            <div class="result-block">
+              <h3 id="alternativeTitle">Cleaner Alternatives</h3>
+              <ul id="alternativeList"></ul>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
       </main>
 
-      <footer>
+      <footer class="app-footer">
         <p>
-          Nova is an educational tool and not a medical diagnosis. Always consult
-          a healthcare professional for personalized advice.
+          <strong>Nova — Grislis</strong> · class project<br />
+          <a href="./showcase.html">Project write-up (showcase)</a>
+          ·
+          <a href="https://github.com/bgrislis27-crypto/Grislis--Nova-app">GitHub repository</a>
+        </p>
+        <p class="fine-print">
+          Visual style and traffic-light colors are <strong>Yuka-inspired</strong> for a class demo. Nova is not
+          affiliated with Yuka SAS; scores and UI differ from the real product. Not medical advice — consult a
+          professional for personal nutrition decisions.
         </p>
       </footer>
     </div>

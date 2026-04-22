@@ -492,6 +492,17 @@ const nutritionSummary = document.getElementById("nutritionSummary");
 const ingredientsInput = document.getElementById("ingredients");
 const scanButton = document.getElementById("scanButton");
 const loadDemoButton = document.getElementById("loadDemoButton");
+const openCameraModalButton = document.getElementById("openCameraModalButton");
+const cameraModal = document.getElementById("cameraModal");
+const cameraModalBackdrop = document.getElementById("cameraModalBackdrop");
+const cameraPreview = document.getElementById("cameraPreview");
+const cameraCanvas = document.getElementById("cameraCanvas");
+const cameraOcrStatus = document.getElementById("cameraOcrStatus");
+const cameraWebcamStart = document.getElementById("cameraWebcamStart");
+const cameraWebcamCapture = document.getElementById("cameraWebcamCapture");
+const cameraFileInput = document.getElementById("cameraFileInput");
+const cameraFileTrigger = document.getElementById("cameraFileTrigger");
+const cameraModalClose = document.getElementById("cameraModalClose");
 const scanOverlay = document.getElementById("scanOverlay");
 const scanLoading = document.getElementById("scanLoading");
 const brandSearch = document.getElementById("brandSearch");
@@ -653,11 +664,167 @@ function handleLogout() {
 }
 
 function parseIngredients(rawInput) {
-  return rawInput
+  const normalized = rawInput
     .toLowerCase()
+    .replace(/\r\n/g, "\n")
+    .replace(/[,;\n\u2022\u00b7]+/g, ",")
     .split(",")
-    .map((ingredient) => ingredient.trim())
+    .map((ingredient) => ingredient.replace(/^[\-\s·•]+/, "").trim())
     .filter(Boolean);
+  return normalized;
+}
+
+function normalizeOcrForIngredients(raw) {
+  let t = raw.replace(/\r\n/g, "\n").replace(/\u00a0/g, " ");
+  const labelMatch = t.match(/ingredients?\s*[:\-]\s*/i);
+  if (labelMatch && labelMatch.index !== undefined) {
+    t = t.slice(labelMatch.index + labelMatch[0].length);
+  }
+  t = t.replace(/[\u2022\u00b7]/g, ",").replace(/\n+/g, ", ").replace(/;/g, ",");
+  t = t.replace(/\s*,\s*/g, ", ").replace(/\s{2,}/g, " ").trim();
+  return t;
+}
+
+let cameraStream = null;
+let tesseractLoadPromise = null;
+
+function loadTesseractScript() {
+  if (window.Tesseract) {
+    return Promise.resolve();
+  }
+  if (tesseractLoadPromise) {
+    return tesseractLoadPromise;
+  }
+  tesseractLoadPromise = new Promise((resolve, reject) => {
+    const script = document.createElement("script");
+    script.src = "https://cdn.jsdelivr.net/npm/tesseract.js@5.1.0/dist/tesseract.min.js";
+    script.async = true;
+    script.onload = () => resolve();
+    script.onerror = () => reject(new Error("Could not load OCR library."));
+    document.head.append(script);
+  });
+  return tesseractLoadPromise;
+}
+
+function stopCameraStream() {
+  if (cameraStream) {
+    cameraStream.getTracks().forEach((track) => track.stop());
+    cameraStream = null;
+  }
+  if (cameraPreview) {
+    cameraPreview.srcObject = null;
+  }
+}
+
+function openCameraModal() {
+  cameraModal.classList.remove("hidden");
+  cameraOcrStatus.textContent = "";
+  cameraPreview.classList.add("hidden");
+  cameraWebcamCapture.classList.add("hidden");
+  stopCameraStream();
+  cameraModalClose.focus();
+}
+
+function closeCameraModal() {
+  cameraModal.classList.add("hidden");
+  cameraPreview.classList.add("hidden");
+  cameraWebcamCapture.classList.add("hidden");
+  stopCameraStream();
+}
+
+function setCameraBusy(isBusy) {
+  [cameraWebcamStart, cameraWebcamCapture, cameraFileTrigger, cameraModalClose].forEach((el) => {
+    if (el) {
+      el.disabled = isBusy;
+    }
+  });
+}
+
+async function startWebcam() {
+  cameraOcrStatus.textContent = "Starting camera…";
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    cameraOcrStatus.textContent =
+      "This browser does not expose a camera here. Use “Take / choose photo” instead.";
+    return;
+  }
+  try {
+    stopCameraStream();
+    cameraStream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: { ideal: "environment" } },
+      audio: false,
+    });
+    cameraPreview.srcObject = cameraStream;
+    await cameraPreview.play();
+    cameraPreview.classList.remove("hidden");
+    cameraWebcamCapture.classList.remove("hidden");
+    cameraOcrStatus.textContent = "Line up the ingredient list, then tap Capture photo.";
+  } catch {
+    cameraOcrStatus.textContent =
+      "Could not use the webcam. Try “Take / choose photo”, or allow camera access (HTTPS required on some devices).";
+  }
+}
+
+function captureWebcamFrame() {
+  const vw = cameraPreview.videoWidth;
+  const vh = cameraPreview.videoHeight;
+  if (!vw || !vh) {
+    cameraOcrStatus.textContent = "Camera is not ready yet.";
+    return;
+  }
+  cameraCanvas.width = vw;
+  cameraCanvas.height = vh;
+  const ctx = cameraCanvas.getContext("2d");
+  ctx.drawImage(cameraPreview, 0, 0, vw, vh);
+  void runOcrOnCanvas(cameraCanvas);
+}
+
+async function runOcrOnCanvas(canvas) {
+  stopCameraStream();
+  cameraPreview.classList.add("hidden");
+  cameraWebcamCapture.classList.add("hidden");
+  setCameraBusy(true);
+  cameraOcrStatus.textContent = "Reading label… (first run may take 15–40s while the OCR engine downloads)";
+  try {
+    await loadTesseractScript();
+    const {
+      data: { text },
+    } = await Tesseract.recognize(canvas, "eng", {
+      logger() {},
+    });
+    ingredientsInput.value = normalizeOcrForIngredients(text);
+    closeCameraModal();
+    ingredientsInput.focus();
+  } catch {
+    cameraOcrStatus.textContent = "Could not read that image. Try better light, closer crop, or sharper focus.";
+  } finally {
+    setCameraBusy(false);
+  }
+}
+
+async function runOcrOnFile(file) {
+  if (!file || !file.type.startsWith("image/")) {
+    return;
+  }
+  stopCameraStream();
+  cameraPreview.classList.add("hidden");
+  cameraWebcamCapture.classList.add("hidden");
+  setCameraBusy(true);
+  cameraOcrStatus.textContent = "Reading label… (first run may take 15–40s while the OCR engine downloads)";
+  try {
+    await loadTesseractScript();
+    const {
+      data: { text },
+    } = await Tesseract.recognize(file, "eng", {
+      logger() {},
+    });
+    ingredientsInput.value = normalizeOcrForIngredients(text);
+    closeCameraModal();
+    ingredientsInput.focus();
+  } catch {
+    cameraOcrStatus.textContent = "Could not read that image. Try a clearer photo of the ingredient block.";
+  } finally {
+    setCameraBusy(false);
+  }
 }
 
 function findMatches(parsedIngredients) {
@@ -699,8 +866,7 @@ function getVerdictText(score) {
     return {
       label: "Low concern profile",
       confidence: "Higher ingredient transparency and fewer red flags detected.",
-      color: "#46d7ac",
-      badgeBackground: "#123b32",
+      tier: "good",
     };
   }
 
@@ -708,17 +874,20 @@ function getVerdictText(score) {
     return {
       label: "Moderate concern profile",
       confidence: "Some engineered additives detected. Compare with cleaner alternatives.",
-      color: "#ffd166",
-      badgeBackground: "#453918",
+      tier: "fair",
     };
   }
 
   return {
     label: "High concern profile",
     confidence: "Multiple high-risk additives suggest heavy ultra-processing.",
-    color: "#ff6b6b",
-    badgeBackground: "#4a2323",
+    tier: "poor",
   };
+}
+
+function applyScoreBadgeTier(tier) {
+  scoreBadge.classList.remove("tier-good", "tier-fair", "tier-poor", "tier-neutral");
+  scoreBadge.classList.add(`tier-${tier}`);
 }
 
 function renderList(target, items, formatter) {
@@ -760,8 +929,7 @@ function runScan() {
   scoreValue.textContent = String(score);
   verdict.textContent = verdictData.label;
   confidence.textContent = verdictData.confidence;
-  scoreBadge.style.borderColor = verdictData.color;
-  scoreBadge.style.backgroundColor = verdictData.badgeBackground;
+  applyScoreBadgeTier(verdictData.tier);
   nutritionSummary.textContent = "";
   resultImage.src = "./assets/default-food.svg";
   resultImage.alt = "Ingredient-based label scan visual";
@@ -924,8 +1092,7 @@ function renderOpenFoodFactsProduct(product) {
   verdict.textContent = `${brandName}: ${productName}`;
   confidence.textContent = "Live nutrition data pulled from OpenFoodFacts product records.";
   nutritionSummary.textContent = `Calories: ${calories ?? "N/A"} kcal/100g | Protein: ${protein ?? "N/A"}g/100g`;
-  scoreBadge.style.borderColor = verdictData.color;
-  scoreBadge.style.backgroundColor = verdictData.badgeBackground;
+  applyScoreBadgeTier(verdictData.tier);
   resultImage.src = product.image_url || "./assets/default-food.svg";
   resultImage.alt = `${productName} food package image`;
   resultImageCaption.textContent = `${productName} (${brandName})`;
@@ -1035,8 +1202,7 @@ async function runBrandSearch() {
       confidence.textContent =
         "No profile was found in live lookup or local database. Try Coca-Cola, Kellogg's, Nestle, Chobani, or Annie's.";
       nutritionSummary.textContent = "";
-      scoreBadge.style.borderColor = "#2a3657";
-      scoreBadge.style.backgroundColor = "#12253d";
+      applyScoreBadgeTier("neutral");
       resultImage.src = "./assets/default-food.svg";
       resultImage.alt = "No brand image available";
       resultImageCaption.textContent = "No brand visual available yet";
@@ -1056,8 +1222,7 @@ async function runBrandSearch() {
     verdict.textContent = `${match.name}: ${match.verdict}`;
     confidence.textContent = match.confidence;
     nutritionSummary.textContent = "Calories and protein are unavailable for static profile entries.";
-    scoreBadge.style.borderColor = verdictData.color;
-    scoreBadge.style.backgroundColor = verdictData.badgeBackground;
+    applyScoreBadgeTier(verdictData.tier);
     resultImage.src = match.image;
     resultImage.alt = `${match.name} visual profile`;
     resultImageCaption.textContent = `${match.name} portfolio-style visual`;
@@ -1135,6 +1300,30 @@ document.addEventListener("click", (event) => {
 loadDemoButton.addEventListener("click", () => {
   ingredientsInput.value = demoLabel;
   triggerHighSpeedScan();
+});
+
+openCameraModalButton.addEventListener("click", openCameraModal);
+cameraModalClose.addEventListener("click", closeCameraModal);
+cameraModalBackdrop.addEventListener("click", closeCameraModal);
+cameraWebcamStart.addEventListener("click", () => {
+  void startWebcam();
+});
+cameraWebcamCapture.addEventListener("click", captureWebcamFrame);
+cameraFileTrigger.addEventListener("click", () => {
+  cameraFileInput.click();
+});
+cameraFileInput.addEventListener("change", () => {
+  const file = cameraFileInput.files && cameraFileInput.files[0];
+  cameraFileInput.value = "";
+  if (file) {
+    void runOcrOnFile(file);
+  }
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && cameraModal && !cameraModal.classList.contains("hidden")) {
+    closeCameraModal();
+  }
 });
 
 loadBrandDemoButton.addEventListener("click", () => {
