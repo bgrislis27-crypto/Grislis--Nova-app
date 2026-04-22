@@ -3,14 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Nova — label decoder (class write-up)</title>
+    <title>Nova — quick write-up for class</title>
     <meta
       name="description"
-      content="Nova: paste ingredients, get a rough health score and additive flags. Vanilla JS, OpenFoodFacts, GitHub Pages."
+      content="Notes on Nova: a tiny static site that pastes ingredients, guesses a score, and pokes OpenFoodFacts for brand stuff. Nothing fancy."
     />
     <link rel="icon" href="./assets/nova-fruit-logo.svg" type="image/svg+xml" />
     <style>
-      /* Palette inspired by common nutrition-app traffic lights (e.g. Yuka-style greens / amber / red). */
+      /* Traffic-light greens / amber / red (nutrition apps do this a lot). */
       :root {
         color-scheme: light;
         --page: #ebebf0;
@@ -29,9 +29,12 @@
         --shadow: 0 2px 14px rgba(0, 0, 0, 0.06);
         --shadow-lg: 0 8px 28px rgba(0, 0, 0, 0.08);
         --radius: 18px;
-        --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, sans-serif;
+        /* Serif reads like a paper write-up; sans only for “UI chrome” (nav, buttons). */
+        --font-serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Palatino LT STD", Charter,
+          "Book Antiqua", Georgia, "Times New Roman", serif;
+        --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
         --step--1: clamp(0.9rem, 0.85rem + 0.35vw, 1.05rem);
-        --step-0: clamp(1rem, 0.92rem + 0.45vw, 1.15rem);
+        --step-0: clamp(1.04rem, 0.96rem + 0.45vw, 1.18rem);
         --space: clamp(1rem, 3vw, 2.5rem);
         --max: 52rem;
       }
@@ -54,9 +57,9 @@
 
       body {
         margin: 0;
-        font-family: var(--font);
+        font-family: var(--font-serif);
         font-size: var(--step-0);
-        line-height: 1.55;
+        line-height: 1.62;
         color: var(--text);
         background: var(--page);
         overflow-x: hidden;
@@ -104,8 +107,10 @@
         justify-content: space-between;
         gap: 0.75rem;
         padding: 0.85rem clamp(1rem, 4vw, 2rem);
-        background: rgba(255, 255, 255, 0.92);
-        backdrop-filter: blur(10px);
+        font-family: var(--font-ui);
+        font-size: 0.94rem;
+        background: rgba(255, 255, 255, 0.96);
+        backdrop-filter: blur(6px);
         border-bottom: 1px solid var(--stroke);
       }
 
@@ -122,13 +127,13 @@
         height: 36px;
         display: block;
         border-radius: 10px;
-        box-shadow: 0 4px 14px rgba(0, 177, 74, 0.2);
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
       }
 
       .brand-mark {
-        font-weight: 800;
-        font-size: 1.15rem;
-        letter-spacing: -0.02em;
+        font-weight: 700;
+        font-size: 1.12rem;
+        letter-spacing: 0;
         color: var(--excellent);
       }
 
@@ -146,7 +151,7 @@
         width: 4.35rem;
         height: 4.35rem;
         border-radius: 1.1rem;
-        box-shadow: 0 8px 22px rgba(0, 177, 74, 0.2);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
       }
 
       .top-nav nav {
@@ -176,33 +181,34 @@
         padding: clamp(1.35rem, 3vw, 2rem);
         border-radius: var(--radius);
         border: 1px solid var(--stroke);
-        background: linear-gradient(180deg, #f9fff6 0%, #ffffff 42%);
-        box-shadow: var(--shadow-lg);
+        background: #fff;
+        box-shadow: var(--shadow);
       }
 
       .tagline {
         margin: 0 0 0.4rem;
-        font-size: 0.8rem;
-        font-weight: 700;
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
-        color: var(--excellent);
+        font-size: 1.05rem;
+        font-weight: 500;
+        font-style: italic;
+        letter-spacing: 0;
+        text-transform: none;
+        color: #2d6a45;
       }
 
       h1 {
         margin: 0 0 0.75rem;
-        font-size: clamp(1.45rem, 1.1rem + 1.8vw, 2rem);
-        line-height: 1.18;
-        font-weight: 700;
-        letter-spacing: -0.025em;
-        max-width: 26ch;
+        font-size: clamp(1.55rem, 1.2rem + 1.5vw, 2.1rem);
+        line-height: 1.2;
+        font-weight: 600;
+        letter-spacing: 0;
+        max-width: 34ch;
       }
 
       .lead {
         margin: 0;
-        font-size: 1.02rem;
+        font-size: 1.05rem;
         color: var(--muted);
-        max-width: 46ch;
+        max-width: 52ch;
       }
 
       .hero-actions {
@@ -216,11 +222,12 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        padding: 0.65rem 1.25rem;
+        padding: 0.6rem 1.1rem;
         min-height: 44px;
-        font-size: 0.95rem;
+        font-family: var(--font-ui);
+        font-size: 0.9rem;
         font-weight: 600;
-        border-radius: 999px;
+        border-radius: 10px;
         border: none;
         cursor: pointer;
         text-decoration: none;
@@ -264,17 +271,17 @@
 
       h2 {
         margin: 0 0 0.5rem;
-        font-size: clamp(1.2rem, 1rem + 0.8vw, 1.45rem);
-        line-height: 1.2;
-        font-weight: 700;
-        letter-spacing: -0.02em;
+        font-size: clamp(1.22rem, 1.05rem + 0.65vw, 1.5rem);
+        line-height: 1.25;
+        font-weight: 600;
+        letter-spacing: 0;
       }
 
       .section-lead {
         margin: 0 0 1.1rem;
         color: var(--muted);
-        font-size: 1rem;
-        max-width: 48ch;
+        font-size: 1.05rem;
+        max-width: 52ch;
       }
 
       .grid-2 {
@@ -299,16 +306,16 @@
 
       .card h3 {
         margin: 0 0 0.35rem;
-        font-size: 0.95rem;
-        font-weight: 700;
+        font-size: 1.02rem;
+        font-weight: 600;
         color: var(--text);
       }
 
       .card p {
         margin: 0;
         color: var(--muted);
-        font-size: 0.92rem;
-        line-height: 1.5;
+        font-size: 0.98rem;
+        line-height: 1.55;
       }
 
       .stack-list {
@@ -335,6 +342,7 @@
         display: inline-flex;
         align-items: center;
         gap: 0.5rem;
+        font-family: var(--font-ui);
         font-weight: 600;
         font-size: var(--step--1);
       }
@@ -362,6 +370,7 @@
       .mock-label {
         font-size: var(--step--1);
         font-weight: 600;
+        font-style: italic;
         color: var(--muted);
         margin-bottom: 0.45rem;
       }
@@ -425,6 +434,7 @@
         justify-content: space-between;
         gap: 0.5rem;
         border-bottom: 1px solid var(--stroke);
+        font-family: var(--font-ui);
         font-weight: 600;
         font-size: var(--step--1);
         background: var(--page-alt);
@@ -460,19 +470,24 @@
 
       .feature-list {
         margin: 0;
-        padding-left: 1.2rem;
+        padding-left: 1.35rem;
         color: var(--muted);
-        font-size: 0.96rem;
+        font-size: 1rem;
       }
 
       .feature-list li {
-        margin-bottom: 0.6rem;
-        line-height: 1.45;
+        margin-bottom: 0.65rem;
+        line-height: 1.55;
       }
 
       .feature-list strong {
         color: var(--text);
         font-weight: 600;
+      }
+
+      code {
+        font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, monospace;
+        font-size: 0.88em;
       }
 
       .app-shot-gallery {
@@ -500,8 +515,9 @@
       .app-shot figcaption {
         margin: 0;
         padding: 0.65rem 1rem;
-        font-size: var(--step--1);
-        font-weight: 600;
+        font-size: 0.95rem;
+        font-weight: 500;
+        font-style: italic;
         color: var(--muted);
         border-top: 1px solid var(--stroke);
         background: var(--page-alt);
@@ -535,12 +551,12 @@
       </a>
       <nav aria-label="Page sections">
         <a href="#main">Top</a>
-        <a href="#story">Context</a>
-        <a href="#features">Behavior</a>
-        <a href="#shots">Screenshots</a>
-        <a href="#tech">Build</a>
-        <a href="#screens">Wire-ish mocks</a>
-        <a href="#demo">Try it</a>
+        <a href="#story">Why</a>
+        <a href="#features">What it does</a>
+        <a href="#shots">Photos</a>
+        <a href="#tech">How I built it</a>
+        <a href="#screens">Sketches</a>
+        <a href="#demo">Live app</a>
       </nav>
     </header>
 
@@ -558,79 +574,72 @@
             />
           </div>
           <p class="tagline">A new way to look at food</p>
-          <h1>Paste a label. Get a rough score and a list of flagged additives.</h1>
+          <h1>Paste junk from a label, get a number and some flags.</h1>
           <p class="lead">
-            It’s one static site: HTML, CSS, and plain JS. I wanted something I could run from GitHub Pages
-            without a build step, and still hit a real API (OpenFoodFacts) for product photos and nutrition when
-            the lookup works.
+            Nova is just HTML/CSS/JS in a folder. I skipped a bundler so I could chuck it on GitHub Pages and
+            not fight the toolchain. OpenFoodFacts is there for brand search: sometimes you get a pack photo and
+            macros, sometimes the API is weird. That’s fine for what this is.
           </p>
           <div class="hero-actions">
             <a class="btn btn-primary" href="https://github.com/bgrislis27-crypto/Grislis--Nova-app"
-              >Repo on GitHub</a
+              >Code on GitHub</a
             >
-            <a class="btn btn-ghost" href="#demo">Open the embedded app</a>
+            <a class="btn btn-ghost" href="#demo">Jump to the iframe</a>
           </div>
         </div>
       </div>
 
       <section id="story" aria-labelledby="story-h">
-        <h2 id="story-h">What problem it’s solving</h2>
+        <h2 id="story-h">Why I bothered</h2>
         <p class="section-lead">
-          Ingredient lists are long and easy to skim past. This is mostly a UI + data exercise: match additives
-          from a small dictionary, fake a bit of “processing” with list length, then color-code a 0–100 score so
-          you get something readable at a glance. Brand search fills in calories and a pack image when the API
-          returns a hit.
+          Ingredient text is boring to read. The app is basically: string match against a list I typed in, then a
+          score that goes red/yellow/green so you don’t have to think too hard. The “processing” signal is kind of
+          fake (longer list = ding the score a bit). Not science, just something to wire up the UI around.
         </p>
         <div class="grid-2">
           <div class="card">
-            <h3>Scan side</h3>
+            <h3>Paste scan</h3>
             <p>
-              Input is comma-separated ingredients. The script checks against an additive list, uses list
-              length as a stand-in for “how processed this probably is,” and maps the final number to green /
-              yellow / red (80+, 50–79, under 50).
+              You paste commas / lines. It hunts additives, adds a penalty if the list is huge, then buckets the
+              final 0–100 number: green 80+, yellow 50–79, red under 50.
             </p>
           </div>
           <div class="card">
-            <h3>Brand side</h3>
+            <h3>Brands</h3>
             <p>
-              There’s a local JSON-ish fallback for brands so the autocomplete isn’t empty offline. Online, it
-              calls OpenFoodFacts search and shows macros, a few auto-written pros/cons from thresholds, and a
-              product image when one exists.
+              I kept a local list so autocomplete still works with WiFi off. With WiFi it tries OpenFoodFacts,
+              merges in a better row when the search JSON is thin, and shows a picture if one actually exists.
             </p>
           </div>
         </div>
       </section>
 
       <section id="features" aria-labelledby="feat-h">
-        <h2 id="feat-h">Behavior (short list)</h2>
+        <h2 id="feat-h">Stuff that works</h2>
         <p class="section-lead">
-          Nothing fancy under the hood — I was aiming for “works in a lab browser” and “easy to grade.”
+          No clever architecture. If it runs in Chrome/Safari on the due date, good enough.
         </p>
         <ol class="feature-list">
           <li>
-            <strong>Scan animation</strong> — line sweeps the textarea, short delay, then results land in one
-            column.
+            Fake “scan”: green line runs over the textarea, waits a beat, dumps results below. Looks busy.
           </li>
           <li>
-            <strong>Brand field</strong> — suggestions while typing; arrows, Enter, Escape behave like you’d
-            expect.
+            Brand box has typeahead from my hard-coded list. Keyboard stuff mostly works (I tested it a few times).
           </li>
           <li>
-            <strong>Login screen</strong> — email/password, create account, guest, logout. Accounts are
-            stubbed in localStorage for the assignment.
+            Login page is real-ish UI but the backend is <code style="color: #008f3d">localStorage</code>. Guest
+            skips straight in. Good enough for the rubric.
           </li>
           <li>
-            <strong>Art</strong> — a few inline SVGs for the hero and categories; live mode swaps in a photo
-            from OFF when it can.
+            Icons are SVGs I stole time on / tweaked. Product photos come from contributors on OFF, not from me.
           </li>
         </ol>
       </section>
 
       <section id="shots" aria-labelledby="shots-h">
-        <h2 id="shots-h">App screenshots</h2>
+        <h2 id="shots-h">What it actually looks like</h2>
         <p class="section-lead">
-          Captures from the live app on GitHub Pages (Safari) — welcome flow, main scan view, and brand lookup
-          with score band.
+          Grabbed on my laptop from the Pages URL (Safari). Yes there’s a menu bar in some of them. Whatever.
         </p>
         <div class="app-shot-gallery">
           <figure class="app-shot">
@@ -640,9 +649,9 @@
               height="662"
               loading="lazy"
               decoding="async"
-              alt="Nova welcome card: sign in, create account, and continue as guest on a white background with green accents."
+              alt="Nova sign-in screen: email and password fields, login and continue as guest, on a light gray page."
             />
-            <figcaption>Welcome / sign-in — guest path for quick demos</figcaption>
+            <figcaption>Login screen (guest still works)</figcaption>
           </figure>
           <figure class="app-shot">
             <img
@@ -651,9 +660,9 @@
               height="662"
               loading="lazy"
               decoding="async"
-              alt="Nova main screen with hero, ingredient scan textarea, and scan label with camera controls."
+              alt="Nova main screen with hero, ingredient scan section, and example label text in the textarea."
             />
-            <figcaption>Main app — ingredient scan and camera entry</figcaption>
+            <figcaption>Main view with the big paste box</figcaption>
           </figure>
           <figure class="app-shot">
             <img
@@ -662,43 +671,42 @@
               height="662"
               loading="lazy"
               decoding="async"
-              alt="Nova brand lookup and scan results showing a numeric health score in the red band for a cola brand."
+              alt="Nova ingredient scan, brand lookup for Kellogg's, and scan results with a numeric score in the mid band."
             />
-            <figcaption>Brand lookup + results — live-style score and copy</figcaption>
+            <figcaption>Kellogg’s search + the score blob underneath</figcaption>
           </figure>
         </div>
       </section>
 
       <section id="tech" aria-labelledby="tech-h">
-        <h2 id="tech-h">How it’s built</h2>
+        <h2 id="tech-h">How I built it</h2>
         <p class="section-lead">
-          No React, no Vite, no npm script you have to remember. That was intentional so the folder is the
-          whole project and you can open index.html directly (CORS aside for some fetches).
+          No React. No Vite. One big <code style="color: #008f3d">app.js</code> plus the HTML. You can drag
+          <code style="color: #008f3d">index.html</code> into a browser and most of it runs; OFF calls might
+          whine if you’re on <code style="color: #008f3d">file://</code>.
         </p>
         <div class="card">
-          <h3>Stack (honest version)</h3>
+          <h3>Actually used</h3>
           <div class="stack-list" role="region" aria-label="Technology list">
-            · HTML + CSS (variables, clamp for type)
-            · JavaScript in one page flow — no bundler
-            · fetch() to OpenFoodFacts JSON search
-            · localStorage for the demo “accounts”
-            · SVGs drawn / inlined by hand (and a couple generated blocks in this page)
+            · HTML + CSS (a few variables, clamp on type)
+            · Plain fetch to OpenFoodFacts; I had to merge search + product-by-code to get images reliably
+            · localStorage fake accounts (passwords aren’t secure, obviously)
+            · SVGs: some hand-edited, a couple blocks in this write-up page I didn’t overthink
           </div>
           <p class="footnote">
-            OpenFoodFacts is volunteer-maintained. The scores here are <strong>heuristics for a class
-            demo</strong>, not nutrition advice.
+            OFF data is crowd-sourced. The score is a toy for class, not something you should shop with.
           </p>
         </div>
       </section>
 
       <section id="screens" aria-labelledby="scr-h">
-        <h2 id="scr-h">Rough UI sketches</h2>
+        <h2 id="scr-h">Ugly wireframes</h2>
         <p class="section-lead">
-          These SVGs are simplified; they’re for projecting or printing. The iframe below is the real layout.
+          Inline SVGs I drew before the CSS looked decent. Scroll down for the real thing in an iframe.
         </p>
 
         <div class="mock-wrap">
-          <p class="mock-label">Auth / guest entry</p>
+          <p class="mock-label">Login-ish</p>
           <div class="mock-browser" role="img" aria-label="Mock screenshot of Nova welcome card with email and password fields">
             <div class="mock-chrome">
               <span class="mock-dot" aria-hidden="true"></span>
@@ -722,7 +730,7 @@
         </div>
 
         <div class="mock-wrap">
-          <p class="mock-label">Scan + results (yellow band example)</p>
+          <p class="mock-label">Scan + fake results (yellow score)</p>
           <div class="mock-browser" role="img" aria-label="Mock screenshot of scan results with health score 67 in yellow band">
             <div class="mock-chrome">
               <span class="mock-dot" aria-hidden="true"></span>
@@ -751,54 +759,49 @@
         </div>
 
         <div class="legend" aria-label="Score color bands">
-          <span><span class="dot dot-green" aria-hidden="true"></span> 80–100 · good</span>
-          <span><span class="dot dot-yellow" aria-hidden="true"></span> 50–79 · so-so</span>
-          <span><span class="dot dot-red" aria-hidden="true"></span> 0–49 · poor</span>
+          <span><span class="dot dot-green" aria-hidden="true"></span> 80–100 ok</span>
+          <span><span class="dot dot-yellow" aria-hidden="true"></span> 50–79 meh</span>
+          <span><span class="dot dot-red" aria-hidden="true"></span> under 50 rough</span>
         </div>
       </section>
 
       <section id="demo" aria-labelledby="demo-h">
-        <h2 id="demo-h">Live embed</h2>
+        <h2 id="demo-h">Try it here</h2>
         <p class="section-lead">
-          Same-origin <code style="color: #008f3d">index.html</code> in an iframe. If you’re grading from
-          GitHub Pages, publish from <code style="color: #008f3d">main</code> at repo root so this path resolves.
+          Iframe points at <code style="color: #008f3d">./index.html</code>. For class, make sure Pages is on
+          <code style="color: #008f3d">main</code> / root or this goes blank.
         </p>
         <div class="demo-box">
           <div class="demo-head">
-            <span>index.html (embedded)</span>
+            <span>Embedded index.html</span>
             <a class="btn btn-ghost" style="min-height: 40px; padding: 0.5rem 1rem" href="./index.html" target="_blank" rel="noopener"
-              >New tab</a
+              >Open full tab</a
             >
           </div>
           <iframe
             class="demo-frame"
             src="./index.html"
-            title="Nova Label Decoder application"
+            title="Nova app embedded"
             loading="lazy"
           ></iframe>
         </div>
         <p class="footnote">
-          Blank iframe? Open the new-tab link or run <code style="color: #008f3d">npx serve</code> (or any
-          static server) from the project folder. Pages: Settings → Pages → branch <strong>main</strong>, folder
-          <strong>/ (root)</strong>.
+          If it’s empty locally, use any static server from the folder. On GitHub: repo Settings → Pages →
+          branch <strong>main</strong>, folder <strong>/ (root)</strong>.
         </p>
       </section>
     </main>
 
     <footer>
       <p>
-        Nova — Grislis · class write-up.<br />
-        Code: <a href="https://github.com/bgrislis27-crypto/Grislis--Nova-app">github.com/bgrislis27-crypto/Grislis--Nova-app</a>
-      </p>
-      <p style="margin-top: 1rem">
-        After Pages deploys:<br />
-        <a href="https://bgrislis27-crypto.github.io/Grislis--Nova-app/showcase.html"
-          >bgrislis27-crypto.github.io/Grislis--Nova-app/showcase.html</a
-        >
+        Nova — Grislis, class project.<br />
+        <a href="https://github.com/bgrislis27-crypto/Grislis--Nova-app">Repo link</a>
+        ·
+        <a href="https://bgrislis27-crypto.github.io/Grislis--Nova-app/showcase.html">This page on Pages</a>
       </p>
       <p class="fine-print">
-        Visual style and traffic-light colors on this page and in the app are <strong>Yuka-inspired</strong> for
-        a class demo. Nova is not affiliated with Yuka SAS; scores and UI differ from the real product.
+        Green/amber/red vibe is on purpose (think apps like Yuka). Not affiliated with them; numbers don’t mean
+        the same thing.
       </p>
     </footer>
   </body>
