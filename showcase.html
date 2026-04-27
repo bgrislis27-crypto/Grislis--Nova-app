@@ -9,6 +9,7 @@
       content="Notes on Nova: a tiny static site that pastes ingredients, guesses a score, and pokes OpenFoodFacts for brand stuff. Nothing fancy."
     />
     <link rel="icon" href="./assets/nova-fruit-logo.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./nova-fonts.css" />
     <style>
       /* Traffic-light greens / amber / red (nutrition apps do this a lot). */
       :root {
@@ -29,12 +30,6 @@
         --shadow: 0 2px 14px rgba(0, 0, 0, 0.06);
         --shadow-lg: 0 8px 28px rgba(0, 0, 0, 0.08);
         --radius: 18px;
-        /* Serif reads like a paper write-up; sans only for “UI chrome” (nav, buttons). */
-        --font-serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Palatino LT STD", Charter,
-          "Book Antiqua", Georgia, "Times New Roman", serif;
-        --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-        --step--1: clamp(0.9rem, 0.85rem + 0.35vw, 1.05rem);
-        --step-0: clamp(1.04rem, 0.96rem + 0.45vw, 1.18rem);
         --space: clamp(1rem, 3vw, 2.5rem);
         --max: 52rem;
       }
