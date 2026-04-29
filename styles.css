@@ -33,6 +33,7 @@
   --radius-sm: 10px;
   --max: 52rem;
   --space: clamp(1rem, 3vw, 2.5rem);
+  --paper-noise: rgba(255, 255, 255, 0.08);
 }
 
 * {
@@ -71,6 +72,22 @@ body {
     background-image: radial-gradient(ellipse 90% 70% at 50% -15%, rgba(255, 255, 255, 0.45), transparent 50%),
       linear-gradient(165deg, #d4dce8 0%, #c3ccdb 50%, #b0bacd 100%);
   }
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent 0,
+    transparent 8px,
+    var(--paper-noise) 8px,
+    var(--paper-noise) 9px
+  );
+  opacity: 0.28;
+  z-index: -1;
 }
 
 .skip {
@@ -305,6 +322,20 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.7);
   background: #ffffff;
   box-shadow: 0 18px 48px rgba(15, 23, 42, 0.14);
+  position: relative;
+  overflow: clip;
+}
+
+.hero-inner::after {
+  content: "";
+  position: absolute;
+  right: -80px;
+  top: -80px;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 177, 74, 0.13) 0%, rgba(0, 177, 74, 0) 68%);
+  pointer-events: none;
 }
 
 .hero-mark {
@@ -373,6 +404,8 @@ h1 {
   border: 1px solid var(--border);
   background: #ffffff;
   box-shadow: var(--shadow-card);
+  padding: 6px;
+  transform: rotate(-1.2deg);
 }
 
 .app-shell {
@@ -384,12 +417,26 @@ h1 {
 
 /* Stacked “cards” on the gray workspace (clear contrast vs flat white page). */
 .app-shell > .panel {
-  border-radius: 16px;
+  border-radius: 18px 14px 20px 12px;
   border: 1px solid rgba(255, 255, 255, 0.65);
   box-shadow: 0 14px 40px rgba(15, 23, 42, 0.12);
   margin: 0 0 1rem;
   padding: clamp(1.75rem, 4vw, 2.75rem) var(--space);
   background: var(--card);
+  position: relative;
+}
+
+.app-shell > .panel:nth-of-type(even) {
+  border-radius: 14px 20px 12px 18px;
+}
+
+@media (min-width: 920px) {
+  .app-shell > .panel:nth-of-type(odd) {
+    transform: translateX(-3px);
+  }
+  .app-shell > .panel:nth-of-type(even) {
+    transform: translateX(3px);
+  }
 }
 
 .app-shell > .panel.panel--results {
@@ -404,6 +451,18 @@ h2 {
   font-weight: 600;
   letter-spacing: 0;
   line-height: 1.25;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+h2::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #2cb56f;
+  box-shadow: 0 0 0 4px rgba(44, 181, 111, 0.18);
 }
 
 .app-shell > .panel h2 {
@@ -633,6 +692,8 @@ button {
   cursor: pointer;
   background: var(--cta);
   color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25) inset;
 }
 
 button:hover {
@@ -642,6 +703,7 @@ button:hover {
 button.secondary {
   background: var(--secondary-fill);
   color: var(--secondary-text);
+  border-color: rgba(0, 0, 0, 0.06);
 }
 
 button.secondary:hover {
@@ -861,6 +923,22 @@ button:focus-visible {
   border: 1px solid var(--stroke);
   background: var(--card);
   box-shadow: var(--shadow);
+  border-left: 4px solid #d9dfe8;
+}
+
+#flagTitle,
+#factTitle,
+#alternativeTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+#flagTitle::before,
+#factTitle::before,
+#alternativeTitle::before {
+  content: "•";
+  color: #7e8aa1;
 }
 
 .app-shell .panel.panel--results .result-block {
@@ -994,6 +1072,7 @@ footer,
   border-radius: 12px;
   background: #fff;
   padding: 10px 12px;
+  box-shadow: 0 6px 18px rgba(12, 25, 48, 0.06);
 }
 
 .meal-group h3 {
