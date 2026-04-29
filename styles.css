@@ -1028,6 +1028,17 @@ footer,
   font-size: 0.92rem;
 }
 
+.macro-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.macro-icon {
+  font-size: 0.98rem;
+  line-height: 1;
+}
+
 .macro-row-head strong {
   color: var(--text);
   font-size: 0.88rem;
