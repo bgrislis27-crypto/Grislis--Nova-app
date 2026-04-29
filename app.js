@@ -889,11 +889,59 @@ const SESSION_KEY = "novaSession";
 const ACCOUNTS_KEY = "novaAccounts";
 const GOALS_KEY = "novaMacroGoals";
 const MEAL_LOG_KEY = "novaMealLog";
+const BRAND_PHOTO_CACHE_KEY = "novaBrandPhotoCache";
+const HISTORY_KEY = "novaActionHistory";
 const DEFAULT_GOALS = { calories: 2200, protein: 140, carbs: 250, fat: 70 };
 let activeSuggestionIndex = -1;
 let currentSuggestions = [];
 let authMode = "login";
 let currentLogCandidate = null;
+
+function getBrandPhotoCache() {
+  const raw = localStorage.getItem(BRAND_PHOTO_CACHE_KEY);
+  if (!raw) {
+    return {};
+  }
+  try {
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === "object" ? parsed : {};
+  } catch {
+    return {};
+  }
+}
+
+function setBrandPhotoCache(cache) {
+  localStorage.setItem(BRAND_PHOTO_CACHE_KEY, JSON.stringify(cache));
+}
+
+function getActionHistory() {
+  const raw = localStorage.getItem(HISTORY_KEY);
+  if (!raw) {
+    return [];
+  }
+  try {
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveActionHistory(items) {
+  localStorage.setItem(HISTORY_KEY, JSON.stringify(items));
+}
+
+function addActionHistoryEntry(type, title, details = "") {
+  const entries = getActionHistory();
+  entries.unshift({
+    id: `${Date.now()}-${Math.random().toString(16).slice(2, 8)}`,
+    type,
+    title,
+    details,
+    createdAt: Date.now(),
+  });
+  saveActionHistory(entries.slice(0, 120));
+}
 
 function showApp() {
   authScreen.classList.add("hidden");
@@ -1116,6 +1164,7 @@ function addCurrentCandidateToToday() {
     createdAt: Date.now(),
   });
   saveStoredMealLog(list);
+  addActionHistoryEntry("meal-log", `Added to ${mealType}`, currentLogCandidate.name || "Logged item");
   renderDashboard();
   renderMealTimeline();
 }
@@ -1545,6 +1594,11 @@ function runScan() {
   );
   renderList(factList, matches, (item) => item.reason);
   renderList(alternativeList, matches, (item) => item.alternative);
+  addActionHistoryEntry(
+    "scan",
+    `Ingredient scan (${score})`,
+    `${parsedIngredients.length} ingredients, ${matches.length} additive flag(s)`,
+  );
   setCurrentLogCandidate({
     name: "Ingredient scan entry",
     calories: null,
@@ -1883,6 +1937,55 @@ async function fetchOpenFoodFactsProduct(query) {
   return bestWithoutPhoto;
 }
 
+function buildBrandPhotoQueries(brand) {
+  const queries = [brand.name, ...brand.aliases];
+  const compact = [];
+  const seen = new Set();
+  for (const q of queries) {
+    const cleaned = String(q || "").trim();
+    if (!cleaned) continue;
+    const key = cleaned.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    compact.push(cleaned);
+    if (compact.length >= 5) break;
+  }
+  if (compact.length > 0) {
+    compact.push(`${compact[0]} original`);
+    compact.push(`${compact[0]} classic`);
+  }
+  return compact;
+}
+
+async function fetchBestBrandPhotoProduct(brand) {
+  const cache = getBrandPhotoCache();
+  const cacheKey = brand.name.toLowerCase();
+  if (cache[cacheKey] && typeof cache[cacheKey] === "string") {
+    return {
+      product_name: brand.name,
+      brands: brand.name,
+      image_front_url: cache[cacheKey],
+      nutriments: {},
+    };
+  }
+
+  const queries = buildBrandPhotoQueries(brand);
+  for (const q of queries) {
+    try {
+      const product = await fetchOpenFoodFactsProduct(q);
+      const url = getProductImageUrl(product);
+      if (product && url) {
+        cache[cacheKey] = url;
+        setBrandPhotoCache(cache);
+        return product;
+      }
+    } catch {
+      // Keep trying other aliases/queries.
+    }
+  }
+  return null;
+}
+
 function renderOpenFoodFactsProduct(product) {
   const score = computeNutritionScore(product);
   const verdictData = getVerdictText(score);
@@ -1945,8 +2048,14 @@ async function runBarcodeLookup() {
       renderList(factList, [], () => "");
       renderList(alternativeList, [], () => "");
       setCurrentLogCandidate(null);
+      addActionHistoryEntry("barcode", `Barcode lookup: ${code}`, "No product found");
       return;
     }
+    addActionHistoryEntry(
+      "barcode",
+      `Barcode lookup: ${code}`,
+      `${product.brands || "Unknown brand"} ${getProductDisplayName(product) || "product"}`,
+    );
     renderOpenFoodFactsProduct(product);
   } finally {
     barcodeLookupButton.disabled = false;
@@ -2032,6 +2141,7 @@ async function runBrandSearch() {
   brandSearchButton.textContent = "Searching...";
 
   try {
+    addActionHistoryEntry("brand-search", `Brand search: ${query}`);
     try {
       const liveProduct = await fetchOpenFoodFactsProduct(query);
       if (liveProduct) {
@@ -2103,7 +2213,7 @@ async function runBrandSearch() {
     });
 
     try {
-      const photoProduct = await fetchOpenFoodFactsProduct(match.name);
+      const photoProduct = await fetchBestBrandPhotoProduct(match);
       const packUrl = photoProduct ? getProductImageUrl(photoProduct) : null;
       if (packUrl) {
         const pname = getProductDisplayName(photoProduct) || match.name;

@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nova — recommendations</title>
+    <link rel="icon" href="./assets/nova-fruit-logo.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./nova-fonts.css?v=2" />
+    <link rel="stylesheet" href="./styles.css?v=2" />
+  </head>
+  <body>
+    <div class="app-top-nav-wrap">
+      <div class="app-top-nav">
+        <a class="brand-lockup" href="./index.html" aria-label="Nova home">
+          <img class="app-logo app-logo--nav" src="./assets/nova-fruit-logo.svg" width="36" height="36" alt="" />
+          <span class="brand-mark">Nova</span>
+        </a>
+        <nav class="app-top-links" aria-label="Related pages">
+          <a href="./index.html">App</a>
+          <a href="./history.html">History</a>
+          <a href="./showcase.html">Project write-up</a>
+        </nav>
+        <span></span>
+      </div>
+    </div>
+
+    <main class="app-shell">
+      <section class="panel">
+        <h2>Recommendations</h2>
+        <p class="lookup-note">Generated from today's logged meals and your saved goals.</p>
+        <div id="recommendationList" class="meal-timeline"></div>
+      </section>
+    </main>
+
+    <script>
+      const GOALS_KEY = "novaMacroGoals";
+      const MEAL_LOG_KEY = "novaMealLog";
+      const DEFAULT_GOALS = { calories: 2200, protein: 140, carbs: 250, fat: 70 };
+      const list = document.getElementById("recommendationList");
+
+      function getTodayKey() {
+        const now = new Date();
+        return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+      }
+
+      function getJson(key, fallback) {
+        const raw = localStorage.getItem(key);
+        if (!raw) return fallback;
+        try {
+          const parsed = JSON.parse(raw);
+          return parsed ?? fallback;
+        } catch {
+          return fallback;
+        }
+      }
+
+      function sum(items, key) {
+        return items.reduce((acc, x) => acc + (Number(x[key]) || 0), 0);
+      }
+
+      function addCard(title, body) {
+        const card = document.createElement("div");
+        card.className = "meal-group";
+        const h3 = document.createElement("h3");
+        h3.textContent = title;
+        const p = document.createElement("p");
+        p.className = "meal-meta";
+        p.textContent = body;
+        card.append(h3, p);
+        list.append(card);
+      }
+
+      const goals = { ...DEFAULT_GOALS, ...getJson(GOALS_KEY, {}) };
+      const allMeals = getJson(MEAL_LOG_KEY, []).filter((m) => m && m.date === getTodayKey());
+      const totals = {
+        calories: sum(allMeals, "calories"),
+        protein: sum(allMeals, "protein"),
+        carbs: sum(allMeals, "carbs"),
+        fat: sum(allMeals, "fat"),
+      };
+
+      addCard(
+        "Today's macro snapshot",
+        `Calories ${Math.round(totals.calories)}/${goals.calories}, Protein ${Math.round(totals.protein)}/${goals.protein}g, Carbs ${Math.round(totals.carbs)}/${goals.carbs}g, Fat ${Math.round(totals.fat)}/${goals.fat}g.`,
+      );
+
+      if (totals.protein < goals.protein * 0.7) {
+        addCard(
+          "Protein is low today",
+          "Add a high-protein snack: Greek yogurt, grilled chicken wrap, tofu bowl, tuna packet, or a protein shake.",
+        );
+      }
+
+      if (totals.calories > goals.calories * 1.15) {
+        addCard(
+          "Calories are running high",
+          "Try lower-calorie swaps tonight: sparkling water over soda, grilled options over fried, and prioritize fiber/protein to stay full.",
+        );
+      }
+
+      if (totals.carbs > goals.carbs * 1.2) {
+        addCard(
+          "Carbs are above target",
+          "Balance your next meal with lean protein + non-starchy veggies. Reduce liquid sugars and refined snack foods.",
+        );
+      }
+
+      if (totals.fat > goals.fat * 1.2) {
+        addCard(
+          "Fat is above target",
+          "Choose baking/grilling over frying and reduce extra sauces/oils in the next meal.",
+        );
+      }
+
+      if (totals.calories < goals.calories * 0.6 && allMeals.length > 0) {
+        addCard(
+          "You may be under-fueling",
+          "If this is a normal day, add one balanced meal (protein + complex carbs + healthy fat).",
+        );
+      }
+
+      if (allMeals.length === 0) {
+        addCard(
+          "No meals logged yet",
+          "Go back to the app and tap “Add to Today” after a scan, brand search, or barcode lookup.",
+        );
+      }
+
+      if (list.children.length < 3) {
+        addCard(
+          "General quality tip",
+          "Aim for each meal to include protein + fiber. In Nova brand lookup, prefer options with lower sugar and shorter ingredient lists.",
+        );
+      }
+    </script>
+  </body>
+</html>
