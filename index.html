@@ -114,6 +114,54 @@
 
       <main id="app-main" class="app-shell">
         <section class="panel">
+          <h2>Today dashboard</h2>
+          <p class="lookup-note">Track calories and macros from your logged meals.</p>
+          <div class="macro-dashboard">
+            <div class="macro-row">
+              <div class="macro-row-head">
+                <span>Calories</span>
+                <strong id="todayCaloriesText">0 / 2200</strong>
+              </div>
+              <div class="macro-bar"><span id="todayCaloriesBar"></span></div>
+            </div>
+            <div class="macro-row">
+              <div class="macro-row-head">
+                <span>Protein</span>
+                <strong id="todayProteinText">0g / 140g</strong>
+              </div>
+              <div class="macro-bar"><span id="todayProteinBar"></span></div>
+            </div>
+            <div class="macro-row">
+              <div class="macro-row-head">
+                <span>Carbs</span>
+                <strong id="todayCarbsText">0g / 250g</strong>
+              </div>
+              <div class="macro-bar"><span id="todayCarbsBar"></span></div>
+            </div>
+            <div class="macro-row">
+              <div class="macro-row-head">
+                <span>Fat</span>
+                <strong id="todayFatText">0g / 70g</strong>
+              </div>
+              <div class="macro-bar"><span id="todayFatBar"></span></div>
+            </div>
+          </div>
+          <div class="goal-grid">
+            <label class="label" for="goalCalories">Calorie goal</label>
+            <input id="goalCalories" type="number" min="800" step="10" />
+            <label class="label" for="goalProtein">Protein goal (g)</label>
+            <input id="goalProtein" type="number" min="10" step="1" />
+            <label class="label" for="goalCarbs">Carbs goal (g)</label>
+            <input id="goalCarbs" type="number" min="10" step="1" />
+            <label class="label" for="goalFat">Fat goal (g)</label>
+            <input id="goalFat" type="number" min="10" step="1" />
+          </div>
+          <div class="actions">
+            <button id="saveGoalsButton">Save goals</button>
+          </div>
+        </section>
+
+        <section class="panel">
           <h2>Ingredient scan</h2>
           <label for="ingredients" class="label">Ingredients</label>
           <p class="lookup-note">
@@ -198,6 +246,14 @@
               Load Demo Brand
             </button>
           </div>
+
+          <hr class="divider" />
+          <h2>Barcode lookup</h2>
+          <label for="barcodeInput" class="label">Enter barcode (UPC/EAN)</label>
+          <input id="barcodeInput" type="text" placeholder="Example: 5449000054227" inputmode="numeric" />
+          <div class="actions">
+            <button id="barcodeLookupButton">Lookup Barcode</button>
+          </div>
         </section>
 
         <section class="panel panel--results">
@@ -221,6 +277,16 @@
                 <p id="verdict" class="verdict"></p>
                 <p id="confidence" class="confidence"></p>
                 <p id="nutritionSummary" class="nutrition-summary"></p>
+                <div class="actions actions--compact">
+                  <label for="mealTypeSelect" class="label">Log as</label>
+                  <select id="mealTypeSelect">
+                    <option value="Breakfast">Breakfast</option>
+                    <option value="Lunch">Lunch</option>
+                    <option value="Dinner">Dinner</option>
+                    <option value="Snack">Snack</option>
+                  </select>
+                  <button id="addToTodayButton" class="secondary" type="button" disabled>Add to Today</button>
+                </div>
               </div>
             </div>
 
@@ -250,6 +316,12 @@
               <ul id="alternativeList"></ul>
             </div>
           </div>
+        </section>
+
+        <section class="panel">
+          <h2>Today meal log</h2>
+          <p id="mealLogDate" class="lookup-note"></p>
+          <div id="mealTimeline" class="meal-timeline"></div>
         </section>
       </main>
 

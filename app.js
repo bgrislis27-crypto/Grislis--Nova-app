@@ -862,15 +862,38 @@ const showLoginButton = document.getElementById("showLoginButton");
 const showCreateAccountButton = document.getElementById("showCreateAccountButton");
 const createAccountFields = document.getElementById("createAccountFields");
 const signupConfirmPassword = document.getElementById("signupConfirmPassword");
+const addToTodayButton = document.getElementById("addToTodayButton");
+const mealTypeSelect = document.getElementById("mealTypeSelect");
+const mealTimeline = document.getElementById("mealTimeline");
+const mealLogDate = document.getElementById("mealLogDate");
+const goalCalories = document.getElementById("goalCalories");
+const goalProtein = document.getElementById("goalProtein");
+const goalCarbs = document.getElementById("goalCarbs");
+const goalFat = document.getElementById("goalFat");
+const saveGoalsButton = document.getElementById("saveGoalsButton");
+const todayCaloriesText = document.getElementById("todayCaloriesText");
+const todayProteinText = document.getElementById("todayProteinText");
+const todayCarbsText = document.getElementById("todayCarbsText");
+const todayFatText = document.getElementById("todayFatText");
+const todayCaloriesBar = document.getElementById("todayCaloriesBar");
+const todayProteinBar = document.getElementById("todayProteinBar");
+const todayCarbsBar = document.getElementById("todayCarbsBar");
+const todayFatBar = document.getElementById("todayFatBar");
+const barcodeInput = document.getElementById("barcodeInput");
+const barcodeLookupButton = document.getElementById("barcodeLookupButton");
 
 const demoLabel =
   "Carbonated water, high fructose corn syrup, caramel color, phosphoric acid, natural flavors, sodium benzoate, caffeine";
 const demoBrand = "Coca-Cola";
 const SESSION_KEY = "novaSession";
 const ACCOUNTS_KEY = "novaAccounts";
+const GOALS_KEY = "novaMacroGoals";
+const MEAL_LOG_KEY = "novaMealLog";
+const DEFAULT_GOALS = { calories: 2200, protein: 140, carbs: 250, fat: 70 };
 let activeSuggestionIndex = -1;
 let currentSuggestions = [];
 let authMode = "login";
+let currentLogCandidate = null;
 
 function showApp() {
   authScreen.classList.add("hidden");
@@ -891,6 +914,239 @@ function startSession(mode, emailValue = "") {
   localStorage.setItem(SESSION_KEY, JSON.stringify(payload));
   authMessage.textContent = "";
   showApp();
+}
+
+function getTodayKey() {
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = String(now.getMonth() + 1).padStart(2, "0");
+  const d = String(now.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
+
+function formatTodayLabel() {
+  return new Date().toLocaleDateString(undefined, {
+    weekday: "long",
+    month: "short",
+    day: "numeric",
+  });
+}
+
+function parseNullableNumber(value) {
+  if (value === null || value === undefined || value === "") {
+    return null;
+  }
+  const n = Number(value);
+  if (!Number.isFinite(n)) {
+    return null;
+  }
+  return n;
+}
+
+function formatMacroValue(value, unit = "g") {
+  if (value === null || value === undefined || !Number.isFinite(value)) {
+    return `N/A${unit ? ` ${unit}` : ""}`.trim();
+  }
+  if (unit) {
+    return `${Math.round(value)}${unit}`;
+  }
+  return String(Math.round(value));
+}
+
+function getStoredGoals() {
+  const raw = localStorage.getItem(GOALS_KEY);
+  if (!raw) {
+    return { ...DEFAULT_GOALS };
+  }
+  try {
+    const parsed = JSON.parse(raw);
+    return {
+      calories: parseNullableNumber(parsed.calories) ?? DEFAULT_GOALS.calories,
+      protein: parseNullableNumber(parsed.protein) ?? DEFAULT_GOALS.protein,
+      carbs: parseNullableNumber(parsed.carbs) ?? DEFAULT_GOALS.carbs,
+      fat: parseNullableNumber(parsed.fat) ?? DEFAULT_GOALS.fat,
+    };
+  } catch {
+    return { ...DEFAULT_GOALS };
+  }
+}
+
+function saveStoredGoals(goals) {
+  localStorage.setItem(GOALS_KEY, JSON.stringify(goals));
+}
+
+function getStoredMealLog() {
+  const raw = localStorage.getItem(MEAL_LOG_KEY);
+  if (!raw) {
+    return [];
+  }
+  try {
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveStoredMealLog(items) {
+  localStorage.setItem(MEAL_LOG_KEY, JSON.stringify(items));
+}
+
+function getTodayMeals() {
+  const today = getTodayKey();
+  return getStoredMealLog().filter((item) => item && item.date === today);
+}
+
+function sumMacro(items, key) {
+  return items.reduce((total, item) => {
+    const n = parseNullableNumber(item[key]);
+    return n === null ? total : total + n;
+  }, 0);
+}
+
+function clampPercent(value) {
+  return Math.max(0, Math.min(100, value));
+}
+
+function renderDashboard() {
+  const goals = getStoredGoals();
+  goalCalories.value = String(goals.calories);
+  goalProtein.value = String(goals.protein);
+  goalCarbs.value = String(goals.carbs);
+  goalFat.value = String(goals.fat);
+
+  const todayItems = getTodayMeals();
+  const totals = {
+    calories: sumMacro(todayItems, "calories"),
+    protein: sumMacro(todayItems, "protein"),
+    carbs: sumMacro(todayItems, "carbs"),
+    fat: sumMacro(todayItems, "fat"),
+  };
+
+  todayCaloriesText.textContent = `${Math.round(totals.calories)} / ${goals.calories}`;
+  todayProteinText.textContent = `${Math.round(totals.protein)}g / ${goals.protein}g`;
+  todayCarbsText.textContent = `${Math.round(totals.carbs)}g / ${goals.carbs}g`;
+  todayFatText.textContent = `${Math.round(totals.fat)}g / ${goals.fat}g`;
+
+  todayCaloriesBar.style.width = `${clampPercent((totals.calories / goals.calories) * 100)}%`;
+  todayProteinBar.style.width = `${clampPercent((totals.protein / goals.protein) * 100)}%`;
+  todayCarbsBar.style.width = `${clampPercent((totals.carbs / goals.carbs) * 100)}%`;
+  todayFatBar.style.width = `${clampPercent((totals.fat / goals.fat) * 100)}%`;
+}
+
+function renderMealTimeline() {
+  const groups = ["Breakfast", "Lunch", "Dinner", "Snack"];
+  const items = getTodayMeals().sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+  mealLogDate.textContent = `Today: ${formatTodayLabel()}`;
+  mealTimeline.innerHTML = "";
+
+  if (items.length === 0) {
+    const p = document.createElement("p");
+    p.className = "empty-state";
+    p.textContent = "No meals logged yet. Run a scan, brand, or barcode lookup and tap Add to Today.";
+    mealTimeline.append(p);
+    return;
+  }
+
+  for (const group of groups) {
+    const subset = items.filter((item) => item.mealType === group);
+    if (subset.length === 0) continue;
+
+    const wrap = document.createElement("section");
+    wrap.className = "meal-group";
+    const h3 = document.createElement("h3");
+    h3.textContent = group;
+    wrap.append(h3);
+
+    for (const entry of subset) {
+      const row = document.createElement("div");
+      row.className = "meal-item";
+
+      const left = document.createElement("div");
+      const title = document.createElement("strong");
+      title.textContent = entry.name || "Logged item";
+      const meta = document.createElement("div");
+      meta.className = "meal-meta";
+      meta.textContent =
+        `Calories ${formatMacroValue(entry.calories, "")} | Protein ${formatMacroValue(entry.protein)} | ` +
+        `Carbs ${formatMacroValue(entry.carbs)} | Fat ${formatMacroValue(entry.fat)}`;
+      left.append(title, meta);
+
+      const actions = document.createElement("div");
+      actions.className = "meal-item-actions";
+      const edit = document.createElement("button");
+      edit.type = "button";
+      edit.className = "secondary small";
+      edit.textContent = "Edit";
+      edit.addEventListener("click", () => editMealEntry(entry.id));
+      const remove = document.createElement("button");
+      remove.type = "button";
+      remove.className = "secondary small";
+      remove.textContent = "Delete";
+      remove.addEventListener("click", () => deleteMealEntry(entry.id));
+      actions.append(edit, remove);
+
+      row.append(left, actions);
+      wrap.append(row);
+    }
+
+    mealTimeline.append(wrap);
+  }
+}
+
+function setCurrentLogCandidate(candidate) {
+  currentLogCandidate = candidate;
+  if (!addToTodayButton) {
+    return;
+  }
+  addToTodayButton.disabled = !candidate;
+}
+
+function addCurrentCandidateToToday() {
+  if (!currentLogCandidate) {
+    return;
+  }
+  const mealType = mealTypeSelect.value || "Snack";
+  const list = getStoredMealLog();
+  list.push({
+    ...currentLogCandidate,
+    id: `${Date.now()}-${Math.random().toString(16).slice(2, 8)}`,
+    mealType,
+    date: getTodayKey(),
+    createdAt: Date.now(),
+  });
+  saveStoredMealLog(list);
+  renderDashboard();
+  renderMealTimeline();
+}
+
+function deleteMealEntry(id) {
+  const next = getStoredMealLog().filter((item) => item.id !== id);
+  saveStoredMealLog(next);
+  renderDashboard();
+  renderMealTimeline();
+}
+
+function editMealEntry(id) {
+  const entries = getStoredMealLog();
+  const target = entries.find((item) => item.id === id);
+  if (!target) return;
+  const nextCalories = window.prompt("Calories", String(target.calories ?? ""));
+  if (nextCalories === null) return;
+  const nextProtein = window.prompt("Protein (g)", String(target.protein ?? ""));
+  if (nextProtein === null) return;
+  const nextCarbs = window.prompt("Carbs (g)", String(target.carbs ?? ""));
+  if (nextCarbs === null) return;
+  const nextFat = window.prompt("Fat (g)", String(target.fat ?? ""));
+  if (nextFat === null) return;
+
+  target.calories = parseNullableNumber(nextCalories);
+  target.protein = parseNullableNumber(nextProtein);
+  target.carbs = parseNullableNumber(nextCarbs);
+  target.fat = parseNullableNumber(nextFat);
+  saveStoredMealLog(entries);
+  renderDashboard();
+  renderMealTimeline();
 }
 
 function getStoredAccounts() {
@@ -1289,6 +1545,14 @@ function runScan() {
   );
   renderList(factList, matches, (item) => item.reason);
   renderList(alternativeList, matches, (item) => item.alternative);
+  setCurrentLogCandidate({
+    name: "Ingredient scan entry",
+    calories: null,
+    protein: null,
+    carbs: null,
+    fat: null,
+    source: "scan",
+  });
 }
 
 function startScanAnimation() {
@@ -1646,6 +1910,48 @@ function renderOpenFoodFactsProduct(product) {
   renderList(flagList, negatives, (item) => item);
   renderList(factList, positives, (item) => item);
   renderList(alternativeList, alternatives, (item) => item);
+  setCurrentLogCandidate({
+    name: `${brandName}: ${productName}`,
+    calories: calories,
+    protein: protein,
+    carbs: getNutriment(product, "carbohydrates_100g"),
+    fat: getNutriment(product, "fat_100g"),
+    source: "off",
+  });
+}
+
+async function runBarcodeLookup() {
+  const code = barcodeInput.value.trim();
+  if (!code) {
+    return;
+  }
+  barcodeLookupButton.disabled = true;
+  barcodeLookupButton.textContent = "Looking up...";
+  try {
+    const product = await fetchOpenFoodFactsProductDetails(code);
+    if (!product) {
+      emptyState.classList.add("hidden");
+      results.classList.remove("hidden");
+      scoreValue.textContent = "--";
+      verdict.textContent = "Barcode not found";
+      confidence.textContent = "No OpenFoodFacts product was found for this barcode.";
+      nutritionSummary.textContent = "";
+      applyScoreBadgeTier("neutral");
+      resultImage.onerror = null;
+      resultImage.src = "./assets/default-food.svg";
+      resultImage.alt = "No product image available";
+      resultImageCaption.textContent = "No product visual available for this barcode";
+      renderList(flagList, [], () => "");
+      renderList(factList, [], () => "");
+      renderList(alternativeList, [], () => "");
+      setCurrentLogCandidate(null);
+      return;
+    }
+    renderOpenFoodFactsProduct(product);
+  } finally {
+    barcodeLookupButton.disabled = false;
+    barcodeLookupButton.textContent = "Lookup Barcode";
+  }
 }
 
 function getBrandSuggestions(query) {
@@ -1757,6 +2063,7 @@ async function runBrandSearch() {
       renderList(flagList, [], () => "");
       renderList(factList, [], () => "");
       renderList(alternativeList, [], () => "");
+      setCurrentLogCandidate(null);
       return;
     }
 
@@ -1786,6 +2093,14 @@ async function runBrandSearch() {
       (item) => item,
     );
     renderList(alternativeList, match.alternatives, (item) => item);
+    setCurrentLogCandidate({
+      name: `${match.name} (brand profile)`,
+      calories: null,
+      protein: null,
+      carbs: null,
+      fat: null,
+      source: "brand-local",
+    });
 
     try {
       const photoProduct = await fetchOpenFoodFactsProduct(match.name);
@@ -1806,6 +2121,14 @@ async function runBrandSearch() {
           nutritionSummary.textContent =
             "Local brand score above; product photo from OpenFoodFacts (nutrition fields not listed for this hit).";
         }
+        setCurrentLogCandidate({
+          name: `${bname}: ${pname}`,
+          calories: cal,
+          protein: prot,
+          carbs: getNutriment(photoProduct, "carbohydrates_100g"),
+          fat: getNutriment(photoProduct, "fat_100g"),
+          source: "brand-off",
+        });
       } else {
         nutritionSummary.textContent =
           "Calories and protein are unavailable for the static profile, and no product photo was found on OpenFoodFacts for this search.";
@@ -1909,6 +2232,27 @@ loadBrandDemoButton.addEventListener("click", () => {
   runBrandSearch();
 });
 
+addToTodayButton.addEventListener("click", addCurrentCandidateToToday);
+saveGoalsButton.addEventListener("click", () => {
+  const next = {
+    calories: parseNullableNumber(goalCalories.value) ?? DEFAULT_GOALS.calories,
+    protein: parseNullableNumber(goalProtein.value) ?? DEFAULT_GOALS.protein,
+    carbs: parseNullableNumber(goalCarbs.value) ?? DEFAULT_GOALS.carbs,
+    fat: parseNullableNumber(goalFat.value) ?? DEFAULT_GOALS.fat,
+  };
+  saveStoredGoals(next);
+  renderDashboard();
+});
+barcodeLookupButton.addEventListener("click", () => {
+  void runBarcodeLookup();
+});
+barcodeInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    void runBarcodeLookup();
+  }
+});
+
 loginButton.addEventListener("click", handleLogin);
 createAccountButton.addEventListener("click", handleCreateAccount);
 guestButton.addEventListener("click", handleGuestAccess);
@@ -1939,3 +2283,7 @@ if (existingSession) {
 } else {
   showAuth();
 }
+renderDashboard();
+renderMealTimeline();
+mealLogDate.textContent = `Today: ${formatTodayLabel()}`;
+setCurrentLogCandidate(null);
