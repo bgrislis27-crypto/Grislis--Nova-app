@@ -1501,9 +1501,9 @@ footer,
 }
 
 :root[data-theme="dark"] .calendar-day.active {
-  background: #eef2fa;
-  border-color: #eef2fa;
-  color: #10141f;
+  background: #2f3a52;
+  border-color: #465472;
+  color: #f3f5fb;
 }
 
 :root[data-theme="dark"] .segment {
@@ -1513,9 +1513,9 @@ footer,
 }
 
 :root[data-theme="dark"] .segment.active {
-  background: #eef2fa;
-  border-color: #eef2fa;
-  color: #141927;
+  background: #31405d;
+  border-color: #415575;
+  color: #f3f5fb;
 }
 
 :root[data-theme="dark"] .bottom-tabs {
@@ -1544,6 +1544,43 @@ footer,
 :root[data-theme="dark"] .app-footer {
   background: rgba(22, 28, 42, 0.88);
   border-top: 1px solid #323d54;
+}
+
+/* Force light text in dark mode for all hardcoded dark labels. */
+:root[data-theme="dark"] h1,
+:root[data-theme="dark"] h2,
+:root[data-theme="dark"] h3,
+:root[data-theme="dark"] p,
+:root[data-theme="dark"] strong,
+:root[data-theme="dark"] li,
+:root[data-theme="dark"] .fit-big-number,
+:root[data-theme="dark"] .fit-label,
+:root[data-theme="dark"] .fit-subtext,
+:root[data-theme="dark"] .home-calories-big,
+:root[data-theme="dark"] .home-subtle,
+:root[data-theme="dark"] .home-macro-card strong,
+:root[data-theme="dark"] .home-macro-card p,
+:root[data-theme="dark"] .home-log-top strong,
+:root[data-theme="dark"] .home-log-main p,
+:root[data-theme="dark"] .home-log-macros,
+:root[data-theme="dark"] .calendar-day,
+:root[data-theme="dark"] .label,
+:root[data-theme="dark"] .top-badge,
+:root[data-theme="dark"] .top-badge--accent {
+  color: #f3f5fb;
+}
+
+:root[data-theme="dark"] .lookup-note,
+:root[data-theme="dark"] .empty-state,
+:root[data-theme="dark"] .meal-meta,
+:root[data-theme="dark"] .home-log-top span,
+:root[data-theme="dark"] .app-top-links a {
+  color: #c8d0e0;
+}
+
+:root[data-theme="dark"] .home-log-top span {
+  background: #2b344a;
+  border-color: #445070;
 }
 
 .home-recent-list {
