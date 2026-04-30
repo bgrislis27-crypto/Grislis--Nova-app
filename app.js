@@ -895,6 +895,7 @@ const barcodeInput = document.getElementById("barcodeInput");
 const barcodeLookupButton = document.getElementById("barcodeLookupButton");
 const topDateBadge = document.getElementById("topDateBadge");
 const topCaloriesLeftBadge = document.getElementById("topCaloriesLeftBadge");
+const themeToggleButton = document.getElementById("themeToggleButton");
 const tabButtons = Array.from(document.querySelectorAll(".tab-button"));
 const tabPanels = Array.from(document.querySelectorAll(".tab-panel"));
 const fabAddButton = document.getElementById("fabAddButton");
@@ -909,6 +910,7 @@ const MEAL_LOG_KEY = "novaMealLog";
 const BRAND_PHOTO_CACHE_KEY = "novaBrandPhotoCache";
 const HISTORY_KEY = "novaActionHistory";
 const WATER_KEY = "novaWaterByDate";
+const THEME_KEY = "novaTheme";
 const DEFAULT_GOALS = { calories: 2200, protein: 140, carbs: 250, fat: 70 };
 let activeSuggestionIndex = -1;
 let currentSuggestions = [];
@@ -916,6 +918,25 @@ let authMode = "login";
 let currentLogCandidate = null;
 let activeTab = "dashboard";
 let activeProgressRange = "90";
+
+function applyTheme(theme) {
+  const nextTheme = theme === "dark" ? "dark" : "light";
+  document.documentElement.setAttribute("data-theme", nextTheme);
+  localStorage.setItem(THEME_KEY, nextTheme);
+  if (themeToggleButton) {
+    themeToggleButton.textContent = nextTheme === "dark" ? "Light mode" : "Dark mode";
+  }
+}
+
+function initTheme() {
+  const saved = localStorage.getItem(THEME_KEY);
+  if (saved === "dark" || saved === "light") {
+    applyTheme(saved);
+    return;
+  }
+  const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  applyTheme(prefersDark ? "dark" : "light");
+}
 
 function setActiveTab(tabKey) {
   activeTab = tabKey;
@@ -2594,6 +2615,13 @@ if (fabAddButton) {
   });
 }
 
+if (themeToggleButton) {
+  themeToggleButton.addEventListener("click", () => {
+    const current = document.documentElement.getAttribute("data-theme");
+    applyTheme(current === "dark" ? "light" : "dark");
+  });
+}
+
 if (waterMinusButton) {
   waterMinusButton.addEventListener("click", () => {
     setTodayWater(getTodayWater() - 1);
@@ -2706,6 +2734,7 @@ signupConfirmPassword.addEventListener("keydown", (event) => {
 });
 
 setAuthMode("login");
+initTheme();
 const existingSession = localStorage.getItem(SESSION_KEY);
 if (existingSession) {
   showApp();

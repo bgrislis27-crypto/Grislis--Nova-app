@@ -35,6 +35,24 @@
   --paper-noise: rgba(255, 255, 255, 0.08);
 }
 
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page: #141723;
+  --page-alt: #171b29;
+  --page-elevated: #1a1f2e;
+  --card: #1c2232;
+  --text: #f3f5fb;
+  --muted: #a2acc1;
+  --border: #364055;
+  --stroke: #364055;
+  --border-strong: #3d4960;
+  --secondary-fill: #2a3347;
+  --secondary-text: #e4e8f3;
+  --secondary-hover: #34405a;
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  --paper-noise: rgba(255, 255, 255, 0.02);
+}
+
 * {
   box-sizing: border-box;
 }
@@ -1442,6 +1460,90 @@ footer,
   font-size: 0.72rem;
   font-family: var(--font-ui);
   z-index: 2;
+}
+
+:root[data-theme="dark"] .app-top-nav-wrap {
+  background: rgba(23, 28, 42, 0.88);
+  border-bottom: 1px solid #2c3549;
+}
+
+:root[data-theme="dark"] .top-badge {
+  color: #c8d0e0;
+  background: rgba(40, 48, 67, 0.9);
+  border-color: rgba(160, 176, 207, 0.2);
+}
+
+:root[data-theme="dark"] .top-badge--accent {
+  color: #84d5a0;
+  background: rgba(28, 63, 43, 0.85);
+  border-color: rgba(76, 170, 109, 0.42);
+}
+
+:root[data-theme="dark"] .app-shell > .panel {
+  border-color: #2f384e;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.33);
+}
+
+:root[data-theme="dark"] .fit-card,
+:root[data-theme="dark"] .home-hero-card,
+:root[data-theme="dark"] .home-macro-card,
+:root[data-theme="dark"] .home-log-card,
+:root[data-theme="dark"] .meal-group,
+:root[data-theme="dark"] .result-block {
+  background: #20283b;
+  border-color: #39445c;
+}
+
+:root[data-theme="dark"] .calendar-day {
+  background: #242d42;
+  border-color: #3a4560;
+  color: #dbe3f4;
+}
+
+:root[data-theme="dark"] .calendar-day.active {
+  background: #eef2fa;
+  border-color: #eef2fa;
+  color: #10141f;
+}
+
+:root[data-theme="dark"] .segment {
+  background: #2b344a;
+  border-color: #445070;
+  color: #c6d0e4;
+}
+
+:root[data-theme="dark"] .segment.active {
+  background: #eef2fa;
+  border-color: #eef2fa;
+  color: #141927;
+}
+
+:root[data-theme="dark"] .bottom-tabs {
+  background: rgba(25, 31, 46, 0.95);
+  border-top-color: #374158;
+}
+
+:root[data-theme="dark"] .bottom-tabs .tab-button {
+  color: #99a5bf;
+}
+
+:root[data-theme="dark"] .bottom-tabs .tab-button.active {
+  color: #f4f6fc;
+  background: #2c3650;
+  border-color: #3f4d6c;
+}
+
+:root[data-theme="dark"] .goal-chart-wrap svg text {
+  fill: #a9b4cc;
+}
+
+:root[data-theme="dark"] .goal-progress-head span {
+  color: #7dd59c;
+}
+
+:root[data-theme="dark"] .app-footer {
+  background: rgba(22, 28, 42, 0.88);
+  border-top: 1px solid #323d54;
 }
 
 .home-recent-list {
