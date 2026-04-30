@@ -115,7 +115,7 @@
       </header>
 
       <main id="app-main" class="app-shell">
-        <section class="panel">
+        <section class="panel tab-panel" data-tab-panel="dashboard">
           <h2>Today dashboard</h2>
           <p class="lookup-note">Track calories and macros from your logged meals.</p>
           <div class="macro-dashboard">
@@ -163,7 +163,7 @@
           </div>
         </section>
 
-        <section class="panel">
+        <section class="panel tab-panel" data-tab-panel="scan">
           <h2>Ingredient scan</h2>
           <label for="ingredients" class="label">Ingredients</label>
           <p class="lookup-note">
@@ -258,7 +258,7 @@
           </div>
         </section>
 
-        <section class="panel panel--results">
+        <section class="panel panel--results tab-panel" data-tab-panel="results">
           <h2>Scan results</h2>
           <p class="lookup-note score-legend" aria-label="Score color bands">
             <span><strong>80–100</strong> good</span> ·
@@ -320,12 +320,19 @@
           </div>
         </section>
 
-        <section class="panel">
+        <section class="panel tab-panel" data-tab-panel="log">
           <h2>Today meal log</h2>
           <p id="mealLogDate" class="lookup-note"></p>
           <div id="mealTimeline" class="meal-timeline"></div>
         </section>
       </main>
+
+      <nav class="bottom-tabs" aria-label="App sections">
+        <button class="tab-button active" type="button" data-tab-target="dashboard">Dashboard</button>
+        <button class="tab-button" type="button" data-tab-target="scan">Scan</button>
+        <button class="tab-button" type="button" data-tab-target="results">Results</button>
+        <button class="tab-button" type="button" data-tab-target="log">History</button>
+      </nav>
 
       <footer class="app-footer">
         <p>

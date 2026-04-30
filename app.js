@@ -881,6 +881,8 @@ const todayCarbsBar = document.getElementById("todayCarbsBar");
 const todayFatBar = document.getElementById("todayFatBar");
 const barcodeInput = document.getElementById("barcodeInput");
 const barcodeLookupButton = document.getElementById("barcodeLookupButton");
+const tabButtons = Array.from(document.querySelectorAll(".tab-button"));
+const tabPanels = Array.from(document.querySelectorAll(".tab-panel"));
 
 const demoLabel =
   "Carbonated water, high fructose corn syrup, caramel color, phosphoric acid, natural flavors, sodium benzoate, caffeine";
@@ -896,6 +898,19 @@ let activeSuggestionIndex = -1;
 let currentSuggestions = [];
 let authMode = "login";
 let currentLogCandidate = null;
+let activeTab = "dashboard";
+
+function setActiveTab(tabKey) {
+  activeTab = tabKey;
+  tabButtons.forEach((button) => {
+    const isActive = button.dataset.tabTarget === tabKey;
+    button.classList.toggle("active", isActive);
+    button.setAttribute("aria-selected", isActive ? "true" : "false");
+  });
+  tabPanels.forEach((panel) => {
+    panel.classList.toggle("active", panel.dataset.tabPanel === tabKey);
+  });
+}
 
 function getBrandPhotoCache() {
   const raw = localStorage.getItem(BRAND_PHOTO_CACHE_KEY);
@@ -1607,6 +1622,7 @@ function runScan() {
     fat: null,
     source: "scan",
   });
+  setActiveTab("results");
 }
 
 function startScanAnimation() {
@@ -2057,6 +2073,7 @@ async function runBarcodeLookup() {
       `${product.brands || "Unknown brand"} ${getProductDisplayName(product) || "product"}`,
     );
     renderOpenFoodFactsProduct(product);
+    setActiveTab("results");
   } finally {
     barcodeLookupButton.disabled = false;
     barcodeLookupButton.textContent = "Lookup Barcode";
@@ -2146,6 +2163,7 @@ async function runBrandSearch() {
       const liveProduct = await fetchOpenFoodFactsProduct(query);
       if (liveProduct) {
         renderOpenFoodFactsProduct(liveProduct);
+        setActiveTab("results");
         return;
       }
     } catch {
@@ -2174,6 +2192,7 @@ async function runBrandSearch() {
       renderList(factList, [], () => "");
       renderList(alternativeList, [], () => "");
       setCurrentLogCandidate(null);
+      setActiveTab("results");
       return;
     }
 
@@ -2302,6 +2321,14 @@ brandSearch.addEventListener("keydown", (event) => {
   }
 });
 
+tabButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const target = button.dataset.tabTarget;
+    if (!target) return;
+    setActiveTab(target);
+  });
+});
+
 document.addEventListener("click", (event) => {
   if (!brandSuggestions.contains(event.target) && event.target !== brandSearch) {
     hideBrandSuggestions();
@@ -2397,3 +2424,4 @@ renderDashboard();
 renderMealTimeline();
 mealLogDate.textContent = `Today: ${formatTodayLabel()}`;
 setCurrentLogCandidate(null);
+setActiveTab(activeTab);

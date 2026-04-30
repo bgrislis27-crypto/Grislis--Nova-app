@@ -412,7 +412,7 @@ h1 {
   display: block;
   max-width: calc(var(--max) + 6rem);
   margin: 0 auto;
-  padding: 0.75rem var(--space) 2.5rem;
+  padding: 0.75rem var(--space) 7rem;
 }
 
 /* Stacked “cards” on the gray workspace (clear contrast vs flat white page). */
@@ -443,6 +443,14 @@ h1 {
   background: var(--page-elevated);
   border-color: rgba(255, 255, 255, 0.5);
   box-shadow: 0 14px 40px rgba(15, 23, 42, 0.1);
+}
+
+.tab-panel {
+  display: none;
+}
+
+.tab-panel.active {
+  display: block;
 }
 
 h2 {
@@ -1004,6 +1012,39 @@ footer,
 
 .app-footer strong {
   color: var(--text);
+}
+
+.bottom-tabs {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 80;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  padding: 10px max(12px, env(safe-area-inset-left)) calc(10px + env(safe-area-inset-bottom))
+    max(12px, env(safe-area-inset-right));
+  background: rgba(244, 247, 252, 0.9);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(0, 0, 0, 0.07);
+}
+
+.bottom-tabs .tab-button {
+  border-radius: 12px;
+  padding: 10px 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #4a5363;
+  background: #e7ecf4;
+  border: 1px solid rgba(68, 82, 104, 0.12);
+}
+
+.bottom-tabs .tab-button.active {
+  color: #0f6537;
+  background: #d9f1e4;
+  border-color: rgba(0, 177, 74, 0.38);
 }
 
 .fine-print {
