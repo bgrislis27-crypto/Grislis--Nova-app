@@ -871,16 +871,26 @@ const goalProtein = document.getElementById("goalProtein");
 const goalCarbs = document.getElementById("goalCarbs");
 const goalFat = document.getElementById("goalFat");
 const saveGoalsButton = document.getElementById("saveGoalsButton");
-const todayCaloriesText = document.getElementById("todayCaloriesText");
-const todayCaloriesBig = document.getElementById("todayCaloriesBig");
-const todayProteinText = document.getElementById("todayProteinText");
-const todayCarbsText = document.getElementById("todayCarbsText");
-const todayFatText = document.getElementById("todayFatText");
-const todayCaloriesRing = document.getElementById("todayCaloriesRing");
-const todayProteinRing = document.getElementById("todayProteinRing");
-const todayCarbsRing = document.getElementById("todayCarbsRing");
-const todayFatRing = document.getElementById("todayFatRing");
+const homeCalendarStrip = document.getElementById("homeCalendarStrip");
+const stepsValue = document.getElementById("stepsValue");
+const caloriesBurnedValue = document.getElementById("caloriesBurnedValue");
+const activityBreakdown = document.getElementById("activityBreakdown");
+const stepsRing = document.getElementById("stepsRing");
+const caloriesBurnedRing = document.getElementById("caloriesBurnedRing");
+const waterValue = document.getElementById("waterValue");
+const waterMinusButton = document.getElementById("waterMinusButton");
+const waterPlusButton = document.getElementById("waterPlusButton");
 const homeRecentList = document.getElementById("homeRecentList");
+const lastWeightValue = document.getElementById("lastWeightValue");
+const daysLoggedValue = document.getElementById("daysLoggedValue");
+const cheatBadge = document.getElementById("cheatBadge");
+const weightRing = document.getElementById("weightRing");
+const daysLoggedRing = document.getElementById("daysLoggedRing");
+const progressRangeControl = document.getElementById("progressRangeControl");
+const goalChartSvg = document.getElementById("goalChartSvg");
+const goalChartTooltip = document.getElementById("goalChartTooltip");
+const goalChartWrap = document.getElementById("goalChartWrap");
+const goalProgressLabel = document.getElementById("goalProgressLabel");
 const barcodeInput = document.getElementById("barcodeInput");
 const barcodeLookupButton = document.getElementById("barcodeLookupButton");
 const topDateBadge = document.getElementById("topDateBadge");
@@ -898,12 +908,14 @@ const GOALS_KEY = "novaMacroGoals";
 const MEAL_LOG_KEY = "novaMealLog";
 const BRAND_PHOTO_CACHE_KEY = "novaBrandPhotoCache";
 const HISTORY_KEY = "novaActionHistory";
+const WATER_KEY = "novaWaterByDate";
 const DEFAULT_GOALS = { calories: 2200, protein: 140, carbs: 250, fat: 70 };
 let activeSuggestionIndex = -1;
 let currentSuggestions = [];
 let authMode = "login";
 let currentLogCandidate = null;
 let activeTab = "dashboard";
+let activeProgressRange = "90";
 
 function setActiveTab(tabKey) {
   activeTab = tabKey;
@@ -1073,6 +1085,69 @@ function getTodayMeals() {
   return getStoredMealLog().filter((item) => item && item.date === today);
 }
 
+function getWaterMap() {
+  const raw = localStorage.getItem(WATER_KEY);
+  if (!raw) return {};
+  try {
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === "object" ? parsed : {};
+  } catch {
+    return {};
+  }
+}
+
+function setWaterMap(map) {
+  localStorage.setItem(WATER_KEY, JSON.stringify(map));
+}
+
+function getTodayWater() {
+  const map = getWaterMap();
+  const v = Number(map[getTodayKey()] || 0);
+  return Number.isFinite(v) ? Math.max(0, Math.min(20, Math.round(v))) : 0;
+}
+
+function setTodayWater(cups) {
+  const map = getWaterMap();
+  map[getTodayKey()] = Math.max(0, Math.min(20, Math.round(cups)));
+  setWaterMap(map);
+}
+
+function getDailySeriesFromMeals(meals) {
+  const byDate = new Map();
+  for (const item of meals) {
+    if (!item || !item.date) continue;
+    const cur = byDate.get(item.date) || { calories: 0, entries: 0 };
+    cur.calories += parseNullableNumber(item.calories) ?? 0;
+    cur.entries += 1;
+    byDate.set(item.date, cur);
+  }
+  const rows = Array.from(byDate.entries())
+    .map(([date, data]) => ({ date, calories: Math.round(data.calories), entries: data.entries }))
+    .sort((a, b) => a.date.localeCompare(b.date));
+  return rows;
+}
+
+function renderCalendarStrip() {
+  if (!homeCalendarStrip) return;
+  const base = new Date();
+  const day = base.getDay();
+  const mondayOffset = day === 0 ? -6 : 1 - day;
+  const monday = new Date(base);
+  monday.setDate(base.getDate() + mondayOffset);
+  const labels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  homeCalendarStrip.innerHTML = "";
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(monday);
+    d.setDate(monday.getDate() + i);
+    const button = document.createElement("div");
+    button.className = "calendar-day";
+    const isToday = d.toDateString() === base.toDateString();
+    if (isToday) button.classList.add("active");
+    button.innerHTML = `<span>${labels[i]}</span><strong>${d.getDate()}</strong>`;
+    homeCalendarStrip.append(button);
+  }
+}
+
 function sumMacro(items, key) {
   return items.reduce((total, item) => {
     const n = parseNullableNumber(item[key]);
@@ -1141,32 +1216,20 @@ function renderDashboard() {
   const todayItems = getTodayMeals();
   const totals = {
     calories: sumMacro(todayItems, "calories"),
-    protein: sumMacro(todayItems, "protein"),
-    carbs: sumMacro(todayItems, "carbs"),
-    fat: sumMacro(todayItems, "fat"),
+    steps: Math.min(12000, 3200 + todayItems.length * 1800),
   };
+  const caloriesBurned = Math.min(900, 280 + todayItems.length * 120);
+  const walkBurn = Math.round(caloriesBurned * 0.62);
+  const activeBurn = caloriesBurned - walkBurn;
 
-  const left = {
-    calories: Math.round(goals.calories - totals.calories),
-    protein: Math.round(goals.protein - totals.protein),
-    carbs: Math.round(goals.carbs - totals.carbs),
-    fat: Math.round(goals.fat - totals.fat),
-  };
-
-  if (todayCaloriesText) {
-    todayCaloriesText.textContent = `${Math.round(totals.calories)} / ${goals.calories}`;
-  }
-  if (todayCaloriesBig) {
-    todayCaloriesBig.textContent = String(left.calories);
-  }
-  if (todayProteinText) todayProteinText.textContent = `${left.protein}g`;
-  if (todayCarbsText) todayCarbsText.textContent = `${left.carbs}g`;
-  if (todayFatText) todayFatText.textContent = `${left.fat}g`;
-
-  setRingProgress(todayCaloriesRing, (totals.calories / goals.calories) * 100, "#111111");
-  setRingProgress(todayProteinRing, (totals.protein / goals.protein) * 100, "#e66b6b");
-  setRingProgress(todayCarbsRing, (totals.carbs / goals.carbs) * 100, "#d89b61");
-  setRingProgress(todayFatRing, (totals.fat / goals.fat) * 100, "#6b97dd");
+  if (stepsValue) stepsValue.textContent = totals.steps.toLocaleString();
+  if (caloriesBurnedValue) caloriesBurnedValue.textContent = `${caloriesBurned}`;
+  if (activityBreakdown) activityBreakdown.textContent = `Walk ${walkBurn} · Active ${activeBurn}`;
+  setRingProgress(stepsRing, (totals.steps / 12000) * 100, "#5d89df");
+  setRingProgress(caloriesBurnedRing, (caloriesBurned / 900) * 100, "#e69557");
+  const water = getTodayWater();
+  if (waterValue) waterValue.textContent = `${water} / 8 cups`;
+  renderCalendarStrip();
   renderHomeRecentList(todayItems);
 
   const caloriesLeft = Math.round(goals.calories - totals.calories);
@@ -1180,6 +1243,113 @@ function renderDashboard() {
       topCaloriesLeftBadge.textContent = `Over by: ${Math.abs(caloriesLeft)}`;
     }
   }
+}
+
+function getRangeDays() {
+  if (activeProgressRange === "all") return Infinity;
+  const v = Number(activeProgressRange);
+  return Number.isFinite(v) ? v : 90;
+}
+
+function smoothPath(points) {
+  if (points.length === 0) return "";
+  if (points.length === 1) return `M ${points[0].x} ${points[0].y}`;
+  let d = `M ${points[0].x} ${points[0].y}`;
+  for (let i = 1; i < points.length; i++) {
+    const prev = points[i - 1];
+    const cur = points[i];
+    const mx = (prev.x + cur.x) / 2;
+    d += ` Q ${mx} ${prev.y}, ${cur.x} ${cur.y}`;
+  }
+  return d;
+}
+
+function renderGoalChart() {
+  if (!goalChartSvg || !goalChartWrap || !goalChartTooltip || !goalProgressLabel) return;
+  const goals = getStoredGoals();
+  const allMeals = getStoredMealLog();
+  const series = getDailySeriesFromMeals(allMeals);
+  const maxDays = getRangeDays();
+  const rows =
+    maxDays === Infinity
+      ? series
+      : series.slice(Math.max(0, series.length - maxDays));
+
+  goalChartSvg.innerHTML = "";
+  if (rows.length === 0) {
+    goalChartSvg.innerHTML = `<text x="50%" y="52%" text-anchor="middle" fill="#7b8190" font-size="18">No progress data yet</text>`;
+    goalProgressLabel.textContent = "0% completed";
+    return;
+  }
+
+  const w = 640;
+  const h = 240;
+  const padX = 24;
+  const padY = 20;
+  const innerW = w - padX * 2;
+  const innerH = h - padY * 2;
+  const points = rows.map((row, i) => {
+    const pct = clampPercent((row.calories / goals.calories) * 100);
+    const x = padX + (i / Math.max(1, rows.length - 1)) * innerW;
+    const y = padY + (1 - pct / 100) * innerH;
+    return { x, y, pct, date: row.date };
+  });
+  const avg = points.reduce((a, p) => a + p.pct, 0) / points.length;
+  goalProgressLabel.textContent = `${Math.round(avg)}% completed`;
+
+  goalChartSvg.innerHTML += `<rect x="0" y="0" width="${w}" height="${h}" rx="14" fill="#f8f9fd" />`;
+  for (let i = 0; i <= 4; i++) {
+    const y = padY + (innerH / 4) * i;
+    goalChartSvg.innerHTML += `<line x1="${padX}" y1="${y}" x2="${w - padX}" y2="${y}" stroke="#e4e8f2" stroke-width="1" />`;
+  }
+
+  const areaPoints = points
+    .map((p) => `${p.x},${p.y}`)
+    .join(" ");
+  const areaD = `M ${padX} ${h - padY} L ${areaPoints} L ${w - padX} ${h - padY} Z`;
+  const lineD = smoothPath(points);
+  goalChartSvg.innerHTML += `<path d="${areaD}" fill="rgba(83, 136, 228, 0.13)" />`;
+  goalChartSvg.innerHTML += `<path d="${lineD}" fill="none" stroke="#5d89df" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />`;
+  points.forEach((p) => {
+    goalChartSvg.innerHTML += `<circle class="chart-point" cx="${p.x}" cy="${p.y}" r="6" fill="#5d89df" data-date="${p.date}" data-pct="${Math.round(p.pct)}" />`;
+  });
+
+  const pointEls = goalChartSvg.querySelectorAll(".chart-point");
+  pointEls.forEach((el) => {
+    const show = (ev) => {
+      const date = el.getAttribute("data-date");
+      const pct = el.getAttribute("data-pct");
+      goalChartTooltip.textContent = `${date} · ${pct}%`;
+      goalChartTooltip.classList.remove("hidden");
+      const rect = goalChartWrap.getBoundingClientRect();
+      const x = ev.clientX - rect.left + 8;
+      const y = ev.clientY - rect.top - 30;
+      goalChartTooltip.style.left = `${x}px`;
+      goalChartTooltip.style.top = `${y}px`;
+    };
+    el.addEventListener("mousemove", show);
+    el.addEventListener("touchstart", (ev) => {
+      const t = ev.touches[0];
+      if (t) show(t);
+    });
+    el.addEventListener("mouseleave", () => goalChartTooltip.classList.add("hidden"));
+    el.addEventListener("touchend", () => goalChartTooltip.classList.add("hidden"));
+  });
+}
+
+function renderProgress() {
+  const goals = getStoredGoals();
+  const log = getStoredMealLog();
+  const daily = getDailySeriesFromMeals(log);
+  const lastWeight = 182;
+  const daysLogged = daily.length;
+  const cheatDays = daily.filter((d) => d.calories > goals.calories).length;
+  if (lastWeightValue) lastWeightValue.textContent = `${lastWeight} lb`;
+  if (daysLoggedValue) daysLoggedValue.textContent = String(daysLogged);
+  if (cheatBadge) cheatBadge.textContent = `${cheatDays} cheat`;
+  setRingProgress(weightRing, 72, "#5d89df");
+  setRingProgress(daysLoggedRing, Math.min(100, daysLogged), "#58b36a");
+  renderGoalChart();
 }
 
 function renderMealTimeline() {
@@ -1266,6 +1436,7 @@ function addCurrentCandidateToToday() {
   saveStoredMealLog(list);
   addActionHistoryEntry("meal-log", `Added to ${mealType}`, currentLogCandidate.name || "Logged item");
   renderDashboard();
+  renderProgress();
   renderMealTimeline();
 }
 
@@ -1273,6 +1444,7 @@ function deleteMealEntry(id) {
   const next = getStoredMealLog().filter((item) => item.id !== id);
   saveStoredMealLog(next);
   renderDashboard();
+  renderProgress();
   renderMealTimeline();
 }
 
@@ -1295,6 +1467,7 @@ function editMealEntry(id) {
   target.fat = parseNullableNumber(nextFat);
   saveStoredMealLog(entries);
   renderDashboard();
+  renderProgress();
   renderMealTimeline();
 }
 
@@ -2421,6 +2594,32 @@ if (fabAddButton) {
   });
 }
 
+if (waterMinusButton) {
+  waterMinusButton.addEventListener("click", () => {
+    setTodayWater(getTodayWater() - 1);
+    renderDashboard();
+  });
+}
+
+if (waterPlusButton) {
+  waterPlusButton.addEventListener("click", () => {
+    setTodayWater(getTodayWater() + 1);
+    renderDashboard();
+  });
+}
+
+if (progressRangeControl) {
+  progressRangeControl.addEventListener("click", (event) => {
+    const target = event.target;
+    if (!(target instanceof HTMLElement) || !target.matches(".segment")) return;
+    activeProgressRange = target.dataset.range || "90";
+    progressRangeControl.querySelectorAll(".segment").forEach((btn) => {
+      btn.classList.toggle("active", btn === target);
+    });
+    renderProgress();
+  });
+}
+
 document.addEventListener("click", (event) => {
   if (!brandSuggestions.contains(event.target) && event.target !== brandSearch) {
     hideBrandSuggestions();
@@ -2471,6 +2670,7 @@ saveGoalsButton.addEventListener("click", () => {
   };
   saveStoredGoals(next);
   renderDashboard();
+  renderProgress();
 });
 barcodeLookupButton.addEventListener("click", () => {
   void runBarcodeLookup();
@@ -2513,6 +2713,7 @@ if (existingSession) {
   showAuth();
 }
 renderDashboard();
+renderProgress();
 renderMealTimeline();
 mealLogDate.textContent = `Today: ${formatTodayLabel()}`;
 setCurrentLogCandidate(null);

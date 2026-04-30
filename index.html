@@ -89,36 +89,71 @@
 
       <main id="app-main" class="app-shell">
         <section class="panel tab-panel" data-tab-panel="dashboard">
-          <div class="home-hero-card">
-            <div>
-              <p id="todayCaloriesBig" class="home-calories-big">0</p>
-              <p class="home-subtle">Calories left</p>
-            </div>
-            <div class="home-ring home-ring--large" id="todayCaloriesRing" aria-label="Calories progress">
-              <span aria-hidden="true">🔥</span>
-            </div>
+          <div class="calendar-strip" id="homeCalendarStrip"></div>
+          <div class="home-top-grid">
+            <article class="fit-card">
+              <p class="fit-label">Steps</p>
+              <p id="stepsValue" class="fit-big-number">0</p>
+              <div class="home-ring home-ring--large home-ring--blue" id="stepsRing" aria-label="Steps progress">
+                <span aria-hidden="true">👟</span>
+              </div>
+            </article>
+            <article class="fit-card">
+              <p class="fit-label">Calories burned</p>
+              <p id="caloriesBurnedValue" class="fit-big-number">0</p>
+              <p id="activityBreakdown" class="fit-subtext">Walk 0 · Active 0</p>
+              <div class="home-ring home-ring--large home-ring--orange" id="caloriesBurnedRing" aria-label="Calories burned progress">
+                <span aria-hidden="true">🔥</span>
+              </div>
+            </article>
           </div>
-          <div class="home-macro-grid">
-            <article class="home-macro-card">
-              <strong id="todayProteinText">0g</strong>
-              <p>Protein left</p>
-              <div class="home-ring" id="todayProteinRing"><span aria-hidden="true">🍗</span></div>
-            </article>
-            <article class="home-macro-card">
-              <strong id="todayCarbsText">0g</strong>
-              <p>Carbs left</p>
-              <div class="home-ring" id="todayCarbsRing"><span aria-hidden="true">🍞</span></div>
-            </article>
-            <article class="home-macro-card">
-              <strong id="todayFatText">0g</strong>
-              <p>Fat left</p>
-              <div class="home-ring" id="todayFatRing"><span aria-hidden="true">🧈</span></div>
-            </article>
+          <div class="water-row fit-card">
+            <div>
+              <p class="fit-label">Water</p>
+              <strong id="waterValue">0 / 8 cups</strong>
+            </div>
+            <div class="water-actions">
+              <button id="waterMinusButton" type="button" class="secondary small">−</button>
+              <button id="waterPlusButton" type="button" class="secondary small">+</button>
+            </div>
           </div>
           <div class="home-recent-head">
             <h3>Recently logged</h3>
           </div>
           <div id="homeRecentList" class="home-recent-list"></div>
+        </section>
+
+        <section class="panel tab-panel" data-tab-panel="progress">
+          <h2>Progress</h2>
+          <div class="progress-stat-grid">
+            <article class="fit-card progress-stat-card">
+              <p class="fit-label">Last weight</p>
+              <strong id="lastWeightValue">0 lb</strong>
+              <div class="home-ring home-ring--blue" id="weightRing"><span aria-hidden="true">⚖</span></div>
+            </article>
+            <article class="fit-card progress-stat-card">
+              <p class="fit-label">Days logged</p>
+              <strong id="daysLoggedValue">0</strong>
+              <span id="cheatBadge" class="cheat-badge">0 cheat</span>
+              <div class="home-ring home-ring--green" id="daysLoggedRing"><span aria-hidden="true">✓</span></div>
+            </article>
+          </div>
+          <div class="segmented-control" id="progressRangeControl" role="tablist" aria-label="Progress range">
+            <button type="button" class="segment active" data-range="90">90 Days</button>
+            <button type="button" class="segment" data-range="180">6 Months</button>
+            <button type="button" class="segment" data-range="365">1 Year</button>
+            <button type="button" class="segment" data-range="all">All Time</button>
+          </div>
+          <article class="fit-card goal-progress-card">
+            <div class="goal-progress-head">
+              <h3>Goal Progress</h3>
+              <span id="goalProgressLabel">0% completed</span>
+            </div>
+            <div id="goalChartWrap" class="goal-chart-wrap">
+              <svg id="goalChartSvg" viewBox="0 0 640 240" aria-label="Goal progress chart"></svg>
+              <div id="goalChartTooltip" class="chart-tooltip hidden"></div>
+            </div>
+          </article>
           <div class="goal-grid">
             <label class="label" for="goalCalories">Calorie goal</label>
             <input id="goalCalories" type="number" min="800" step="10" />
@@ -303,7 +338,7 @@
           <span class="tab-icon" aria-hidden="true">⌂</span>
           <span class="tab-label">Home</span>
         </button>
-        <button class="tab-button" type="button" data-tab-target="log" aria-label="Progress">
+        <button class="tab-button" type="button" data-tab-target="progress" aria-label="Progress">
           <span class="tab-icon" aria-hidden="true">▥</span>
           <span class="tab-label">Progress</span>
         </button>

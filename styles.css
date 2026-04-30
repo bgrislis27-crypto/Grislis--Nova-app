@@ -1134,6 +1134,99 @@ footer,
   box-shadow: 0 8px 18px rgba(14, 21, 35, 0.06);
 }
 
+.calendar-strip {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.calendar-day {
+  border-radius: 12px;
+  border: 1px solid #e3e7f1;
+  background: #f7f8fc;
+  padding: 8px 6px;
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  color: #495064;
+}
+
+.calendar-day span {
+  font-size: 0.72rem;
+  font-family: var(--font-ui);
+}
+
+.calendar-day strong {
+  font-size: 0.95rem;
+  font-family: var(--font-ui);
+}
+
+.calendar-day.active {
+  background: #1a1b24;
+  border-color: #1a1b24;
+  color: #ffffff;
+}
+
+.home-top-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.fit-card {
+  border-radius: 20px;
+  border: 1px solid #e5e9f2;
+  background: #f8f9fd;
+  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.06);
+  padding: 14px;
+}
+
+.fit-label {
+  margin: 0 0 6px;
+  color: #5a6173;
+  font-size: 0.84rem;
+  font-family: var(--font-ui);
+  font-weight: 600;
+}
+
+.fit-big-number {
+  margin: 0;
+  font-size: 1.85rem;
+  line-height: 1;
+  font-family: var(--font-ui);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.fit-subtext {
+  margin: 6px 0 8px;
+  font-size: 0.8rem;
+  color: #687086;
+  font-family: var(--font-ui);
+}
+
+.water-row {
+  margin-top: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.water-row strong {
+  font-family: var(--font-ui);
+}
+
+.water-actions {
+  display: inline-flex;
+  gap: 6px;
+}
+
+.water-actions button {
+  min-width: 36px;
+  padding: 7px 10px;
+}
+
 .home-calories-big {
   margin: 0;
   font-size: clamp(2rem, 6vw, 2.7rem);
@@ -1176,6 +1269,18 @@ footer,
   filter: saturate(0.9);
 }
 
+.home-ring--blue {
+  background: conic-gradient(#5d89df 0%, #eaedf3 0% 100%);
+}
+
+.home-ring--orange {
+  background: conic-gradient(#e69557 0%, #eaedf3 0% 100%);
+}
+
+.home-ring--green {
+  background: conic-gradient(#58b36a 0%, #eaedf3 0% 100%);
+}
+
 .home-ring--large {
   --ring-size: 96px;
 }
@@ -1206,6 +1311,11 @@ footer,
 }
 
 @media (max-width: 520px) {
+  .home-top-grid,
+  .progress-stat-grid {
+    grid-template-columns: 1fr;
+  }
+
   .home-macro-card strong {
     font-size: 1.65rem;
   }
@@ -1235,6 +1345,103 @@ footer,
   font-family: var(--font-ui);
   font-size: 1.9rem;
   letter-spacing: -0.02em;
+}
+
+.progress-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.progress-stat-card {
+  display: grid;
+  gap: 8px;
+  justify-items: start;
+}
+
+.progress-stat-card strong {
+  font-size: 1.55rem;
+  font-family: var(--font-ui);
+}
+
+.cheat-badge {
+  display: inline-flex;
+  border-radius: 999px;
+  background: #fef2f0;
+  color: #c04d3f;
+  border: 1px solid #f6d7d2;
+  padding: 3px 8px;
+  font-size: 0.72rem;
+  font-family: var(--font-ui);
+  font-weight: 600;
+}
+
+.segmented-control {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.segment {
+  border-radius: 999px;
+  border: 1px solid #dfe5f1;
+  background: #f5f7fc;
+  color: #636d84;
+  font-size: 0.76rem;
+  padding: 8px 6px;
+  font-family: var(--font-ui);
+  font-weight: 600;
+}
+
+.segment.active {
+  background: #1d1e2a;
+  color: #fff;
+  border-color: #1d1e2a;
+}
+
+.goal-progress-card {
+  margin-top: 12px;
+}
+
+.goal-progress-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.goal-progress-head h3 {
+  margin: 0;
+}
+
+.goal-progress-head span {
+  color: #3b8750;
+  font-family: var(--font-ui);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.goal-chart-wrap {
+  margin-top: 10px;
+  position: relative;
+}
+
+.goal-chart-wrap svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.chart-tooltip {
+  position: absolute;
+  pointer-events: none;
+  background: #1c1e29;
+  color: #fff;
+  border-radius: 8px;
+  padding: 4px 8px;
+  font-size: 0.72rem;
+  font-family: var(--font-ui);
+  z-index: 2;
 }
 
 .home-recent-list {
