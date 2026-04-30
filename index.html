@@ -299,11 +299,20 @@
       </main>
 
       <nav class="bottom-tabs" aria-label="App sections">
-        <button class="tab-button active" type="button" data-tab-target="dashboard">Dashboard</button>
-        <button class="tab-button" type="button" data-tab-target="scan">Scan</button>
-        <button class="tab-button" type="button" data-tab-target="results">Results</button>
-        <button class="tab-button" type="button" data-tab-target="log">History</button>
+        <button class="tab-button active" type="button" data-tab-target="dashboard" aria-label="Home">
+          <span class="tab-icon" aria-hidden="true">⌂</span>
+          <span class="tab-label">Home</span>
+        </button>
+        <button class="tab-button" type="button" data-tab-target="log" aria-label="Progress">
+          <span class="tab-icon" aria-hidden="true">▥</span>
+          <span class="tab-label">Progress</span>
+        </button>
+        <button class="tab-button" type="button" data-tab-target="scan" aria-label="Settings">
+          <span class="tab-icon" aria-hidden="true">⚙</span>
+          <span class="tab-label">Settings</span>
+        </button>
       </nav>
+      <button id="fabAddButton" class="fab-add-button" type="button" aria-label="Add meal">+</button>
 
       <footer class="app-footer">
         <p>

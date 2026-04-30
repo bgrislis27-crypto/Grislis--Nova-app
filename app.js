@@ -887,6 +887,7 @@ const topDateBadge = document.getElementById("topDateBadge");
 const topCaloriesLeftBadge = document.getElementById("topCaloriesLeftBadge");
 const tabButtons = Array.from(document.querySelectorAll(".tab-button"));
 const tabPanels = Array.from(document.querySelectorAll(".tab-panel"));
+const fabAddButton = document.getElementById("fabAddButton");
 
 const demoLabel =
   "Carbonated water, high fructose corn syrup, caramel color, phosphoric acid, natural flavors, sodium benzoate, caffeine";
@@ -2412,6 +2413,13 @@ tabButtons.forEach((button) => {
     setActiveTab(target);
   });
 });
+
+if (fabAddButton) {
+  fabAddButton.addEventListener("click", () => {
+    setActiveTab("scan");
+    ingredientsInput?.focus();
+  });
+}
 
 document.addEventListener("click", (event) => {
   if (!brandSuggestions.contains(event.target) && event.target !== brandSearch) {
