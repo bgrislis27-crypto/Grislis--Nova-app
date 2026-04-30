@@ -872,13 +872,15 @@ const goalCarbs = document.getElementById("goalCarbs");
 const goalFat = document.getElementById("goalFat");
 const saveGoalsButton = document.getElementById("saveGoalsButton");
 const todayCaloriesText = document.getElementById("todayCaloriesText");
+const todayCaloriesBig = document.getElementById("todayCaloriesBig");
 const todayProteinText = document.getElementById("todayProteinText");
 const todayCarbsText = document.getElementById("todayCarbsText");
 const todayFatText = document.getElementById("todayFatText");
-const todayCaloriesBar = document.getElementById("todayCaloriesBar");
-const todayProteinBar = document.getElementById("todayProteinBar");
-const todayCarbsBar = document.getElementById("todayCarbsBar");
-const todayFatBar = document.getElementById("todayFatBar");
+const todayCaloriesRing = document.getElementById("todayCaloriesRing");
+const todayProteinRing = document.getElementById("todayProteinRing");
+const todayCarbsRing = document.getElementById("todayCarbsRing");
+const todayFatRing = document.getElementById("todayFatRing");
+const homeRecentList = document.getElementById("homeRecentList");
 const barcodeInput = document.getElementById("barcodeInput");
 const barcodeLookupButton = document.getElementById("barcodeLookupButton");
 const topDateBadge = document.getElementById("topDateBadge");
@@ -1081,6 +1083,53 @@ function clampPercent(value) {
   return Math.max(0, Math.min(100, value));
 }
 
+function setRingProgress(el, percent, color) {
+  if (!el) return;
+  const p = clampPercent(percent);
+  el.style.background = `conic-gradient(${color} ${p}%, #eaedf3 ${p}% 100%)`;
+}
+
+function formatClockTime(ts) {
+  return new Date(ts).toLocaleTimeString(undefined, {
+    hour: "numeric",
+    minute: "2-digit",
+  });
+}
+
+function renderHomeRecentList(todayItems) {
+  if (!homeRecentList) return;
+  homeRecentList.innerHTML = "";
+  const latest = [...todayItems].sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0)).slice(0, 4);
+  if (latest.length === 0) {
+    const p = document.createElement("p");
+    p.className = "empty-state";
+    p.textContent = "No meals logged yet.";
+    homeRecentList.append(p);
+    return;
+  }
+
+  for (const item of latest) {
+    const card = document.createElement("article");
+    card.className = "home-log-card";
+    card.innerHTML = `
+      <img src="./assets/default-food.svg" alt="" />
+      <div class="home-log-main">
+        <div class="home-log-top">
+          <strong>${item.name || "Logged item"}</strong>
+          <span>${formatClockTime(item.createdAt || Date.now())}</span>
+        </div>
+        <p>🔥 ${formatMacroValue(item.calories, "")} calories</p>
+        <div class="home-log-macros">
+          <span>🍗 ${formatMacroValue(item.protein)}</span>
+          <span>🍞 ${formatMacroValue(item.carbs)}</span>
+          <span>🧈 ${formatMacroValue(item.fat)}</span>
+        </div>
+      </div>
+    `;
+    homeRecentList.append(card);
+  }
+}
+
 function renderDashboard() {
   const goals = getStoredGoals();
   goalCalories.value = String(goals.calories);
@@ -1096,15 +1145,28 @@ function renderDashboard() {
     fat: sumMacro(todayItems, "fat"),
   };
 
-  todayCaloriesText.textContent = `${Math.round(totals.calories)} / ${goals.calories}`;
-  todayProteinText.textContent = `${Math.round(totals.protein)}g / ${goals.protein}g`;
-  todayCarbsText.textContent = `${Math.round(totals.carbs)}g / ${goals.carbs}g`;
-  todayFatText.textContent = `${Math.round(totals.fat)}g / ${goals.fat}g`;
+  const left = {
+    calories: Math.round(goals.calories - totals.calories),
+    protein: Math.round(goals.protein - totals.protein),
+    carbs: Math.round(goals.carbs - totals.carbs),
+    fat: Math.round(goals.fat - totals.fat),
+  };
 
-  todayCaloriesBar.style.width = `${clampPercent((totals.calories / goals.calories) * 100)}%`;
-  todayProteinBar.style.width = `${clampPercent((totals.protein / goals.protein) * 100)}%`;
-  todayCarbsBar.style.width = `${clampPercent((totals.carbs / goals.carbs) * 100)}%`;
-  todayFatBar.style.width = `${clampPercent((totals.fat / goals.fat) * 100)}%`;
+  if (todayCaloriesText) {
+    todayCaloriesText.textContent = `${Math.round(totals.calories)} / ${goals.calories}`;
+  }
+  if (todayCaloriesBig) {
+    todayCaloriesBig.textContent = String(left.calories);
+  }
+  if (todayProteinText) todayProteinText.textContent = `${left.protein}g`;
+  if (todayCarbsText) todayCarbsText.textContent = `${left.carbs}g`;
+  if (todayFatText) todayFatText.textContent = `${left.fat}g`;
+
+  setRingProgress(todayCaloriesRing, (totals.calories / goals.calories) * 100, "#111111");
+  setRingProgress(todayProteinRing, (totals.protein / goals.protein) * 100, "#e66b6b");
+  setRingProgress(todayCarbsRing, (totals.carbs / goals.carbs) * 100, "#d89b61");
+  setRingProgress(todayFatRing, (totals.fat / goals.fat) * 100, "#6b97dd");
+  renderHomeRecentList(todayItems);
 
   const caloriesLeft = Math.round(goals.calories - totals.calories);
   if (topDateBadge) {

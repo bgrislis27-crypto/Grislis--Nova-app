@@ -89,38 +89,36 @@
 
       <main id="app-main" class="app-shell">
         <section class="panel tab-panel" data-tab-panel="dashboard">
-          <h2>Today dashboard</h2>
-          <p class="lookup-note">Track calories and macros from your logged meals.</p>
-          <div class="macro-dashboard">
-            <div class="macro-row">
-              <div class="macro-row-head">
-                <span class="macro-label">Calories <span class="macro-icon" aria-hidden="true">🔥</span></span>
-                <strong id="todayCaloriesText">0 / 2200</strong>
-              </div>
-              <div class="macro-bar"><span id="todayCaloriesBar"></span></div>
+          <div class="home-hero-card">
+            <div>
+              <p id="todayCaloriesBig" class="home-calories-big">0</p>
+              <p class="home-subtle">Calories left</p>
             </div>
-            <div class="macro-row">
-              <div class="macro-row-head">
-                <span class="macro-label">Protein <span class="macro-icon" aria-hidden="true">🍗</span></span>
-                <strong id="todayProteinText">0g / 140g</strong>
-              </div>
-              <div class="macro-bar"><span id="todayProteinBar"></span></div>
-            </div>
-            <div class="macro-row">
-              <div class="macro-row-head">
-                <span class="macro-label">Carbs <span class="macro-icon" aria-hidden="true">🍞</span></span>
-                <strong id="todayCarbsText">0g / 250g</strong>
-              </div>
-              <div class="macro-bar"><span id="todayCarbsBar"></span></div>
-            </div>
-            <div class="macro-row">
-              <div class="macro-row-head">
-                <span class="macro-label">Fat <span class="macro-icon" aria-hidden="true">🧈</span></span>
-                <strong id="todayFatText">0g / 70g</strong>
-              </div>
-              <div class="macro-bar"><span id="todayFatBar"></span></div>
+            <div class="home-ring home-ring--large" id="todayCaloriesRing" aria-label="Calories progress">
+              <span aria-hidden="true">🔥</span>
             </div>
           </div>
+          <div class="home-macro-grid">
+            <article class="home-macro-card">
+              <strong id="todayProteinText">0g</strong>
+              <p>Protein left</p>
+              <div class="home-ring" id="todayProteinRing"><span aria-hidden="true">🍗</span></div>
+            </article>
+            <article class="home-macro-card">
+              <strong id="todayCarbsText">0g</strong>
+              <p>Carbs left</p>
+              <div class="home-ring" id="todayCarbsRing"><span aria-hidden="true">🍞</span></div>
+            </article>
+            <article class="home-macro-card">
+              <strong id="todayFatText">0g</strong>
+              <p>Fat left</p>
+              <div class="home-ring" id="todayFatRing"><span aria-hidden="true">🧈</span></div>
+            </article>
+          </div>
+          <div class="home-recent-head">
+            <h3>Recently logged</h3>
+          </div>
+          <div id="homeRecentList" class="home-recent-list"></div>
           <div class="goal-grid">
             <label class="label" for="goalCalories">Calorie goal</label>
             <input id="goalCalories" type="number" min="800" step="10" />
@@ -130,9 +128,9 @@
             <input id="goalCarbs" type="number" min="10" step="1" />
             <label class="label" for="goalFat">Fat goal (g)</label>
             <input id="goalFat" type="number" min="10" step="1" />
-          </div>
-          <div class="actions">
-            <button id="saveGoalsButton">Save goals</button>
+            <div class="actions">
+              <button id="saveGoalsButton">Save goals</button>
+            </div>
           </div>
         </section>
 
