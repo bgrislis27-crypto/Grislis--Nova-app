@@ -881,6 +881,8 @@ const todayCarbsBar = document.getElementById("todayCarbsBar");
 const todayFatBar = document.getElementById("todayFatBar");
 const barcodeInput = document.getElementById("barcodeInput");
 const barcodeLookupButton = document.getElementById("barcodeLookupButton");
+const topDateBadge = document.getElementById("topDateBadge");
+const topCaloriesLeftBadge = document.getElementById("topCaloriesLeftBadge");
 const tabButtons = Array.from(document.querySelectorAll(".tab-button"));
 const tabPanels = Array.from(document.querySelectorAll(".tab-panel"));
 
@@ -995,6 +997,14 @@ function formatTodayLabel() {
   });
 }
 
+function formatTopDateLabel() {
+  return new Date().toLocaleDateString(undefined, {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+  });
+}
+
 function parseNullableNumber(value) {
   if (value === null || value === undefined || value === "") {
     return null;
@@ -1095,6 +1105,18 @@ function renderDashboard() {
   todayProteinBar.style.width = `${clampPercent((totals.protein / goals.protein) * 100)}%`;
   todayCarbsBar.style.width = `${clampPercent((totals.carbs / goals.carbs) * 100)}%`;
   todayFatBar.style.width = `${clampPercent((totals.fat / goals.fat) * 100)}%`;
+
+  const caloriesLeft = Math.round(goals.calories - totals.calories);
+  if (topDateBadge) {
+    topDateBadge.textContent = `📅 ${formatTopDateLabel()}`;
+  }
+  if (topCaloriesLeftBadge) {
+    if (caloriesLeft >= 0) {
+      topCaloriesLeftBadge.textContent = `Calories left: ${caloriesLeft}`;
+    } else {
+      topCaloriesLeftBadge.textContent = `Over by: ${Math.abs(caloriesLeft)}`;
+    }
+  }
 }
 
 function renderMealTimeline() {
