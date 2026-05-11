@@ -78,7 +78,8 @@ body {
   font-size: var(--step-0);
   color: var(--text);
   min-height: 100vh;
-  line-height: 1.62;
+  line-height: 1.55;
+  letter-spacing: -0.01em;
   -webkit-font-smoothing: antialiased;
   background-color: var(--page);
   background-image: linear-gradient(180deg, #f8f8fb 0%, #f1f2f7 100%);
@@ -426,7 +427,7 @@ h1 {
   line-height: 1.2;
   font-weight: 600;
   font-size: clamp(1.55rem, 1.2rem + 1.5vw, 2.1rem);
-  letter-spacing: 0;
+  letter-spacing: -0.025em;
   text-align: center;
   max-width: 34ch;
   margin-left: auto;
@@ -507,7 +508,7 @@ h2 {
   margin-top: 0;
   font-size: clamp(1.22rem, 1.05rem + 0.65vw, 1.5rem);
   font-weight: 600;
-  letter-spacing: 0;
+  letter-spacing: -0.02em;
   line-height: 1.25;
   display: inline-flex;
   align-items: center;
@@ -813,7 +814,7 @@ button:focus-visible {
   border-radius: var(--radius-lg);
   padding: 20px;
   box-shadow: var(--shadow-float);
-  font-family: var(--font-serif);
+  font-family: var(--font-ui);
 }
 
 .modal-card h3 {
@@ -1030,6 +1031,7 @@ h3 {
   margin-bottom: 8px;
   font-size: 1.02rem;
   font-weight: 600;
+  letter-spacing: -0.015em;
 }
 
 ul {

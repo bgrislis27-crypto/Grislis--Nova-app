@@ -1,8 +1,12 @@
 /* Shared by index.html + showcase.html — one source of truth for type. */
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400..700;1,400..700&display=swap");
+
 :root {
   --font-serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Palatino LT STD", Charter,
     "Book Antiqua", Georgia, "Times New Roman", serif;
-  --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  /* Rounded app-style sans (common on modern nutrition / tracker UIs) */
+  --font-ui: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial,
+    sans-serif;
   --step--1: clamp(0.9rem, 0.85rem + 0.35vw, 1.05rem);
   --step-0: clamp(1.04rem, 0.96rem + 0.45vw, 1.18rem);
 }
