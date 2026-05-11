@@ -306,6 +306,7 @@ body::before {
 }
 
 .brand-mark {
+  font-family: var(--font-ui);
   font-weight: 700;
   font-size: 1.12rem;
   letter-spacing: 0;
