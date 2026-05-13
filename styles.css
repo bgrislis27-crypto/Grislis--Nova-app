@@ -32,14 +32,14 @@
   --radius-sm: 10px;
   --max: 52rem;
   --space: clamp(1rem, 3vw, 2.5rem);
-  --paper-noise: rgba(255, 255, 255, 0.08);
+  --paper-noise: rgba(255, 255, 255, 0.045);
   /* Page atmosphere (light) */
   --bg-mesh-a: #f6f8fd;
   --bg-mesh-b: #eef2fb;
   --bg-mesh-c: #e9eef8;
-  --bg-aurora-1: rgba(0, 177, 74, 0.11);
-  --bg-aurora-2: rgba(110, 138, 255, 0.14);
-  --bg-aurora-3: rgba(255, 186, 130, 0.09);
+  --bg-aurora-1: rgba(0, 177, 74, 0.16);
+  --bg-aurora-2: rgba(110, 138, 255, 0.2);
+  --bg-aurora-3: rgba(255, 186, 130, 0.13);
   --bg-vignette: rgba(12, 18, 32, 0.045);
   --bg-rim: rgba(255, 255, 255, 0.55);
   --bg-blob-blur: 68px;
@@ -67,9 +67,9 @@
   --bg-mesh-a: #0d1018;
   --bg-mesh-b: #121826;
   --bg-mesh-c: #0a0d14;
-  --bg-aurora-1: rgba(0, 214, 110, 0.07);
-  --bg-aurora-2: rgba(96, 140, 255, 0.1);
-  --bg-aurora-3: rgba(255, 170, 95, 0.045);
+  --bg-aurora-1: rgba(0, 214, 110, 0.1);
+  --bg-aurora-2: rgba(96, 140, 255, 0.14);
+  --bg-aurora-3: rgba(255, 170, 95, 0.07);
   --bg-vignette: rgba(0, 0, 0, 0.42);
   --bg-rim: rgba(120, 160, 255, 0.06);
   --bg-blob-blur: 80px;
@@ -117,7 +117,35 @@ body {
   letter-spacing: -0.01em;
   -webkit-font-smoothing: antialiased;
   background-color: var(--page);
+  /* First layers paint on top; keep vignette + noise here so they sit under UI, not on top of it. */
   background-image:
+    repeating-linear-gradient(
+      125deg,
+      transparent 0,
+      transparent 9px,
+      var(--paper-noise) 9px,
+      var(--paper-noise) 10px
+    ),
+    radial-gradient(ellipse 140% 90% at 50% 110%, var(--bg-vignette), transparent 52%),
+    radial-gradient(ellipse 80% 55% at 50% 0%, rgba(255, 255, 255, 0.08), transparent 45%),
+    radial-gradient(ellipse 120% 70% at 50% -15%, var(--bg-rim), transparent 58%),
+    radial-gradient(ellipse 90% 55% at 100% 15%, var(--bg-mesh-spot-tr), transparent 52%),
+    radial-gradient(ellipse 70% 45% at 0% 85%, var(--bg-mesh-spot-bl), transparent 50%),
+    linear-gradient(168deg, var(--bg-mesh-a) 0%, var(--bg-mesh-b) 42%, var(--bg-mesh-c) 100%);
+  background-attachment: fixed;
+}
+
+:root[data-theme="dark"] body {
+  background-image:
+    repeating-linear-gradient(
+      125deg,
+      transparent 0,
+      transparent 9px,
+      var(--paper-noise) 9px,
+      var(--paper-noise) 10px
+    ),
+    radial-gradient(ellipse 130% 85% at 50% 115%, var(--bg-vignette), transparent 55%),
+    radial-gradient(ellipse 75% 45% at 50% -5%, rgba(120, 160, 255, 0.1), transparent 48%),
     radial-gradient(ellipse 120% 70% at 50% -15%, var(--bg-rim), transparent 58%),
     radial-gradient(ellipse 90% 55% at 100% 15%, var(--bg-mesh-spot-tr), transparent 52%),
     radial-gradient(ellipse 70% 45% at 0% 85%, var(--bg-mesh-spot-bl), transparent 50%),
@@ -136,7 +164,7 @@ body::before {
     radial-gradient(ellipse 48% 42% at 8% 85%, var(--bg-aurora-2), transparent 72%),
     radial-gradient(ellipse 40% 35% at 72% 95%, var(--bg-aurora-3), transparent 75%);
   filter: blur(var(--bg-blob-blur));
-  opacity: 0.92;
+  opacity: 1;
   transform: translateZ(0);
   animation: aura-drift 28s ease-in-out infinite alternate;
 }
@@ -154,41 +182,6 @@ body::before {
   100% {
     transform: translate(-1.2%, 1.4%) scale(1.03);
   }
-}
-
-/* Vignette + micro texture — sits above blurred layer */
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  background-image:
-    radial-gradient(ellipse 140% 90% at 50% 110%, var(--bg-vignette), transparent 52%),
-    radial-gradient(ellipse 80% 55% at 50% 0%, rgba(255, 255, 255, 0.06), transparent 45%),
-    repeating-linear-gradient(
-      125deg,
-      transparent 0,
-      transparent 9px,
-      var(--paper-noise) 9px,
-      var(--paper-noise) 10px
-    );
-  opacity: 0.85;
-  mix-blend-mode: multiply;
-}
-
-:root[data-theme="dark"] body::after {
-  mix-blend-mode: normal;
-  opacity: 1;
-  background-image:
-    radial-gradient(ellipse 130% 85% at 50% 115%, var(--bg-vignette), transparent 55%),
-    radial-gradient(ellipse 75% 45% at 50% -5%, rgba(120, 160, 255, 0.07), transparent 48%),
-    repeating-linear-gradient(
-      125deg,
-      transparent 0,
-      transparent 9px,
-      var(--paper-noise) 9px,
-      var(--paper-noise) 10px
-    );
 }
 
 .skip {
