@@ -33,6 +33,18 @@
   --max: 52rem;
   --space: clamp(1rem, 3vw, 2.5rem);
   --paper-noise: rgba(255, 255, 255, 0.08);
+  /* Page atmosphere (light) */
+  --bg-mesh-a: #f6f8fd;
+  --bg-mesh-b: #eef2fb;
+  --bg-mesh-c: #e9eef8;
+  --bg-aurora-1: rgba(0, 177, 74, 0.11);
+  --bg-aurora-2: rgba(110, 138, 255, 0.14);
+  --bg-aurora-3: rgba(255, 186, 130, 0.09);
+  --bg-vignette: rgba(12, 18, 32, 0.045);
+  --bg-rim: rgba(255, 255, 255, 0.55);
+  --bg-blob-blur: 68px;
+  --bg-mesh-spot-tr: rgba(0, 177, 74, 0.06);
+  --bg-mesh-spot-bl: rgba(110, 138, 255, 0.07);
 }
 
 :root[data-theme="dark"] {
@@ -51,10 +63,33 @@
   --secondary-hover: #34405a;
   --shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
   --paper-noise: rgba(255, 255, 255, 0.02);
+  /* Page atmosphere (dark) */
+  --bg-mesh-a: #0d1018;
+  --bg-mesh-b: #121826;
+  --bg-mesh-c: #0a0d14;
+  --bg-aurora-1: rgba(0, 214, 110, 0.07);
+  --bg-aurora-2: rgba(96, 140, 255, 0.1);
+  --bg-aurora-3: rgba(255, 170, 95, 0.045);
+  --bg-vignette: rgba(0, 0, 0, 0.42);
+  --bg-rim: rgba(120, 160, 255, 0.06);
+  --bg-blob-blur: 80px;
+  --bg-mesh-spot-tr: rgba(0, 214, 110, 0.05);
+  --bg-mesh-spot-bl: rgba(96, 140, 255, 0.08);
 }
 
 * {
   box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }
 
 a {
@@ -82,29 +117,78 @@ body {
   letter-spacing: -0.01em;
   -webkit-font-smoothing: antialiased;
   background-color: var(--page);
-  background-image: linear-gradient(180deg, #f8f8fb 0%, #f1f2f7 100%);
+  background-image:
+    radial-gradient(ellipse 120% 70% at 50% -15%, var(--bg-rim), transparent 58%),
+    radial-gradient(ellipse 90% 55% at 100% 15%, var(--bg-mesh-spot-tr), transparent 52%),
+    radial-gradient(ellipse 70% 45% at 0% 85%, var(--bg-mesh-spot-bl), transparent 50%),
+    linear-gradient(168deg, var(--bg-mesh-a) 0%, var(--bg-mesh-b) 42%, var(--bg-mesh-c) 100%);
+  background-attachment: fixed;
 }
 
-@media (min-width: 720px) {
-  body {
-    background-image: linear-gradient(180deg, #f9fafd 0%, #f0f2f7 100%);
+/* Soft aurora blobs — between body background and content */
+body::before {
+  content: "";
+  position: fixed;
+  inset: -12%;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 55% 48% at 88% 10%, var(--bg-aurora-1), transparent 70%),
+    radial-gradient(ellipse 48% 42% at 8% 85%, var(--bg-aurora-2), transparent 72%),
+    radial-gradient(ellipse 40% 35% at 72% 95%, var(--bg-aurora-3), transparent 75%);
+  filter: blur(var(--bg-blob-blur));
+  opacity: 0.92;
+  transform: translateZ(0);
+  animation: aura-drift 28s ease-in-out infinite alternate;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::before {
+    animation: none;
   }
 }
 
-body::before {
+@keyframes aura-drift {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    transform: translate(-1.2%, 1.4%) scale(1.03);
+  }
+}
+
+/* Vignette + micro texture — sits above blurred layer */
+body::after {
   content: "";
   position: fixed;
   inset: 0;
   pointer-events: none;
-  background-image: repeating-linear-gradient(
-    45deg,
-    transparent 0,
-    transparent 8px,
-    var(--paper-noise) 8px,
-    var(--paper-noise) 9px
-  );
-  opacity: 0.08;
-  z-index: -1;
+  background-image:
+    radial-gradient(ellipse 140% 90% at 50% 110%, var(--bg-vignette), transparent 52%),
+    radial-gradient(ellipse 80% 55% at 50% 0%, rgba(255, 255, 255, 0.06), transparent 45%),
+    repeating-linear-gradient(
+      125deg,
+      transparent 0,
+      transparent 9px,
+      var(--paper-noise) 9px,
+      var(--paper-noise) 10px
+    );
+  opacity: 0.85;
+  mix-blend-mode: multiply;
+}
+
+:root[data-theme="dark"] body::after {
+  mix-blend-mode: normal;
+  opacity: 1;
+  background-image:
+    radial-gradient(ellipse 130% 85% at 50% 115%, var(--bg-vignette), transparent 55%),
+    radial-gradient(ellipse 75% 45% at 50% -5%, rgba(120, 160, 255, 0.07), transparent 48%),
+    repeating-linear-gradient(
+      125deg,
+      transparent 0,
+      transparent 9px,
+      var(--paper-noise) 9px,
+      var(--paper-noise) 10px
+    );
 }
 
 .skip {
@@ -144,11 +228,15 @@ body::before {
 .auth-card {
   width: 100%;
   max-width: 420px;
-  background: var(--card);
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(18px) saturate(1.1);
+  -webkit-backdrop-filter: blur(18px) saturate(1.1);
   border: 1px solid rgba(255, 255, 255, 0.75);
   border-radius: var(--radius-lg);
   padding: 28px 24px;
-  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.18);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.75) inset,
+    0 24px 60px rgba(15, 23, 42, 0.12);
 }
 
 .auth-card .tagline {
@@ -203,10 +291,13 @@ body::before {
   top: 0;
   z-index: 50;
   width: 100%;
-  background: rgba(255, 255, 255, 0.94);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--stroke);
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(18px) saturate(1.12);
+  -webkit-backdrop-filter: blur(18px) saturate(1.12);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.65);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.55) inset,
+    0 10px 40px rgba(15, 23, 42, 0.05);
 }
 
 .app-top-nav {
@@ -469,8 +560,11 @@ h1 {
 
 .app-shell > .panel {
   border-radius: 18px;
-  border: 1px solid #e7eaf1;
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.65) inset,
+    0 10px 40px rgba(15, 23, 42, 0.07),
+    0 2px 8px rgba(15, 23, 42, 0.03);
   margin: 0 0 1rem;
   padding: clamp(1.75rem, 4vw, 2.75rem) var(--space);
   background: var(--card);
@@ -492,8 +586,10 @@ h1 {
 
 .app-shell > .panel.panel--results {
   background: var(--page-elevated);
-  border-color: rgba(255, 255, 255, 0.5);
-  box-shadow: 0 14px 40px rgba(15, 23, 42, 0.1);
+  border-color: rgba(255, 255, 255, 0.45);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.5) inset,
+    0 14px 44px rgba(15, 23, 42, 0.09);
 }
 
 .tab-panel {
@@ -1056,10 +1152,11 @@ footer,
   font-size: var(--step--1);
   line-height: 1.62;
   text-align: center;
-  border-top: 1px solid rgba(255, 255, 255, 0.35);
-  background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255, 255, 255, 0.45);
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(16px) saturate(1.08);
+  -webkit-backdrop-filter: blur(16px) saturate(1.08);
+  box-shadow: 0 -6px 28px rgba(15, 23, 42, 0.04);
 }
 
 .app-footer strong {
@@ -1077,10 +1174,11 @@ footer,
   gap: 6px;
   padding: 10px max(14px, env(safe-area-inset-left)) calc(14px + env(safe-area-inset-bottom))
     max(96px, env(safe-area-inset-right));
-  background: rgba(247, 248, 252, 0.95);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-top: 1px solid rgba(0, 0, 0, 0.07);
+  background: rgba(247, 248, 252, 0.82);
+  backdrop-filter: blur(18px) saturate(1.1);
+  -webkit-backdrop-filter: blur(18px) saturate(1.1);
+  border-top: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow: 0 -8px 32px rgba(15, 23, 42, 0.05);
 }
 
 .bottom-tabs .tab-button {
@@ -1466,8 +1564,11 @@ footer,
 }
 
 :root[data-theme="dark"] .app-top-nav-wrap {
-  background: rgba(23, 28, 42, 0.88);
-  border-bottom: 1px solid #2c3549;
+  background: rgba(18, 22, 34, 0.78);
+  border-bottom: 1px solid rgba(120, 160, 255, 0.08);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.04) inset,
+    0 12px 48px rgba(0, 0, 0, 0.35);
 }
 
 :root[data-theme="dark"] .top-badge {
@@ -1483,8 +1584,17 @@ footer,
 }
 
 :root[data-theme="dark"] .app-shell > .panel {
-  border-color: #2f384e;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.33);
+  border-color: rgba(74, 90, 120, 0.45);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.04) inset,
+    0 14px 48px rgba(0, 0, 0, 0.38);
+}
+
+:root[data-theme="dark"] .app-shell > .panel.panel--results {
+  border-color: rgba(74, 90, 120, 0.38);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.04) inset,
+    0 18px 56px rgba(0, 0, 0, 0.42);
 }
 
 :root[data-theme="dark"] .fit-card,
@@ -1522,8 +1632,9 @@ footer,
 }
 
 :root[data-theme="dark"] .bottom-tabs {
-  background: rgba(25, 31, 46, 0.95);
-  border-top-color: #374158;
+  background: rgba(16, 20, 32, 0.82);
+  border-top-color: rgba(120, 160, 255, 0.08);
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.35);
 }
 
 :root[data-theme="dark"] .bottom-tabs .tab-button {
@@ -1545,8 +1656,17 @@ footer,
 }
 
 :root[data-theme="dark"] .app-footer {
-  background: rgba(22, 28, 42, 0.88);
-  border-top: 1px solid #323d54;
+  background: rgba(14, 18, 28, 0.78);
+  border-top: 1px solid rgba(120, 160, 255, 0.08);
+  box-shadow: 0 -8px 36px rgba(0, 0, 0, 0.32);
+}
+
+:root[data-theme="dark"] .auth-card {
+  background: rgba(28, 34, 50, 0.88);
+  border-color: rgba(120, 160, 255, 0.12);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.05) inset,
+    0 24px 60px rgba(0, 0, 0, 0.45);
 }
 
 /* Force light text in dark mode for all hardcoded dark labels. */
