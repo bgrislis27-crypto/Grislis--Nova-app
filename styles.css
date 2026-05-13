@@ -1156,57 +1156,133 @@ footer,
   color: var(--text);
 }
 
+/* Floating dock tab bar — iOS-inspired glass */
 .bottom-tabs {
   position: fixed;
   left: 0;
   right: 0;
   bottom: 0;
   z-index: 80;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  padding: 0 max(16px, env(safe-area-inset-left)) calc(14px + env(safe-area-inset-bottom))
+    max(20px, calc(76px + env(safe-area-inset-right)));
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  pointer-events: none;
+}
+
+.bottom-tabs-dock {
+  pointer-events: auto;
+  flex: 0 1 min(320px, calc(100vw - 96px));
+  width: 100%;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 6px;
-  padding: 10px max(14px, env(safe-area-inset-left)) calc(14px + env(safe-area-inset-bottom))
-    max(96px, env(safe-area-inset-right));
-  background: rgba(247, 248, 252, 0.82);
-  backdrop-filter: blur(18px) saturate(1.1);
-  -webkit-backdrop-filter: blur(18px) saturate(1.1);
-  border-top: 1px solid rgba(255, 255, 255, 0.55);
-  box-shadow: 0 -8px 32px rgba(15, 23, 42, 0.05);
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 26px;
+  background: rgba(255, 255, 255, 0.58);
+  backdrop-filter: blur(26px) saturate(1.35);
+  -webkit-backdrop-filter: blur(26px) saturate(1.35);
+  border: 1px solid rgba(255, 255, 255, 0.62);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.9) inset,
+    0 14px 44px rgba(15, 23, 42, 0.11),
+    0 4px 14px rgba(15, 23, 42, 0.05);
 }
 
 .bottom-tabs .tab-button {
-  border-radius: 14px;
-  padding: 7px 6px 8px;
+  position: relative;
+  border-radius: 18px;
+  padding: 10px 10px 9px;
+  min-height: 52px;
   display: grid;
   place-items: center;
-  gap: 3px;
-  font-size: 0.76rem;
+  align-content: center;
+  gap: 5px;
+  font-size: 0.68rem;
   font-weight: 500;
-  color: #818896;
+  letter-spacing: 0.02em;
+  color: #7b8496;
   background: transparent;
   border: 1px solid transparent;
   box-shadow: none;
+  transition:
+    transform 0.32s cubic-bezier(0.34, 1.45, 0.64, 1),
+    background 0.22s ease,
+    color 0.22s ease,
+    box-shadow 0.26s ease,
+    border-color 0.22s ease;
+}
+
+.bottom-tabs .tab-button:focus-visible {
+  outline: 2px solid var(--yuka-excellent);
+  outline-offset: 2px;
 }
 
 .bottom-tabs .tab-button .tab-icon {
-  font-size: 1.18rem;
+  font-size: 1.28rem;
   line-height: 1;
+  transition:
+    transform 0.34s cubic-bezier(0.34, 1.45, 0.64, 1),
+    filter 0.32s ease;
 }
 
 .bottom-tabs .tab-button .tab-label {
-  line-height: 1;
+  line-height: 1.05;
+  font-weight: 500;
+  transition: font-weight 0.2s ease, opacity 0.2s ease;
+}
+
+.bottom-tabs .tab-button:not(.active):active {
+  transform: scale(0.94);
 }
 
 .bottom-tabs .tab-button.active {
-  color: #111827;
-  background: #eceef5;
-  border-color: #e2e6f0;
+  color: #0f172a;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.88);
+  border-color: rgba(0, 177, 74, 0.22);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 1) inset,
+    0 0 0 1px rgba(0, 177, 74, 0.06),
+    0 8px 24px rgba(0, 177, 74, 0.14),
+    0 2px 8px rgba(15, 23, 42, 0.06);
+  transform: scale(1.03);
+}
+
+.bottom-tabs .tab-button.active .tab-label {
+  font-weight: 600;
+}
+
+.bottom-tabs .tab-button.active .tab-icon {
+  transform: scale(1.12) translateY(-1px);
+  filter: drop-shadow(0 0 8px rgba(0, 177, 74, 0.55)) drop-shadow(0 0 18px rgba(0, 177, 74, 0.22));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bottom-tabs .tab-button,
+  .bottom-tabs .tab-button .tab-icon {
+    transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  }
+
+  .bottom-tabs .tab-button:not(.active):active,
+  .bottom-tabs .tab-button.active {
+    transform: none;
+  }
+
+  .bottom-tabs .tab-button.active .tab-icon {
+    transform: none;
+    filter: none;
+  }
 }
 
 .fab-add-button {
   position: fixed;
   right: max(16px, env(safe-area-inset-right));
-  bottom: calc(16px + env(safe-area-inset-bottom));
+  bottom: calc(15px + env(safe-area-inset-bottom));
   z-index: 90;
   width: 62px;
   height: 62px;
@@ -1624,20 +1700,32 @@ footer,
   color: #f3f5fb;
 }
 
-:root[data-theme="dark"] .bottom-tabs {
-  background: rgba(16, 20, 32, 0.82);
-  border-top-color: rgba(120, 160, 255, 0.08);
-  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.35);
+:root[data-theme="dark"] .bottom-tabs-dock {
+  background: rgba(20, 26, 42, 0.68);
+  border-color: rgba(120, 160, 255, 0.14);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.06) inset,
+    0 16px 48px rgba(0, 0, 0, 0.42),
+    0 4px 16px rgba(0, 0, 0, 0.25);
 }
 
 :root[data-theme="dark"] .bottom-tabs .tab-button {
-  color: #99a5bf;
+  color: #8b96ad;
 }
 
 :root[data-theme="dark"] .bottom-tabs .tab-button.active {
   color: #f4f6fc;
-  background: #2c3650;
-  border-color: #3f4d6c;
+  background: rgba(44, 56, 82, 0.92);
+  border-color: rgba(0, 214, 110, 0.28);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.08) inset,
+    0 0 0 1px rgba(0, 214, 110, 0.08),
+    0 8px 28px rgba(0, 214, 110, 0.12),
+    0 4px 14px rgba(0, 0, 0, 0.35);
+}
+
+:root[data-theme="dark"] .bottom-tabs .tab-button.active .tab-icon {
+  filter: drop-shadow(0 0 10px rgba(0, 214, 110, 0.55)) drop-shadow(0 0 22px rgba(96, 140, 255, 0.2));
 }
 
 :root[data-theme="dark"] .goal-chart-wrap svg text {

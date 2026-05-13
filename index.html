@@ -10,7 +10,7 @@
     />
     <link rel="icon" href="./assets/nova-fruit-logo.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="./nova-fonts.css?v=5" />
-    <link rel="stylesheet" href="./styles.css?v=5" />
+    <link rel="stylesheet" href="./styles.css?v=6" />
   </head>
   <body>
     <a class="skip" href="#app-main">Skip to main content</a>
@@ -335,18 +335,20 @@
       </main>
 
       <nav class="bottom-tabs" aria-label="App sections">
-        <button class="tab-button active" type="button" data-tab-target="dashboard" aria-label="Home">
-          <span class="tab-icon" aria-hidden="true">⌂</span>
-          <span class="tab-label">Home</span>
-        </button>
-        <button class="tab-button" type="button" data-tab-target="progress" aria-label="Progress">
-          <span class="tab-icon" aria-hidden="true">▥</span>
-          <span class="tab-label">Progress</span>
-        </button>
-        <button class="tab-button" type="button" data-tab-target="scan" aria-label="Settings">
-          <span class="tab-icon" aria-hidden="true">⚙</span>
-          <span class="tab-label">Settings</span>
-        </button>
+        <div class="bottom-tabs-dock">
+          <button class="tab-button active" type="button" data-tab-target="dashboard" aria-label="Home">
+            <span class="tab-icon" aria-hidden="true">⌂</span>
+            <span class="tab-label">Home</span>
+          </button>
+          <button class="tab-button" type="button" data-tab-target="progress" aria-label="Progress">
+            <span class="tab-icon" aria-hidden="true">▥</span>
+            <span class="tab-label">Progress</span>
+          </button>
+          <button class="tab-button" type="button" data-tab-target="scan" aria-label="Settings">
+            <span class="tab-icon" aria-hidden="true">⚙</span>
+            <span class="tab-label">Settings</span>
+          </button>
+        </div>
       </nav>
       <button id="fabAddButton" class="fab-add-button" type="button" aria-label="Add meal">+</button>
 
