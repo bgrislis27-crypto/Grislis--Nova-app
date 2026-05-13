@@ -10,7 +10,7 @@
     />
     <link rel="icon" href="./assets/nova-fruit-logo.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="./nova-fonts.css?v=5" />
-    <link rel="stylesheet" href="./styles.css?v=6" />
+    <link rel="stylesheet" href="./styles.css?v=7" />
   </head>
   <body>
     <a class="skip" href="#app-main">Skip to main content</a>
@@ -89,39 +89,72 @@
       </div>
 
       <main id="app-main" class="app-shell">
-        <section class="panel tab-panel" data-tab-panel="dashboard">
-          <div class="calendar-strip" id="homeCalendarStrip"></div>
-          <div class="home-top-grid">
-            <article class="fit-card">
-              <p class="fit-label">Steps</p>
-              <p id="stepsValue" class="fit-big-number">0</p>
-              <div class="home-ring home-ring--large home-ring--blue" id="stepsRing" aria-label="Steps progress">
-                <span aria-hidden="true">👟</span>
-              </div>
-            </article>
-            <article class="fit-card">
-              <p class="fit-label">Calories burned</p>
-              <p id="caloriesBurnedValue" class="fit-big-number">0</p>
-              <p id="activityBreakdown" class="fit-subtext">Walk 0 · Active 0</p>
-              <div class="home-ring home-ring--large home-ring--orange" id="caloriesBurnedRing" aria-label="Calories burned progress">
-                <span aria-hidden="true">🔥</span>
-              </div>
-            </article>
-          </div>
-          <div class="water-row fit-card">
+        <section class="panel tab-panel dashboard-panel" data-tab-panel="dashboard">
+          <header class="home-dash-header">
             <div>
-              <p class="fit-label">Water</p>
-              <strong id="waterValue">0 / 8 cups</strong>
+              <p class="home-dash-eyebrow" id="homeDashDate">Today</p>
+              <h2 class="home-dash-title">Dashboard</h2>
             </div>
-            <div class="water-actions">
-              <button id="waterMinusButton" type="button" class="secondary small">−</button>
-              <button id="waterPlusButton" type="button" class="secondary small">+</button>
+          </header>
+
+          <section class="home-section" aria-labelledby="home-week-heading">
+            <div class="home-section-head">
+              <h3 class="home-section-title" id="home-week-heading">This week</h3>
+              <span class="home-section-meta">Last 7 days</span>
             </div>
+            <div class="calendar-strip" id="homeCalendarStrip"></div>
+          </section>
+
+          <div class="home-dash-primary">
+            <section class="home-section home-section--metrics" aria-labelledby="home-activity-heading">
+              <div class="home-section-head">
+                <h3 class="home-section-title" id="home-activity-heading">Activity</h3>
+                <span class="home-section-meta" id="homeActivityHint">Rings from your log</span>
+              </div>
+              <div class="home-top-grid">
+                <article class="fit-card dashboard-metric-card">
+                  <p class="fit-label">Steps</p>
+                  <p id="stepsValue" class="fit-big-number">0</p>
+                  <div class="home-ring home-ring--large home-ring--blue" id="stepsRing" aria-label="Steps progress">
+                    <span aria-hidden="true">👟</span>
+                  </div>
+                </article>
+                <article class="fit-card dashboard-metric-card">
+                  <p class="fit-label">Calories burned</p>
+                  <p id="caloriesBurnedValue" class="fit-big-number">0</p>
+                  <p id="activityBreakdown" class="fit-subtext">Walk 0 · Active 0</p>
+                  <div class="home-ring home-ring--large home-ring--orange" id="caloriesBurnedRing" aria-label="Calories burned progress">
+                    <span aria-hidden="true">🔥</span>
+                  </div>
+                </article>
+              </div>
+            </section>
+
+            <section class="home-section home-section--water" aria-labelledby="home-water-heading">
+              <div class="home-section-head">
+                <h3 class="home-section-title" id="home-water-heading">Hydration</h3>
+                <span class="home-section-meta">Goal 8 cups</span>
+              </div>
+              <div class="water-row fit-card dashboard-card--interactive">
+                <div>
+                  <p class="fit-label">Water today</p>
+                  <strong id="waterValue">0 / 8 cups</strong>
+                </div>
+                <div class="water-actions">
+                  <button id="waterMinusButton" type="button" class="secondary small">−</button>
+                  <button id="waterPlusButton" type="button" class="secondary small">+</button>
+                </div>
+              </div>
+            </section>
           </div>
-          <div class="home-recent-head">
-            <h3>Recently logged</h3>
-          </div>
-          <div id="homeRecentList" class="home-recent-list"></div>
+
+          <section class="home-section home-section--recent" aria-labelledby="home-recent-heading">
+            <div class="home-section-head">
+              <h3 class="home-section-title" id="home-recent-heading">Recently logged</h3>
+              <span class="home-section-meta" id="homeRecentMeta">Today</span>
+            </div>
+            <div id="homeRecentList" class="home-recent-list"></div>
+          </section>
         </section>
 
         <section class="panel tab-panel" data-tab-panel="progress">

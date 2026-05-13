@@ -1253,6 +1253,23 @@ function renderDashboard() {
   renderCalendarStrip();
   renderHomeRecentList(todayItems);
 
+  const homeDashDate = document.getElementById("homeDashDate");
+  if (homeDashDate) {
+    homeDashDate.textContent = formatTodayLabel();
+  }
+  const homeRecentMeta = document.getElementById("homeRecentMeta");
+  if (homeRecentMeta) {
+    const n = todayItems.length;
+    homeRecentMeta.textContent =
+      n === 0 ? "No meals yet today" : `${n} meal${n === 1 ? "" : "s"} logged`;
+  }
+  const homeActivityHint = document.getElementById("homeActivityHint");
+  if (homeActivityHint) {
+    homeActivityHint.textContent = todayItems.length
+      ? `Estimated from ${todayItems.length} log${todayItems.length === 1 ? "" : "s"}`
+      : "Log a meal to animate rings";
+  }
+
   const caloriesLeft = Math.round(goals.calories - totals.calories);
   if (topDateBadge) {
     topDateBadge.textContent = `📅 ${formatTopDateLabel()}`;
