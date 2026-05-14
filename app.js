@@ -1377,76 +1377,168 @@ function smoothPath(points) {
   return d;
 }
 
+function formatChartAxisWeekday(isoDate) {
+  const parts = String(isoDate).split("-");
+  if (parts.length < 3) return String(isoDate);
+  const y = Number(parts[0]);
+  const m = Number(parts[1]);
+  const d = Number(parts[2]);
+  if (!Number.isFinite(y) || !Number.isFinite(m) || !Number.isFinite(d)) return String(isoDate);
+  const dt = new Date(y, m - 1, d);
+  return dt.toLocaleDateString(undefined, { weekday: "short" });
+}
+
+function formatChartTooltipDate(isoDate) {
+  const parts = String(isoDate).split("-");
+  if (parts.length < 3) return String(isoDate);
+  const y = Number(parts[0]);
+  const m = Number(parts[1]);
+  const d = Number(parts[2]);
+  if (!Number.isFinite(y) || !Number.isFinite(m) || !Number.isFinite(d)) return String(isoDate);
+  const dt = new Date(y, m - 1, d);
+  return dt.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+}
+
 function renderGoalChart() {
-  if (!goalChartSvg || !goalChartWrap || !goalChartTooltip || !goalProgressLabel) return;
+  if (!goalChartSvg || !goalChartWrap || !goalChartTooltip) return;
+  const goalProgressFoot = document.getElementById("goalProgressFoot");
+
   const goals = getStoredGoals();
   const allMeals = getStoredMealLog();
   const series = getDailySeriesFromMeals(allMeals);
   const maxDays = getRangeDays();
   const rows =
-    maxDays === Infinity
-      ? series
-      : series.slice(Math.max(0, series.length - maxDays));
+    maxDays === Infinity ? series : series.slice(Math.max(0, series.length - maxDays));
 
   goalChartSvg.innerHTML = "";
+  goalChartTooltip.classList.add("hidden");
+  goalChartTooltip.innerHTML = "";
+
+  if (goalProgressLabel) {
+    goalProgressLabel.textContent = "0% of goal done";
+  }
+  if (goalProgressFoot) {
+    goalProgressFoot.textContent =
+      "Log meals on the Home tab to see your calorie trend toward your daily goal.";
+  }
+
   if (rows.length === 0) {
-    goalChartSvg.innerHTML = `<text x="50%" y="52%" text-anchor="middle" fill="#7b8190" font-size="18">No progress data yet</text>`;
-    goalProgressLabel.textContent = "0% completed";
+    goalChartSvg.innerHTML = `<text x="50%" y="48%" text-anchor="middle" fill="#7b8190" font-size="17" font-family="system-ui,sans-serif">No progress data yet</text>`;
     return;
   }
 
   const w = 640;
-  const h = 240;
-  const padX = 24;
-  const padY = 20;
-  const innerW = w - padX * 2;
-  const innerH = h - padY * 2;
+  const h = 280;
+  const padXL = 44;
+  const padXR = 16;
+  const padYTop = 28;
+  const padYBottom = 42;
+  const innerW = w - padXL - padXR;
+  const innerH = h - padYTop - padYBottom;
+
   const points = rows.map((row, i) => {
     const pct = clampPercent((row.calories / goals.calories) * 100);
-    const x = padX + (i / Math.max(1, rows.length - 1)) * innerW;
-    const y = padY + (1 - pct / 100) * innerH;
-    return { x, y, pct, date: row.date };
+    const x = padXL + (i / Math.max(1, rows.length - 1)) * innerW;
+    const y = padYTop + (1 - pct / 100) * innerH;
+    return { x, y, pct, date: row.date, calories: row.calories };
   });
   const avg = points.reduce((a, p) => a + p.pct, 0) / points.length;
-  goalProgressLabel.textContent = `${Math.round(avg)}% completed`;
-
-  goalChartSvg.innerHTML += `<rect x="0" y="0" width="${w}" height="${h}" rx="14" fill="#f8f9fd" />`;
-  for (let i = 0; i <= 4; i++) {
-    const y = padY + (innerH / 4) * i;
-    goalChartSvg.innerHTML += `<line x1="${padX}" y1="${y}" x2="${w - padX}" y2="${y}" stroke="#e4e8f2" stroke-width="1" />`;
+  if (goalProgressLabel) {
+    goalProgressLabel.textContent = `${Math.round(avg)}% of goal done`;
+  }
+  if (goalProgressFoot) {
+    if (avg >= 80) {
+      goalProgressFoot.textContent =
+        "Great job! Consistency is key, and you're mastering it!";
+    } else if (avg >= 55) {
+      goalProgressFoot.textContent = "You're building solid momentum — keep logging!";
+    } else if (avg >= 35) {
+      goalProgressFoot.textContent = "Nice start — every day you log helps the chart grow.";
+    } else {
+      goalProgressFoot.textContent =
+        "Keep logging meals on Home — you'll see the trend shape up toward your goal.";
+    }
   }
 
-  const areaPoints = points
-    .map((p) => `${p.x},${p.y}`)
-    .join(" ");
-  const areaD = `M ${padX} ${h - padY} L ${areaPoints} L ${w - padX} ${h - padY} Z`;
-  const lineD = smoothPath(points);
-  goalChartSvg.innerHTML += `<path d="${areaD}" fill="rgba(83, 136, 228, 0.13)" />`;
-  goalChartSvg.innerHTML += `<path d="${lineD}" fill="none" stroke="#5d89df" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />`;
+  let svg = `<defs><linearGradient id="goalAreaFade" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="rgba(34, 197, 94, 0.22)" />
+    <stop offset="100%" stop-color="rgba(34, 197, 94, 0.02)" />
+  </linearGradient></defs>`;
+  svg += `<rect x="0" y="0" width="${w}" height="${h}" rx="16" fill="#fafbfd" />`;
+
+  for (let i = 0; i <= 4; i++) {
+    const yLine = padYTop + (innerH / 4) * i;
+    const val = 100 - i * 25;
+    svg += `<line x1="${padXL}" y1="${yLine}" x2="${w - padXR}" y2="${yLine}" stroke="#e6e9f1" stroke-width="1" />`;
+    svg += `<text x="8" y="${yLine + 4}" font-size="11" fill="#8b92a6" font-family="system-ui,sans-serif">${val}%</text>`;
+  }
+
+  const areaPoints = points.map((p) => `${p.x},${p.y}`).join(" ");
+  const areaD =
+    points.length === 1
+      ? `M ${padXL} ${h - padYBottom} L ${points[0].x} ${points[0].y} L ${w - padXR} ${h - padYBottom} Z`
+      : `M ${padXL} ${h - padYBottom} L ${areaPoints} L ${w - padXR} ${h - padYBottom} Z`;
+  const lineD = points.length === 1 ? `M ${points[0].x} ${points[0].y}` : smoothPath(points);
+  svg += `<path d="${areaD}" fill="url(#goalAreaFade)" />`;
+  svg += `<path d="${lineD}" fill="none" stroke="#22c55e" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />`;
+
   points.forEach((p) => {
-    goalChartSvg.innerHTML += `<circle class="chart-point" cx="${p.x}" cy="${p.y}" r="6" fill="#5d89df" data-date="${p.date}" data-pct="${Math.round(p.pct)}" />`;
+    svg += `<circle class="chart-point" cx="${p.x}" cy="${p.y}" r="7" fill="#22c55e" stroke="#ffffff" stroke-width="2.5" data-date="${p.date}" data-pct="${Math.round(p.pct)}" data-calories="${Math.round(p.calories)}" />`;
   });
+
+  const xStep = Math.max(1, Math.ceil((points.length - 1) / 6));
+  for (let i = 0; i < points.length; i += xStep) {
+    const p = points[i];
+    const label = formatChartAxisWeekday(p.date);
+    svg += `<text x="${p.x}" y="${h - 10}" text-anchor="middle" font-size="11" fill="#8b92a6" font-family="system-ui,sans-serif">${label}</text>`;
+  }
+  const lastIdx = points.length - 1;
+  if (lastIdx > 0 && lastIdx % xStep !== 0) {
+    const p = points[lastIdx];
+    svg += `<text x="${p.x}" y="${h - 10}" text-anchor="middle" font-size="11" fill="#8b92a6" font-family="system-ui,sans-serif">${formatChartAxisWeekday(p.date)}</text>`;
+  }
+
+  goalChartSvg.innerHTML = svg;
+
+  const fillTooltip = (calories, date, pct) => {
+    goalChartTooltip.innerHTML = "";
+    const strong = document.createElement("strong");
+    strong.textContent = `${calories} cal · ${pct}% of goal`;
+    const span = document.createElement("span");
+    span.className = "chart-tooltip-date";
+    span.textContent = formatChartTooltipDate(date);
+    goalChartTooltip.append(strong, span);
+  };
 
   const pointEls = goalChartSvg.querySelectorAll(".chart-point");
   pointEls.forEach((el) => {
     const show = (ev) => {
       const date = el.getAttribute("data-date");
       const pct = el.getAttribute("data-pct");
-      goalChartTooltip.textContent = `${date} · ${pct}%`;
+      const calories = el.getAttribute("data-calories");
+      fillTooltip(calories, date, pct);
       goalChartTooltip.classList.remove("hidden");
       const rect = goalChartWrap.getBoundingClientRect();
-      const x = ev.clientX - rect.left + 8;
-      const y = ev.clientY - rect.top - 30;
-      goalChartTooltip.style.left = `${x}px`;
-      goalChartTooltip.style.top = `${y}px`;
+      const clientX = ev.clientX ?? ev.pageX;
+      const clientY = ev.clientY ?? ev.pageY;
+      const x = clientX - rect.left + 10;
+      const y = clientY - rect.top - 8;
+      goalChartTooltip.style.left = `${Math.min(Math.max(8, x), rect.width - 120)}px`;
+      goalChartTooltip.style.top = `${Math.max(8, y - 56)}px`;
     };
     el.addEventListener("mousemove", show);
     el.addEventListener("touchstart", (ev) => {
       const t = ev.touches[0];
-      if (t) show(t);
+      if (t) show({ clientX: t.clientX, clientY: t.clientY });
     });
-    el.addEventListener("mouseleave", () => goalChartTooltip.classList.add("hidden"));
-    el.addEventListener("touchend", () => goalChartTooltip.classList.add("hidden"));
+    el.addEventListener("mouseleave", () => {
+      goalChartTooltip.classList.add("hidden");
+      goalChartTooltip.innerHTML = "";
+    });
+    el.addEventListener("touchend", () => {
+      goalChartTooltip.classList.add("hidden");
+      goalChartTooltip.innerHTML = "";
+    });
   });
 }
 
@@ -1458,10 +1550,10 @@ function renderProgress() {
   const daysLogged = daily.length;
   const cheatDays = daily.filter((d) => d.calories > goals.calories).length;
   if (lastWeightValue) lastWeightValue.textContent = `${lastWeight} lb`;
-  if (daysLoggedValue) daysLoggedValue.textContent = String(daysLogged);
-  if (cheatBadge) cheatBadge.textContent = `${cheatDays} cheat`;
-  setRingProgress(weightRing, 72, "#5d89df");
-  setRingProgress(daysLoggedRing, Math.min(100, daysLogged), "#58b36a");
+  if (daysLoggedValue) daysLoggedValue.textContent = `${daysLogged} logged`;
+  if (cheatBadge) cheatBadge.textContent = `${cheatDays} Cheat`;
+  setRingProgress(weightRing, 72, "#374151");
+  setRingProgress(daysLoggedRing, Math.min(100, Math.max(10, daysLogged * 12)), "#5d89df");
   renderGoalChart();
 }
 
@@ -2737,6 +2829,14 @@ if (progressRangeControl) {
       btn.classList.toggle("active", btn === target);
     });
     renderProgress();
+  });
+}
+
+const editGoalsScrollButton = document.getElementById("editGoalsScrollButton");
+if (editGoalsScrollButton && goalCalories) {
+  editGoalsScrollButton.addEventListener("click", () => {
+    goalCalories.scrollIntoView({ behavior: "smooth", block: "center" });
+    goalCalories.focus({ preventScroll: true });
   });
 }
 
