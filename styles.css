@@ -1383,6 +1383,10 @@ footer,
   gap: 12px;
 }
 
+.home-dash-header-text {
+  min-width: 0;
+}
+
 .home-dash-eyebrow {
   margin: 0 0 4px;
   font-size: 0.82rem;
@@ -1392,12 +1396,33 @@ footer,
 }
 
 .home-dash-title {
-  margin: 0;
+  margin: 0 0 6px;
   font-size: clamp(1.32rem, 1.08rem + 0.95vw, 1.72rem);
   font-weight: 700;
   letter-spacing: -0.03em;
   line-height: 1.12;
   color: var(--text);
+}
+
+.home-dash-tagline {
+  margin: 0 0 6px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.45;
+  color: var(--muted);
+  max-width: 36ch;
+}
+
+.home-dash-streak {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: #c2410c;
+}
+
+:root[data-theme="dark"] .home-dash-streak {
+  color: #fdba74;
 }
 
 .dashboard-panel .home-section {
@@ -1986,6 +2011,7 @@ footer,
 :root[data-theme="dark"] .empty-state,
 :root[data-theme="dark"] .meal-meta,
 :root[data-theme="dark"] .home-section-meta,
+:root[data-theme="dark"] .home-dash-tagline,
 :root[data-theme="dark"] .home-log-top span,
 :root[data-theme="dark"] .app-top-links a {
   color: #c8d0e0;

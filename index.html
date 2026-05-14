@@ -10,7 +10,7 @@
     />
     <link rel="icon" href="./assets/nova-fruit-logo.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="./nova-fonts.css?v=5" />
-    <link rel="stylesheet" href="./styles.css?v=7" />
+    <link rel="stylesheet" href="./styles.css?v=8" />
   </head>
   <body>
     <a class="skip" href="#app-main">Skip to main content</a>
@@ -91,9 +91,11 @@
       <main id="app-main" class="app-shell">
         <section class="panel tab-panel dashboard-panel" data-tab-panel="dashboard">
           <header class="home-dash-header">
-            <div>
+            <div class="home-dash-header-text">
               <p class="home-dash-eyebrow" id="homeDashDate">Today</p>
-              <h2 class="home-dash-title">Dashboard</h2>
+              <h2 class="home-dash-title" id="homeDashGreeting">Good morning 👋</h2>
+              <p class="home-dash-tagline" id="homeDashTagline">Ready to hit your goals today?</p>
+              <p class="home-dash-streak hidden" id="homeDashStreak" aria-live="polite"></p>
             </div>
           </header>
 

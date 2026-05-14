@@ -1017,6 +1017,62 @@ function startSession(mode, emailValue = "") {
   showApp();
 }
 
+function getSessionPayload() {
+  try {
+    const raw = localStorage.getItem(SESSION_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === "object" ? parsed : null;
+  } catch {
+    return null;
+  }
+}
+
+/** First name from login email, or "there" for guests / missing email. */
+function displayNameFromSession() {
+  const p = getSessionPayload();
+  if (!p || p.mode === "guest" || !p.email) {
+    return "there";
+  }
+  const local = String(p.email).split("@")[0];
+  const first = local.split(/[._-]/)[0] || local;
+  if (!first) return "there";
+  return first.charAt(0).toUpperCase() + first.slice(1).toLowerCase();
+}
+
+function getTimeOfDayGreetingWord() {
+  const h = new Date().getHours();
+  if (h < 12) return "Good morning";
+  if (h < 17) return "Good afternoon";
+  return "Good evening";
+}
+
+function dateKeyFromDate(d) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
+/** Consecutive days with ≥1 meal; if today has none, streak counts backward from yesterday. */
+function getMealLoggingStreakDays() {
+  const meals = getStoredMealLog();
+  const dates = new Set();
+  for (const m of meals) {
+    if (m && m.date) dates.add(m.date);
+  }
+  let streak = 0;
+  const d = new Date();
+  if (!dates.has(dateKeyFromDate(d))) {
+    d.setDate(d.getDate() - 1);
+  }
+  while (dates.has(dateKeyFromDate(d))) {
+    streak += 1;
+    d.setDate(d.getDate() - 1);
+  }
+  return streak;
+}
+
 function getTodayKey() {
   const now = new Date();
   const y = now.getFullYear();
@@ -1256,6 +1312,25 @@ function renderDashboard() {
   const homeDashDate = document.getElementById("homeDashDate");
   if (homeDashDate) {
     homeDashDate.textContent = formatTodayLabel();
+  }
+  const homeDashGreeting = document.getElementById("homeDashGreeting");
+  if (homeDashGreeting) {
+    homeDashGreeting.textContent = `${getTimeOfDayGreetingWord()}, ${displayNameFromSession()} 👋`;
+  }
+  const homeDashTagline = document.getElementById("homeDashTagline");
+  if (homeDashTagline) {
+    homeDashTagline.textContent = "Ready to hit your goals today?";
+  }
+  const homeDashStreak = document.getElementById("homeDashStreak");
+  if (homeDashStreak) {
+    const streakDays = getMealLoggingStreakDays();
+    if (streakDays >= 2) {
+      homeDashStreak.textContent = `You're on a ${streakDays}-day streak 🔥`;
+      homeDashStreak.classList.remove("hidden");
+    } else {
+      homeDashStreak.textContent = "";
+      homeDashStreak.classList.add("hidden");
+    }
   }
   const homeRecentMeta = document.getElementById("homeRecentMeta");
   if (homeRecentMeta) {
