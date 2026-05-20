@@ -10,7 +10,7 @@
     />
     <link rel="icon" href="./assets/nova-fruit-logo.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="./nova-fonts.css?v=5" />
-    <link rel="stylesheet" href="./styles.css?v=11" />
+    <link rel="stylesheet" href="./styles.css?v=12" />
   </head>
   <body>
     <a class="skip" href="#app-main">Skip to main content</a>
@@ -223,7 +223,7 @@
           <label for="ingredients" class="label">Ingredients</label>
           <p class="lookup-note">
             Paste text, or use <strong>Scan label with camera</strong> — ingredients are read on your device (OCR).
-            Commas, semicolons, or line breaks all work.
+            Nova also tries to match the product on OpenFoodFacts (barcode or product name) for real nutrition.
           </p>
           <div id="scanZone" class="scan-zone">
             <textarea
@@ -246,6 +246,30 @@
             <button id="loadDemoButton" class="secondary">Load Demo Label</button>
           </div>
 
+          <hr class="divider" />
+
+          <h2>Log a food</h2>
+          <label for="foodSearch" class="label">Search foods</label>
+          <p class="lookup-note">
+            Type everyday foods — eggs, steak, coffee, fruit, and more. Nova uses verified serving sizes first,
+            then looks up real products on OpenFoodFacts.
+          </p>
+          <div class="brand-search-wrap">
+            <input
+              id="foodSearch"
+              type="text"
+              placeholder="Example: eggs, sirloin steak, black coffee, banana, blueberries..."
+              autocomplete="off"
+              aria-autocomplete="list"
+              aria-controls="foodSuggestions"
+              aria-expanded="false"
+            />
+            <ul id="foodSuggestions" class="suggestions hidden"></ul>
+          </div>
+          <div class="actions">
+            <button id="foodSearchButton" type="button">Look up food</button>
+          </div>
+
           <div
             id="cameraModal"
             class="modal hidden"
@@ -255,8 +279,8 @@
           >
             <div class="modal-backdrop" id="cameraModalBackdrop" tabindex="-1"></div>
             <div class="modal-card">
-              <h3 id="cameraModalTitle">Scan ingredient label</h3>
-              <p class="modal-lead">
+              <h3 id="cameraModalTitle">Scan label or barcode</h3>
+              <p id="cameraModalLead" class="modal-lead">
                 Photograph the ingredient list in good light. Recognition runs in your browser; nothing is uploaded
                 to Nova’s servers.
               </p>
@@ -264,6 +288,8 @@
               <canvas id="cameraCanvas" class="hidden"></canvas>
               <p id="cameraOcrStatus" class="camera-status empty-state" aria-live="polite"></p>
               <div class="modal-actions">
+                <button type="button" id="cameraModeIngredients" class="secondary small">Ingredient list</button>
+                <button type="button" id="cameraModeBarcode" class="secondary small">Barcode</button>
                 <button type="button" id="cameraWebcamStart" class="secondary">Use webcam</button>
                 <button type="button" id="cameraWebcamCapture" class="secondary hidden">Capture photo</button>
                 <input
@@ -307,9 +333,11 @@
           <hr class="divider" />
           <h2>Barcode lookup</h2>
           <label for="barcodeInput" class="label">Enter barcode (UPC/EAN)</label>
+          <p class="lookup-note">Scan or type the UPC/EAN from the package for exact product nutrition from OpenFoodFacts.</p>
           <input id="barcodeInput" type="text" placeholder="Example: 5449000054227" inputmode="numeric" />
           <div class="actions">
             <button id="barcodeLookupButton">Lookup Barcode</button>
+            <button id="scanBarcodeCameraButton" type="button" class="secondary">Scan barcode with camera</button>
           </div>
         </section>
 

@@ -813,6 +813,310 @@ const brandHealthDatabase = [
   },
 ];
 
+/** Per-serving nutrition (USDA-style reference portions) for quick logging. */
+const commonFoodDatabase = [
+  {
+    name: "Egg (large)",
+    aliases: ["egg", "eggs", "large egg", "whole egg", "fried egg", "boiled egg"],
+    serving: "1 large egg (50 g)",
+    calories: 72,
+    protein: 6.3,
+    carbs: 0.4,
+    fat: 4.8,
+    score: 82,
+  },
+  {
+    name: "Eggs scrambled (2 large)",
+    aliases: ["scrambled eggs", "scrambled egg", "2 eggs"],
+    serving: "2 large eggs",
+    calories: 182,
+    protein: 12.6,
+    carbs: 2,
+    fat: 13.6,
+    score: 78,
+  },
+  {
+    name: "Steak — sirloin, cooked",
+    aliases: ["steak", "sirloin", "sirloin steak", "beef steak", "grilled steak"],
+    serving: "3 oz (85 g)",
+    calories: 180,
+    protein: 26,
+    carbs: 0,
+    fat: 8,
+    score: 80,
+  },
+  {
+    name: "Steak — ribeye, cooked",
+    aliases: ["ribeye", "rib eye", "ribeye steak"],
+    serving: "3 oz (85 g)",
+    calories: 248,
+    protein: 24,
+    carbs: 0,
+    fat: 17,
+    score: 68,
+  },
+  {
+    name: "Coffee — black",
+    aliases: ["coffee", "black coffee", "brewed coffee", "drip coffee"],
+    serving: "8 fl oz (240 ml)",
+    calories: 2,
+    protein: 0.3,
+    carbs: 0,
+    fat: 0,
+    score: 92,
+  },
+  {
+    name: "Coffee — latte",
+    aliases: ["latte", "cafe latte", "coffee latte"],
+    serving: "12 fl oz with 2% milk",
+    calories: 120,
+    protein: 6,
+    carbs: 12,
+    fat: 5,
+    score: 72,
+  },
+  {
+    name: "Espresso",
+    aliases: ["espresso shot", "shot of espresso"],
+    serving: "1 fl oz (30 ml)",
+    calories: 3,
+    protein: 0.1,
+    carbs: 0,
+    fat: 0.1,
+    score: 90,
+  },
+  {
+    name: "Apple",
+    aliases: ["apple", "apples", "medium apple", "gala apple", "fuji apple", "honeycrisp"],
+    serving: "1 medium (182 g)",
+    calories: 95,
+    protein: 0.5,
+    carbs: 25,
+    fat: 0.3,
+    score: 88,
+  },
+  {
+    name: "Banana",
+    aliases: ["banana", "bananas", "medium banana"],
+    serving: "1 medium (118 g)",
+    calories: 105,
+    protein: 1.3,
+    carbs: 27,
+    fat: 0.4,
+    score: 85,
+  },
+  {
+    name: "Orange",
+    aliases: ["orange", "oranges", "navel orange"],
+    serving: "1 medium (131 g)",
+    calories: 62,
+    protein: 1.2,
+    carbs: 15,
+    fat: 0.2,
+    score: 88,
+  },
+  {
+    name: "Strawberries",
+    aliases: ["strawberry", "strawberries", "fresh strawberries"],
+    serving: "1 cup (152 g)",
+    calories: 49,
+    protein: 1,
+    carbs: 12,
+    fat: 0.5,
+    score: 90,
+  },
+  {
+    name: "Blueberries",
+    aliases: ["blueberry", "blueberries", "fresh blueberries"],
+    serving: "1 cup (148 g)",
+    calories: 84,
+    protein: 1.1,
+    carbs: 21,
+    fat: 0.5,
+    score: 90,
+  },
+  {
+    name: "Grapes",
+    aliases: ["grape", "grapes", "red grapes", "green grapes"],
+    serving: "1 cup (151 g)",
+    calories: 104,
+    protein: 1.1,
+    carbs: 27,
+    fat: 0.2,
+    score: 82,
+  },
+  {
+    name: "Mango",
+    aliases: ["mango", "mangos", "mangoes"],
+    serving: "1 cup sliced (165 g)",
+    calories: 99,
+    protein: 1.4,
+    carbs: 25,
+    fat: 0.6,
+    score: 86,
+  },
+  {
+    name: "Peach",
+    aliases: ["peach", "peaches"],
+    serving: "1 medium (150 g)",
+    calories: 59,
+    protein: 1.4,
+    carbs: 14,
+    fat: 0.4,
+    score: 88,
+  },
+  {
+    name: "Pear",
+    aliases: ["pear", "pears"],
+    serving: "1 medium (178 g)",
+    calories: 101,
+    protein: 0.6,
+    carbs: 27,
+    fat: 0.2,
+    score: 86,
+  },
+  {
+    name: "Watermelon",
+    aliases: ["watermelon", "water melon"],
+    serving: "1 cup diced (152 g)",
+    calories: 46,
+    protein: 0.9,
+    carbs: 11,
+    fat: 0.2,
+    score: 92,
+  },
+  {
+    name: "Pineapple",
+    aliases: ["pineapple", "pineapple chunks"],
+    serving: "1 cup chunks (165 g)",
+    calories: 82,
+    protein: 0.9,
+    carbs: 22,
+    fat: 0.2,
+    score: 84,
+  },
+  {
+    name: "Chicken breast, grilled",
+    aliases: ["chicken breast", "grilled chicken", "chicken", "chicken fillet"],
+    serving: "3 oz (85 g)",
+    calories: 128,
+    protein: 26,
+    carbs: 0,
+    fat: 2.7,
+    score: 88,
+  },
+  {
+    name: "Salmon, baked",
+    aliases: ["salmon", "baked salmon", "atlantic salmon"],
+    serving: "3 oz (85 g)",
+    calories: 177,
+    protein: 19,
+    carbs: 0,
+    fat: 10.5,
+    score: 86,
+  },
+  {
+    name: "White rice, cooked",
+    aliases: ["rice", "white rice", "steamed rice", "cooked rice"],
+    serving: "1 cup (158 g)",
+    calories: 206,
+    protein: 4.3,
+    carbs: 45,
+    fat: 0.4,
+    score: 72,
+  },
+  {
+    name: "Oatmeal, cooked",
+    aliases: ["oatmeal", "oats", "porridge", "rolled oats"],
+    serving: "1 cup (234 g)",
+    calories: 158,
+    protein: 6,
+    carbs: 27,
+    fat: 3.2,
+    score: 84,
+  },
+  {
+    name: "Greek yogurt, plain",
+    aliases: ["greek yogurt", "plain yogurt", "yogurt plain"],
+    serving: "1 cup (245 g)",
+    calories: 130,
+    protein: 23,
+    carbs: 9,
+    fat: 0.7,
+    score: 86,
+  },
+  {
+    name: "Avocado",
+    aliases: ["avocado", "avocados", "half avocado"],
+    serving: "½ medium (68 g)",
+    calories: 161,
+    protein: 2,
+    carbs: 9,
+    fat: 15,
+    score: 82,
+  },
+  {
+    name: "Broccoli, steamed",
+    aliases: ["broccoli", "steamed broccoli"],
+    serving: "1 cup (156 g)",
+    calories: 55,
+    protein: 3.7,
+    carbs: 11,
+    fat: 0.6,
+    score: 94,
+  },
+  {
+    name: "Almonds",
+    aliases: ["almonds", "almond", "raw almonds"],
+    serving: "1 oz (28 g, ~23 nuts)",
+    calories: 164,
+    protein: 6,
+    carbs: 6,
+    fat: 14,
+    score: 80,
+  },
+  {
+    name: "Peanut butter",
+    aliases: ["peanut butter", "pb"],
+    serving: "2 tbsp (32 g)",
+    calories: 188,
+    protein: 8,
+    carbs: 6,
+    fat: 16,
+    score: 74,
+  },
+  {
+    name: "Whole wheat bread",
+    aliases: ["bread", "whole wheat bread", "toast", "slice of bread"],
+    serving: "1 slice (32 g)",
+    calories: 81,
+    protein: 4,
+    carbs: 14,
+    fat: 1.1,
+    score: 76,
+  },
+  {
+    name: "Milk, 2%",
+    aliases: ["milk", "2% milk", "lowfat milk"],
+    serving: "1 cup (244 g)",
+    calories: 122,
+    protein: 8,
+    carbs: 12,
+    fat: 4.8,
+    score: 78,
+  },
+  {
+    name: "Cheddar cheese",
+    aliases: ["cheddar", "cheddar cheese", "cheese slice"],
+    serving: "1 oz (28 g)",
+    calories: 114,
+    protein: 7,
+    carbs: 0.4,
+    fat: 9.4,
+    score: 70,
+  },
+];
+
 const scoreBadge = document.getElementById("scoreBadge");
 const scoreValue = document.getElementById("scoreValue");
 const verdict = document.getElementById("verdict");
@@ -893,6 +1197,14 @@ const goalChartWrap = document.getElementById("goalChartWrap");
 const goalProgressLabel = document.getElementById("goalProgressLabel");
 const barcodeInput = document.getElementById("barcodeInput");
 const barcodeLookupButton = document.getElementById("barcodeLookupButton");
+const scanBarcodeCameraButton = document.getElementById("scanBarcodeCameraButton");
+const foodSearch = document.getElementById("foodSearch");
+const foodSuggestions = document.getElementById("foodSuggestions");
+const foodSearchButton = document.getElementById("foodSearchButton");
+const cameraModalTitle = document.getElementById("cameraModalTitle");
+const cameraModalLead = document.getElementById("cameraModalLead");
+const cameraModeIngredients = document.getElementById("cameraModeIngredients");
+const cameraModeBarcode = document.getElementById("cameraModeBarcode");
 const topDateBadge = document.getElementById("topDateBadge");
 const topCaloriesLeftBadge = document.getElementById("topCaloriesLeftBadge");
 const themeToggleButton = document.getElementById("themeToggleButton");
@@ -914,6 +1226,9 @@ const THEME_KEY = "novaTheme";
 const DEFAULT_GOALS = { calories: 2200, protein: 140, carbs: 250, fat: 70 };
 let activeSuggestionIndex = -1;
 let currentSuggestions = [];
+let activeFoodSuggestionIndex = -1;
+let currentFoodSuggestions = [];
+let cameraCaptureMode = "ingredients";
 let authMode = "login";
 let currentLogCandidate = null;
 let activeTab = "dashboard";
@@ -1839,7 +2154,30 @@ function stopCameraStream() {
   }
 }
 
-function openCameraModal() {
+function setCameraCaptureMode(mode) {
+  cameraCaptureMode = mode === "barcode" ? "barcode" : "ingredients";
+  if (cameraModeIngredients) {
+    cameraModeIngredients.classList.toggle("active", cameraCaptureMode === "ingredients");
+    cameraModeIngredients.setAttribute("aria-pressed", String(cameraCaptureMode === "ingredients"));
+  }
+  if (cameraModeBarcode) {
+    cameraModeBarcode.classList.toggle("active", cameraCaptureMode === "barcode");
+    cameraModeBarcode.setAttribute("aria-pressed", String(cameraCaptureMode === "barcode"));
+  }
+  if (cameraModalTitle) {
+    cameraModalTitle.textContent =
+      cameraCaptureMode === "barcode" ? "Scan barcode" : "Scan ingredient label";
+  }
+  if (cameraModalLead) {
+    cameraModalLead.textContent =
+      cameraCaptureMode === "barcode"
+        ? "Center the UPC/EAN barcode in the frame. Recognition runs in your browser."
+        : "Photograph the ingredient list in good light. Recognition runs in your browser; nothing is uploaded to Nova’s servers.";
+  }
+}
+
+function openCameraModal(mode = "ingredients") {
+  setCameraCaptureMode(mode);
   cameraModal.classList.remove("hidden");
   cameraOcrStatus.textContent = "";
   cameraPreview.classList.add("hidden");
@@ -1880,7 +2218,10 @@ async function startWebcam() {
     await cameraPreview.play();
     cameraPreview.classList.remove("hidden");
     cameraWebcamCapture.classList.remove("hidden");
-    cameraOcrStatus.textContent = "Line up the ingredient list, then tap Capture photo.";
+    cameraOcrStatus.textContent =
+      cameraCaptureMode === "barcode"
+        ? "Line up the barcode, then tap Capture photo."
+        : "Line up the ingredient list, then tap Capture photo.";
   } catch {
     cameraOcrStatus.textContent =
       "Could not use the webcam. Try “Take / choose photo”, or allow camera access (HTTPS required on some devices).";
@@ -1901,12 +2242,32 @@ function captureWebcamFrame() {
   void runOcrOnCanvas(cameraCanvas);
 }
 
+async function handleOcrText(text) {
+  if (cameraCaptureMode === "barcode") {
+    const code = extractBarcodeFromText(text);
+    if (!code) {
+      cameraOcrStatus.textContent = "No barcode detected. Move closer, reduce glare, and try again.";
+      return;
+    }
+    barcodeInput.value = code;
+    closeCameraModal();
+    setActiveTab("scan");
+    void runBarcodeLookup();
+    return;
+  }
+
+  ingredientsInput.value = normalizeOcrForIngredients(text);
+  closeCameraModal();
+  ingredientsInput.focus();
+  triggerHighSpeedScan();
+}
+
 async function runOcrOnCanvas(canvas) {
   stopCameraStream();
   cameraPreview.classList.add("hidden");
   cameraWebcamCapture.classList.add("hidden");
   setCameraBusy(true);
-  cameraOcrStatus.textContent = "Reading label… (first run may take 15–40s while the OCR engine downloads)";
+  cameraOcrStatus.textContent = "Reading image… (first run may take 15–40s while the OCR engine downloads)";
   try {
     await loadTesseractScript();
     const {
@@ -1914,9 +2275,7 @@ async function runOcrOnCanvas(canvas) {
     } = await Tesseract.recognize(canvas, "eng", {
       logger() {},
     });
-    ingredientsInput.value = normalizeOcrForIngredients(text);
-    closeCameraModal();
-    ingredientsInput.focus();
+    await handleOcrText(text);
   } catch {
     cameraOcrStatus.textContent = "Could not read that image. Try better light, closer crop, or sharper focus.";
   } finally {
@@ -1932,7 +2291,7 @@ async function runOcrOnFile(file) {
   cameraPreview.classList.add("hidden");
   cameraWebcamCapture.classList.add("hidden");
   setCameraBusy(true);
-  cameraOcrStatus.textContent = "Reading label… (first run may take 15–40s while the OCR engine downloads)";
+  cameraOcrStatus.textContent = "Reading image… (first run may take 15–40s while the OCR engine downloads)";
   try {
     await loadTesseractScript();
     const {
@@ -1940,11 +2299,9 @@ async function runOcrOnFile(file) {
     } = await Tesseract.recognize(file, "eng", {
       logger() {},
     });
-    ingredientsInput.value = normalizeOcrForIngredients(text);
-    closeCameraModal();
-    ingredientsInput.focus();
+    await handleOcrText(text);
   } catch {
-    cameraOcrStatus.textContent = "Could not read that image. Try a clearer photo of the ingredient block.";
+    cameraOcrStatus.textContent = "Could not read that image. Try a clearer photo of the label or barcode.";
   } finally {
     setCameraBusy(false);
   }
@@ -2036,58 +2393,6 @@ function setResultSectionTitles(flag, fact, alternative) {
   alternativeTitle.textContent = alternative;
 }
 
-function runScan() {
-  const parsedIngredients = parseIngredients(ingredientsInput.value);
-  if (parsedIngredients.length === 0) {
-    return;
-  }
-
-  const matches = findMatches(parsedIngredients);
-  const score = calculateScore(matches, parsedIngredients);
-  const verdictData = getVerdictText(score);
-
-  emptyState.classList.add("hidden");
-  results.classList.remove("hidden");
-
-  scoreValue.textContent = String(score);
-  verdict.textContent = verdictData.label;
-  confidence.textContent = verdictData.confidence;
-  applyScoreBadgeTier(verdictData.tier);
-  nutritionSummary.textContent = "";
-  resultImage.onerror = null;
-  resultImage.src = "./assets/default-food.svg";
-  resultImage.alt = "Ingredient-based label scan visual";
-  resultImageCaption.textContent = "Ingredient scan visualization";
-  setResultSectionTitles(
-    "Hidden Additives / Harmful Ingredients",
-    "What This Means",
-    "Cleaner Alternatives",
-  );
-
-  renderList(
-    flagList,
-    matches,
-    (item) =>
-      `${item.key} (severity ${item.severity}/20): detected via label matching.`,
-  );
-  renderList(factList, matches, (item) => item.reason);
-  renderList(alternativeList, matches, (item) => item.alternative);
-  addActionHistoryEntry(
-    "scan",
-    `Ingredient scan (${score})`,
-    `${parsedIngredients.length} ingredients, ${matches.length} additive flag(s)`,
-  );
-  setCurrentLogCandidate({
-    name: "Ingredient scan entry",
-    calories: null,
-    protein: null,
-    carbs: null,
-    fat: null,
-    source: "scan",
-  });
-  setActiveTab("results");
-}
-
 function startScanAnimation() {
   scanOverlay.classList.remove("hidden");
   scanLoading.classList.remove("hidden");
@@ -2110,8 +2415,13 @@ function triggerHighSpeedScan() {
 
   startScanAnimation();
   window.setTimeout(() => {
-    runScan();
-    stopScanAnimation();
+    void (async () => {
+      try {
+        await runScanWithProductLookup();
+      } finally {
+        stopScanAnimation();
+      }
+    })();
   }, 900);
 }
 
@@ -2133,6 +2443,221 @@ function getNutriment(product, key) {
   const nutriments = product.nutriments || {};
   const value = nutriments[key];
   return typeof value === "number" ? value : null;
+}
+
+function parseServingGramsFromText(servingSize) {
+  if (!servingSize) {
+    return null;
+  }
+  const text = String(servingSize);
+  const gramMatch = text.match(/(\d+(?:\.\d+)?)\s*g\b/i);
+  if (gramMatch) {
+    return parseFloat(gramMatch[1]);
+  }
+  const ozMatch = text.match(/(\d+(?:\.\d+)?)\s*oz\b/i);
+  if (ozMatch) {
+    return parseFloat(ozMatch[1]) * 28.35;
+  }
+  return null;
+}
+
+function getServingGramsFromProduct(product) {
+  if (!product || typeof product !== "object") {
+    return null;
+  }
+  const sq = product.serving_quantity;
+  if (typeof sq === "number" && sq > 0) {
+    return sq;
+  }
+  return parseServingGramsFromText(product.serving_size);
+}
+
+function buildLogMacrosFromProduct(product) {
+  const pickMacro = (servingKey, per100Key) => {
+    const servingVal = getNutriment(product, servingKey);
+    if (servingVal !== null) {
+      return servingVal;
+    }
+    const per100 = getNutriment(product, per100Key);
+    const grams = getServingGramsFromProduct(product);
+    if (per100 !== null && grams) {
+      return Math.round((per100 * grams) / 100 * 10) / 10;
+    }
+    return per100;
+  };
+
+  const servingLabel =
+    (typeof product.serving_size === "string" && product.serving_size.trim()) ||
+    (getServingGramsFromProduct(product) ? `${getServingGramsFromProduct(product)} g` : "100 g");
+
+  const hasServing =
+    getNutriment(product, "energy-kcal_serving") !== null || getServingGramsFromProduct(product) !== null;
+
+  return {
+    calories: pickMacro("energy-kcal_serving", "energy-kcal_100g"),
+    protein: pickMacro("proteins_serving", "proteins_100g"),
+    carbs: pickMacro("carbohydrates_serving", "carbohydrates_100g"),
+    fat: pickMacro("fat_serving", "fat_100g"),
+    servingLabel,
+    per100Fallback: !hasServing && getNutriment(product, "energy-kcal_100g") !== null,
+  };
+}
+
+function formatMacroSummary(macros, prefix = "") {
+  const { calories, protein, carbs, fat, servingLabel, per100Fallback } = macros;
+  let line =
+    `${prefix}Serving (${servingLabel}): ${calories ?? "N/A"} cal | Protein ${protein ?? "N/A"}g | ` +
+    `Carbs ${carbs ?? "N/A"}g | Fat ${fat ?? "N/A"}g`;
+  if (per100Fallback) {
+    line += " · estimated from per-100g label data";
+  }
+  return line;
+}
+
+function extractBarcodeFromText(raw) {
+  const candidates = String(raw || "").match(/\b\d{8,14}\b/g) || [];
+  for (const hit of candidates) {
+    const digits = hit.replace(/\D/g, "");
+    if (digits.length === 8 || digits.length === 12 || digits.length === 13) {
+      return digits;
+    }
+  }
+  return null;
+}
+
+function extractLabelHints(raw) {
+  const text = String(raw || "").replace(/\r\n/g, "\n");
+  const barcode = extractBarcodeFromText(text);
+  const lines = text
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+  const preIngredient = [];
+  for (const line of lines) {
+    if (/^ingredients?\b/i.test(line)) {
+      break;
+    }
+    if (/nutrition\s*facts|amount\s+per\s+serving|daily\s+value/i.test(line)) {
+      continue;
+    }
+    if (/^\d+(\.\d+)?\s*(g|mg|kcal|cal|%)\b/i.test(line)) {
+      continue;
+    }
+    preIngredient.push(line);
+  }
+
+  const nameParts = preIngredient
+    .filter((line) => line.length > 2 && line.length < 90 && !/^\d+$/.test(line))
+    .slice(0, 3);
+
+  const brandLine = nameParts.find((line) => /®|™|brand|inc\.|llc/i.test(line)) || "";
+  const productLine =
+    nameParts.find((line) => line !== brandLine && !/net\s*wt|distributed|manufactured/i.test(line)) ||
+    nameParts[0] ||
+    "";
+
+  const searchQuery = [brandLine, productLine]
+    .filter(Boolean)
+    .join(" ")
+    .replace(/\s{2,}/g, " ")
+    .trim();
+
+  return {
+    barcode,
+    searchQuery: searchQuery || null,
+    brandHint: brandLine || null,
+    productHint: productLine || null,
+  };
+}
+
+function findCommonFood(query) {
+  const q = query.trim().toLowerCase();
+  if (!q) {
+    return null;
+  }
+
+  let best = null;
+  let bestScore = 0;
+
+  for (const food of commonFoodDatabase) {
+    const terms = [food.name.toLowerCase(), ...food.aliases.map((a) => a.toLowerCase())];
+    for (const term of terms) {
+      let score = 0;
+      if (term === q) {
+        score = 100;
+      } else if (q === term || q.startsWith(`${term} `) || q.endsWith(` ${term}`)) {
+        score = 85;
+      } else if (term.includes(q) && q.length >= 3) {
+        score = 70 + q.length;
+      } else if (q.includes(term) && term.length >= 3) {
+        score = 60 + term.length;
+      }
+      if (score > bestScore) {
+        bestScore = score;
+        best = food;
+      }
+    }
+  }
+
+  return bestScore >= 60 ? best : null;
+}
+
+function getCommonFoodSuggestions(query) {
+  const q = query.trim().toLowerCase();
+  if (!q) {
+    return [];
+  }
+
+  const scored = commonFoodDatabase
+    .map((food) => {
+      const terms = [food.name.toLowerCase(), ...food.aliases.map((a) => a.toLowerCase())];
+      const hit = terms.some((term) => term.includes(q) || q.includes(term));
+      const exact = terms.some((term) => term === q || term.startsWith(q));
+      if (!hit) {
+        return null;
+      }
+      return { food, exact };
+    })
+    .filter(Boolean)
+    .sort((a, b) => (b.exact === a.exact ? 0 : b.exact ? 1 : -1));
+
+  const out = [];
+  const seen = new Set();
+  for (const row of scored) {
+    if (seen.has(row.food.name)) {
+      continue;
+    }
+    seen.add(row.food.name);
+    out.push(row.food);
+    if (out.length >= 8) {
+      break;
+    }
+  }
+  return out;
+}
+
+function scoreFromMacros(macros) {
+  let score = 72;
+  if (macros.protein !== null && macros.protein >= 15) {
+    score += 8;
+  } else if (macros.protein !== null && macros.protein >= 8) {
+    score += 4;
+  }
+  if (macros.calories !== null && macros.calories <= 120) {
+    score += 6;
+  } else if (macros.calories !== null && macros.calories > 350) {
+    score -= 8;
+  }
+  if (macros.carbs !== null && macros.carbs <= 8) {
+    score += 4;
+  } else if (macros.carbs !== null && macros.carbs > 35) {
+    score -= 6;
+  }
+  if (macros.fat !== null && macros.fat > 18) {
+    score -= 5;
+  }
+  return Math.max(1, Math.min(100, Math.round(score)));
 }
 
 function getProductDisplayName(product) {
@@ -2349,7 +2874,8 @@ async function fetchOpenFoodFactsProductDetails(code) {
  * Search hits are often missing image URLs; merge each candidate with
  * GET /api/v0/product/{code}.json for full front-of-pack links.
  */
-async function fetchOpenFoodFactsProduct(query) {
+async function fetchOpenFoodFactsProduct(query, options = {}) {
+  const foodMode = Boolean(options.foodMode);
   const searchUrl = `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(query)}&search_simple=1&action=process&json=1&page_size=24`;
   const response = await fetch(searchUrl);
   if (!response.ok) {
@@ -2369,8 +2895,19 @@ async function fetchOpenFoodFactsProduct(query) {
   const labeled = products.filter((p) => getProductDisplayName(p));
   const pool = labeled.length > 0 ? labeled : products;
 
+  const qLower = query.trim().toLowerCase();
+
   const rank = (p) => {
     let score = 0;
+    const name = getProductDisplayName(p).toLowerCase();
+    if (name === qLower) {
+      score += 10;
+    } else if (name.includes(qLower) || qLower.split(/\s+/).every((w) => w.length > 2 && name.includes(w))) {
+      score += 6;
+    }
+    if (getNutriment(p, "energy-kcal_serving") !== null) {
+      score += 5;
+    }
     if (productHasPhoto(p)) {
       score += 4;
     }
@@ -2379,6 +2916,15 @@ async function fetchOpenFoodFactsProduct(query) {
     }
     if (getProductDisplayName(p)) {
       score += 1;
+    }
+    if (foodMode) {
+      const cats = (p.categories_tags || []).join(" ").toLowerCase();
+      if (/en:fruits|en:vegetables|en:eggs|en:meats|en:beverages|en:coffees/.test(cats)) {
+        score += 3;
+      }
+      if (/en:snacks|en:sodas|en:candies|en:chocolates/.test(cats)) {
+        score -= 2;
+      }
     }
     return score;
   };
@@ -2465,22 +3011,23 @@ async function fetchBestBrandPhotoProduct(brand) {
   return null;
 }
 
-function renderOpenFoodFactsProduct(product) {
+function renderOpenFoodFactsProduct(product, options = {}) {
   const score = computeNutritionScore(product);
   const verdictData = getVerdictText(score);
-  const calories = getNutriment(product, "energy-kcal_100g");
-  const protein = getNutriment(product, "proteins_100g");
+  const macros = buildLogMacrosFromProduct(product);
   const { positives, negatives, alternatives } = buildPositivesAndNegatives(product);
   const productName = getProductDisplayName(product) || "Unknown product";
-  const brandName = product.brands || "Unknown brand";
+  const brandName = (product.brands || "Unknown brand").split(",")[0].trim();
 
   emptyState.classList.add("hidden");
   results.classList.remove("hidden");
 
   scoreValue.textContent = String(score);
-  verdict.textContent = `${brandName}: ${productName}`;
-  confidence.textContent = "Live nutrition data pulled from OpenFoodFacts product records.";
-  nutritionSummary.textContent = `Calories: ${calories ?? "N/A"} kcal/100g | Protein: ${protein ?? "N/A"}g/100g`;
+  verdict.textContent = options.titleOverride || `${brandName}: ${productName}`;
+  confidence.textContent =
+    options.confidenceOverride ||
+    "Live product record from OpenFoodFacts — nutrition scaled to package serving when available.";
+  nutritionSummary.textContent = formatMacroSummary(macros);
   applyScoreBadgeTier(verdictData.tier);
   const packPhoto = getProductImageUrl(product);
   applyPackImageToResult(packPhoto || "./assets/default-food.svg", productName);
@@ -2494,12 +3041,194 @@ function renderOpenFoodFactsProduct(product) {
   renderList(alternativeList, alternatives, (item) => item);
   setCurrentLogCandidate({
     name: `${brandName}: ${productName}`,
-    calories: calories,
-    protein: protein,
-    carbs: getNutriment(product, "carbohydrates_100g"),
-    fat: getNutriment(product, "fat_100g"),
+    calories: macros.calories,
+    protein: macros.protein,
+    carbs: macros.carbs,
+    fat: macros.fat,
     source: "off",
   });
+}
+
+function renderCommonFoodItem(food) {
+  const score = food.score ?? scoreFromMacros(food);
+  const verdictData = getVerdictText(score);
+  const macros = {
+    calories: food.calories,
+    protein: food.protein,
+    carbs: food.carbs,
+    fat: food.fat,
+    servingLabel: food.serving,
+    per100Fallback: false,
+  };
+
+  emptyState.classList.add("hidden");
+  results.classList.remove("hidden");
+
+  scoreValue.textContent = String(score);
+  verdict.textContent = food.name;
+  confidence.textContent = `Standard serving (${food.serving}) — USDA-style reference values for quick logging.`;
+  nutritionSummary.textContent = formatMacroSummary(macros);
+  applyScoreBadgeTier(verdictData.tier);
+  applyPackImageToResult("./assets/default-food.svg", food.name);
+  resultImageCaption.textContent = `${food.name} · Built-in food guide`;
+
+  setResultSectionTitles("Good to know", "Nutrition highlights", "Pairing ideas");
+  const notes = [];
+  if (food.protein >= 15) {
+    notes.push(`Strong protein (${food.protein}g per serving).`);
+  }
+  if (food.carbs <= 5) {
+    notes.push("Low carbohydrate serving.");
+  }
+  if (food.calories <= 100) {
+    notes.push("Relatively light calorie load for the portion listed.");
+  }
+  if (notes.length === 0) {
+    notes.push("Balanced everyday food — adjust portions to match your goals.");
+  }
+
+  renderList(flagList, [], () => "");
+  renderList(factList, notes, (item) => item);
+  renderList(alternativeList, ["Log a similar whole-food option from the list above for variety."], (item) => item);
+  setCurrentLogCandidate({
+    name: food.name,
+    calories: food.calories,
+    protein: food.protein,
+    carbs: food.carbs,
+    fat: food.fat,
+    source: "food-local",
+  });
+}
+
+function renderIngredientScanResult({ parsedIngredients, matches, score, product }) {
+  const verdictData = getVerdictText(score);
+  const hints = extractLabelHints(ingredientsInput.value);
+
+  emptyState.classList.add("hidden");
+  results.classList.remove("hidden");
+
+  if (product) {
+    const productName = getProductDisplayName(product) || hints.productHint || "Matched product";
+    const brandName = (product.brands || hints.brandHint || "Product").split(",")[0].trim();
+    const offScore = computeNutritionScore(product);
+    const blended = Math.round(score * 0.45 + offScore * 0.55);
+    const blendedVerdict = getVerdictText(blended);
+    const macros = buildLogMacrosFromProduct(product);
+
+    scoreValue.textContent = String(blended);
+    verdict.textContent = `${brandName}: ${productName}`;
+    confidence.textContent =
+      `Matched on OpenFoodFacts${hints.barcode ? ` (barcode ${hints.barcode})` : ""}. ` +
+      `Ingredient scan found ${matches.length} additive flag(s) on the label text.`;
+    nutritionSummary.textContent = formatMacroSummary(macros);
+    applyScoreBadgeTier(blendedVerdict.tier);
+    const packPhoto = getProductImageUrl(product);
+    applyPackImageToResult(packPhoto || "./assets/default-food.svg", productName);
+    resultImageCaption.textContent = packPhoto
+      ? `${productName} — verified pack photo + label ingredient analysis`
+      : `${productName} — product match + label ingredient analysis`;
+
+    setResultSectionTitles(
+      "Hidden Additives / Harmful Ingredients",
+      "Product positives (OpenFoodFacts)",
+      "Cleaner Alternatives",
+    );
+    renderList(
+      flagList,
+      matches,
+      (item) => `${item.key} (severity ${item.severity}/20): detected on your ingredient list.`,
+    );
+    const { positives, alternatives } = buildPositivesAndNegatives(product);
+    renderList(factList, positives, (item) => item);
+    renderList(alternativeList, alternatives, (item) => item);
+    setCurrentLogCandidate({
+      name: `${brandName}: ${productName}`,
+      calories: macros.calories,
+      protein: macros.protein,
+      carbs: macros.carbs,
+      fat: macros.fat,
+      source: "scan-off",
+    });
+    return;
+  }
+
+  scoreValue.textContent = String(score);
+  verdict.textContent = verdictData.label;
+  confidence.textContent =
+    hints.searchQuery || hints.barcode
+      ? "Ingredient analysis complete. No OpenFoodFacts match — try barcode lookup or search the product name under Log a food."
+      : verdictData.confidence;
+  nutritionSummary.textContent = "";
+  resultImage.onerror = null;
+  resultImage.src = "./assets/default-food.svg";
+  resultImage.alt = "Ingredient-based label scan visual";
+  resultImageCaption.textContent = "Ingredient scan visualization";
+  applyScoreBadgeTier(verdictData.tier);
+
+  setResultSectionTitles(
+    "Hidden Additives / Harmful Ingredients",
+    "What This Means",
+    "Cleaner Alternatives",
+  );
+  renderList(
+    flagList,
+    matches,
+    (item) => `${item.key} (severity ${item.severity}/20): detected via label matching.`,
+  );
+  renderList(factList, matches, (item) => item.reason);
+  renderList(alternativeList, matches, (item) => item.alternative);
+  setCurrentLogCandidate({
+    name: hints.productHint || hints.searchQuery || "Ingredient scan entry",
+    calories: null,
+    protein: null,
+    carbs: null,
+    fat: null,
+    source: "scan",
+  });
+}
+
+async function resolveProductForLabelScan(rawText) {
+  const hints = extractLabelHints(rawText);
+  if (hints.barcode) {
+    const byCode = await fetchOpenFoodFactsProductDetails(hints.barcode);
+    if (byCode) {
+      return byCode;
+    }
+  }
+  if (hints.searchQuery) {
+    return fetchOpenFoodFactsProduct(hints.searchQuery);
+  }
+  return null;
+}
+
+async function runScanWithProductLookup() {
+  const rawText = ingredientsInput.value;
+  const parsedIngredients = parseIngredients(rawText);
+  if (parsedIngredients.length === 0) {
+    return;
+  }
+
+  const matches = findMatches(parsedIngredients);
+  const score = calculateScore(matches, parsedIngredients);
+
+  let product = null;
+  try {
+    product = await resolveProductForLabelScan(rawText);
+  } catch {
+    product = null;
+  }
+
+  renderIngredientScanResult({ parsedIngredients, matches, score, product });
+  addActionHistoryEntry(
+    "scan",
+    product
+      ? `Label scan + product match (${Math.round(score)})`
+      : `Ingredient scan (${score})`,
+    product
+      ? `${getProductDisplayName(product) || "product"} · ${matches.length} additive flag(s)`
+      : `${parsedIngredients.length} ingredients, ${matches.length} additive flag(s)`,
+  );
+  setActiveTab("results");
 }
 
 async function runBarcodeLookup() {
@@ -2705,20 +3434,19 @@ async function runBrandSearch() {
             .trim() || match.name;
         applyPackImageToResult(packUrl, pname);
         resultImageCaption.textContent = `${pname} (${bname}) · Product photo: OpenFoodFacts`;
-        const cal = getNutriment(photoProduct, "energy-kcal_100g");
-        const prot = getNutriment(photoProduct, "proteins_100g");
-        if (cal !== null || prot !== null) {
-          nutritionSummary.textContent = `Local brand score above; pack photo from OpenFoodFacts. Calories: ${cal ?? "N/A"} kcal/100g | Protein: ${prot ?? "N/A"}g/100g for this product.`;
+        const macros = buildLogMacrosFromProduct(photoProduct);
+        if (macros.calories !== null || macros.protein !== null) {
+          nutritionSummary.textContent = `Local brand score above; pack photo from OpenFoodFacts. ${formatMacroSummary(macros)}`;
         } else {
           nutritionSummary.textContent =
             "Local brand score above; product photo from OpenFoodFacts (nutrition fields not listed for this hit).";
         }
         setCurrentLogCandidate({
           name: `${bname}: ${pname}`,
-          calories: cal,
-          protein: prot,
-          carbs: getNutriment(photoProduct, "carbohydrates_100g"),
-          fat: getNutriment(photoProduct, "fat_100g"),
+          calories: macros.calories,
+          protein: macros.protein,
+          carbs: macros.carbs,
+          fat: macros.fat,
           source: "brand-off",
         });
       } else {
@@ -2737,7 +3465,188 @@ async function runBrandSearch() {
   }
 }
 
+function hideFoodSuggestions() {
+  if (!foodSuggestions) {
+    return;
+  }
+  foodSuggestions.classList.add("hidden");
+  foodSuggestions.innerHTML = "";
+  if (foodSearch) {
+    foodSearch.setAttribute("aria-expanded", "false");
+  }
+  activeFoodSuggestionIndex = -1;
+  currentFoodSuggestions = [];
+}
+
+function applyFoodSuggestion(foodName) {
+  if (foodSearch) {
+    foodSearch.value = foodName;
+  }
+  hideFoodSuggestions();
+}
+
+function renderFoodSuggestions(items) {
+  if (!foodSuggestions || !foodSearch) {
+    return;
+  }
+  currentFoodSuggestions = items;
+  activeFoodSuggestionIndex = -1;
+  foodSuggestions.innerHTML = "";
+
+  if (items.length === 0) {
+    hideFoodSuggestions();
+    return;
+  }
+
+  items.forEach((food, index) => {
+    const li = document.createElement("li");
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "suggestion-item";
+    const title = document.createElement("span");
+    title.textContent = food.name;
+    const meta = document.createElement("span");
+    meta.className = "suggestion-meta";
+    meta.textContent = `${food.calories} cal · ${food.serving}`;
+    button.append(title, meta);
+    button.addEventListener("mousedown", (event) => {
+      event.preventDefault();
+      applyFoodSuggestion(food.name);
+    });
+    if (index === activeFoodSuggestionIndex) {
+      button.classList.add("active");
+    }
+    li.append(button);
+    foodSuggestions.append(li);
+  });
+
+  foodSuggestions.classList.remove("hidden");
+  foodSearch.setAttribute("aria-expanded", "true");
+}
+
+function updateActiveFoodSuggestion(nextIndex) {
+  if (!foodSuggestions) {
+    return;
+  }
+  const suggestionButtons = foodSuggestions.querySelectorAll(".suggestion-item");
+  suggestionButtons.forEach((button, index) => {
+    button.classList.toggle("active", index === nextIndex);
+  });
+}
+
+async function runFoodSearch() {
+  const query = foodSearch?.value.trim();
+  if (!query || !foodSearchButton) {
+    return;
+  }
+
+  hideFoodSuggestions();
+  foodSearchButton.disabled = true;
+  foodSearchButton.textContent = "Looking up...";
+
+  try {
+    addActionHistoryEntry("food-search", `Food search: ${query}`);
+
+    const local = findCommonFood(query);
+    if (local) {
+      renderCommonFoodItem(local);
+      setActiveTab("results");
+      return;
+    }
+
+    try {
+      const product = await fetchOpenFoodFactsProduct(query, { foodMode: true });
+      if (product) {
+        renderOpenFoodFactsProduct(product, {
+          titleOverride: getProductDisplayName(product) || query,
+          confidenceOverride:
+            "Matched a real product on OpenFoodFacts — macros use the package serving when listed.",
+        });
+        setActiveTab("results");
+        return;
+      }
+    } catch {
+      // fall through to not-found state
+    }
+
+    emptyState.classList.add("hidden");
+    results.classList.remove("hidden");
+    scoreValue.textContent = "--";
+    verdict.textContent = "Food not found";
+    confidence.textContent =
+      "Try a simpler name (egg, banana, coffee) or check spelling. Built-in guide includes eggs, steak, coffee, and common fruit.";
+    nutritionSummary.textContent = "";
+    applyScoreBadgeTier("neutral");
+    resultImage.onerror = null;
+    resultImage.src = "./assets/default-food.svg";
+    resultImage.alt = "No food image";
+    resultImageCaption.textContent = "No match yet — try another search";
+    setResultSectionTitles("Tip", "Examples", "Next step");
+    renderList(flagList, [], () => "");
+    renderList(factList, ["eggs", "steak", "black coffee", "banana", "blueberries", "apple"], (item) => item);
+    renderList(alternativeList, ["Scan a packaged label or enter a barcode for branded products."], (item) => item);
+    setCurrentLogCandidate(null);
+    setActiveTab("results");
+  } finally {
+    foodSearchButton.disabled = false;
+    foodSearchButton.textContent = "Look up food";
+  }
+}
+
 scanButton.addEventListener("click", triggerHighSpeedScan);
+if (foodSearchButton) {
+  foodSearchButton.addEventListener("click", () => {
+    void runFoodSearch();
+  });
+}
+if (foodSearch) {
+  foodSearch.addEventListener("input", () => {
+    renderFoodSuggestions(getCommonFoodSuggestions(foodSearch.value));
+  });
+  foodSearch.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" && activeFoodSuggestionIndex < 0) {
+      event.preventDefault();
+      void runFoodSearch();
+      return;
+    }
+    if (currentFoodSuggestions.length === 0) {
+      return;
+    }
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      activeFoodSuggestionIndex = (activeFoodSuggestionIndex + 1) % currentFoodSuggestions.length;
+      updateActiveFoodSuggestion(activeFoodSuggestionIndex);
+      return;
+    }
+    if (event.key === "ArrowUp") {
+      event.preventDefault();
+      activeFoodSuggestionIndex =
+        (activeFoodSuggestionIndex - 1 + currentFoodSuggestions.length) %
+        currentFoodSuggestions.length;
+      updateActiveFoodSuggestion(activeFoodSuggestionIndex);
+      return;
+    }
+    if (event.key === "Enter" && activeFoodSuggestionIndex >= 0) {
+      event.preventDefault();
+      applyFoodSuggestion(currentFoodSuggestions[activeFoodSuggestionIndex].name);
+      void runFoodSearch();
+      return;
+    }
+    if (event.key === "Escape") {
+      hideFoodSuggestions();
+    }
+  });
+}
+if (scanBarcodeCameraButton) {
+  scanBarcodeCameraButton.addEventListener("click", () => openCameraModal("barcode"));
+}
+if (cameraModeIngredients) {
+  cameraModeIngredients.addEventListener("click", () => setCameraCaptureMode("ingredients"));
+}
+if (cameraModeBarcode) {
+  cameraModeBarcode.addEventListener("click", () => setCameraCaptureMode("barcode"));
+}
+
 brandSearchButton.addEventListener("click", runBrandSearch);
 
 brandSearch.addEventListener("input", () => {
@@ -2841,8 +3750,11 @@ if (editGoalsScrollButton && goalCalories) {
 }
 
 document.addEventListener("click", (event) => {
-  if (!brandSuggestions.contains(event.target) && event.target !== brandSearch) {
+  if (brandSuggestions && !brandSuggestions.contains(event.target) && event.target !== brandSearch) {
     hideBrandSuggestions();
+  }
+  if (foodSuggestions && !foodSuggestions.contains(event.target) && event.target !== foodSearch) {
+    hideFoodSuggestions();
   }
 });
 

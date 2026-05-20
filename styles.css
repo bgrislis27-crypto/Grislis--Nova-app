@@ -899,6 +899,20 @@ input[type="password"]:focus-visible {
   background: var(--yuka-excellent-soft);
 }
 
+.suggestion-meta {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin-top: 2px;
+  font-weight: 400;
+}
+
+.modal-actions .secondary.small.active {
+  background: var(--yuka-excellent-soft);
+  border-color: var(--yuka-excellent);
+  color: var(--text);
+}
+
 .actions {
   margin-top: 14px;
   display: flex;
